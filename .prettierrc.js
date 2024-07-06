@@ -17,7 +17,6 @@ export default {
 		'^services/(.*)$',
 		'^models/(.*)$',
 		'^components/(.*)$',
-		'^utils/(.*)$',
 		'^lib/(.*)$',
 		'^[./]', // other imports
 	],
