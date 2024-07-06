@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 import { LinksFunction } from '@remix-run/node'
 import {
 	Links,
@@ -7,7 +9,6 @@ import {
 	ScrollRestoration,
 } from '@remix-run/react'
 
-import { ReactNode } from 'react'
 import stylesheet from '~/tailwind.css?url'
 
 export const links: LinksFunction = () => [

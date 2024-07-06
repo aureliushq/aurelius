@@ -9,6 +9,7 @@ export default {
 	trailingComma: 'es5',
 	useTabs: true,
 	importOrder: [
+		'^react*', // react imports
 		'^@remix-run/(.*)$', // remix imports
 		'<THIRD_PARTY_MODULES>',
 		'<THIRD_PARTY_TS_TYPES>',
