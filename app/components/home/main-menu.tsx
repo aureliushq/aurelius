@@ -19,6 +19,7 @@ import {
 	TimerIcon,
 	TwitterIcon,
 } from 'lucide-react'
+import KeyboardShortcut from '~/components/home/keyboard-shortcut'
 import { Button } from '~/components/ui/button'
 import {
 	DropdownMenu,
@@ -32,6 +33,7 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
+import { SHORTCUTS } from '~/lib/constants'
 
 const MainMenu = () => {
 	return (
@@ -57,7 +59,9 @@ const MainMenu = () => {
 										<CirclePlusIcon className='mr-2 w-4 h-4' />
 										<span>New Post</span>
 										<DropdownMenuShortcut className='ml-16'>
-											Alt+N
+											<KeyboardShortcut
+												keys={SHORTCUTS.NEW_POST}
+											/>
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -84,7 +88,11 @@ const MainMenu = () => {
 										<TimerIcon className='mr-2 w-4 h-4' />
 										<span>New Writing Session</span>
 										<DropdownMenuShortcut className='ml-16'>
-											Alt+W
+											<KeyboardShortcut
+												keys={
+													SHORTCUTS.NEW_WRITING_SESSION
+												}
+											/>
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -119,7 +127,9 @@ const MainMenu = () => {
 											<span>Image</span>
 										</span>
 										<DropdownMenuShortcut className='ml-16'>
-											Alt+I
+											<KeyboardShortcut
+												keys={SHORTCUTS.EXPORT_AS_IMAGE}
+											/>
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -142,7 +152,11 @@ const MainMenu = () => {
 										</svg>
 										<span>Markdown</span>
 										<DropdownMenuShortcut className='ml-16'>
-											Alt+D
+											<KeyboardShortcut
+												keys={
+													SHORTCUTS.EXPORT_AS_MARKDOWN
+												}
+											/>
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -157,7 +171,7 @@ const MainMenu = () => {
 								<span>Focus Mode</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								Alt+M
+								<KeyboardShortcut keys={SHORTCUTS.FOCUS_MODE} />
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
@@ -168,7 +182,9 @@ const MainMenu = () => {
 								<span>Reset Editor</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								Alt+R
+								<KeyboardShortcut
+									keys={SHORTCUTS.RESET_EDITOR}
+								/>
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
@@ -179,7 +195,9 @@ const MainMenu = () => {
 								<span>Preferences</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								Alt+S
+								<KeyboardShortcut
+									keys={SHORTCUTS.PREFERENCES}
+								/>
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
@@ -222,7 +240,7 @@ const MainMenu = () => {
 								<span>Help</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								?
+								<KeyboardShortcut keys={SHORTCUTS.HELP} />
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>

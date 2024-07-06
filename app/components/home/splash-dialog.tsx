@@ -13,9 +13,11 @@ import {
 	SettingsIcon,
 	TimerIcon,
 } from 'lucide-react'
+import KeyboardShortcut from '~/components/home/keyboard-shortcut'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Dialog, DialogContent } from '~/components/ui/dialog'
+import { SHORTCUTS } from '~/lib/constants'
 
 const SplashDialogButton = ({
 	icon,
@@ -35,11 +37,7 @@ const SplashDialogButton = ({
 				{icon}
 				{label}
 			</span>
-			{shortcut ? (
-				<span className='text-xs tracking-widest opacity-60 ml-16'>
-					{shortcut}
-				</span>
-			) : null}
+			{shortcut ? <KeyboardShortcut keys={shortcut} /> : null}
 		</Button>
 	)
 }
@@ -47,7 +45,7 @@ const SplashDialogButton = ({
 const SplashDialog = () => {
 	return (
 		<Dialog defaultOpen={true}>
-			<DialogContent className='flex max-w-none w-[32rem] p-0 [&>button]:z-10'>
+			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
 				<div className='flex flex-col min-h-[36rem] h-auto w-full rounded-lg overflow-hidden divide-y divide-subtle'>
 					<div className='relative w-full h-[16rem] flex items-start justify-start p-8'>
 						<img
@@ -62,7 +60,7 @@ const SplashDialog = () => {
 							alt='Aurelius Logo'
 						/>
 					</div>
-					<div className='grid grid-cols-1 flex-col w-full min-h-[20rem] h-auto flex-1 flex-grow py-8 pl-8 pr-4 gap-x-12 gap-y-4'>
+					<div className='grid grid-cols-2 flex-col w-full min-h-[20rem] h-auto flex-1 flex-grow py-8 pl-8 pr-4 gap-x-12 gap-y-4'>
 						<div className='col-span-1 py-2 flex flex-col'>
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
 								Getting Started
@@ -74,7 +72,7 @@ const SplashDialog = () => {
 											<FileTextIcon className='mr-2 w-4 h-4' />
 										}
 										label='New Post'
-										shortcut='Alt+M'
+										shortcut={SHORTCUTS.NEW_POST}
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
@@ -83,7 +81,7 @@ const SplashDialog = () => {
 											<TimerIcon className='mr-2 w-4 h-4' />
 										}
 										label='New Writing Session'
-										shortcut='Alt+W'
+										shortcut={SHORTCUTS.NEW_WRITING_SESSION}
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
@@ -92,7 +90,7 @@ const SplashDialog = () => {
 											<SettingsIcon className='mr-2 w-4 h-4' />
 										}
 										label='Preferences'
-										shortcut='Alt+W'
+										shortcut={SHORTCUTS.PREFERENCES}
 									/>
 								</li>
 							</ul>
@@ -108,7 +106,6 @@ const SplashDialog = () => {
 											<PencilIcon className='mr-2 w-4 h-4' />
 										}
 										label='Continue Writing'
-										shortcut='Alt+W'
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
@@ -118,7 +115,6 @@ const SplashDialog = () => {
 												<RefreshCcwIcon className='mr-2 w-4 h-4' />
 											}
 											label='Resume Writing Session'
-											shortcut='Alt+W'
 										/>
 									</Link>
 								</li>
@@ -129,7 +125,6 @@ const SplashDialog = () => {
 												<ListIcon className='mr-2 w-4 h-4' />
 											}
 											label='See all posts'
-											shortcut='Alt+W'
 										/>
 									</Link>
 								</li>
@@ -179,12 +174,12 @@ const SplashDialog = () => {
 								</li>
 							</ul>
 						</div>
-						<div className='col-span-1 flex flex-col'>
-							<p className='leading-relaxed italic text-xs text-foreground'>
-								All your data will be saved locally in the
-								browser.
-							</p>
-						</div>
+						{/*<div className='col-span-1 flex flex-col'>*/}
+						{/*	<p className='leading-relaxed italic text-xs text-foreground'>*/}
+						{/*		All your data will be saved locally in the*/}
+						{/*		browser.*/}
+						{/*	</p>*/}
+						{/*</div>*/}
 					</div>
 					<div className='w-full px-8 py-4 flex items-center gap-2'>
 						<div className='items-center flex space-x-2'>
