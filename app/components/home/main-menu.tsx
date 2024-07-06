@@ -18,7 +18,6 @@ import {
 	SettingsIcon,
 	TimerIcon,
 	TwitterIcon,
-	UserPlusIcon,
 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import {
@@ -40,7 +39,7 @@ const MainMenu = () => {
 			<DropdownMenu>
 				<DropdownMenuTrigger>
 					<Button size='icon' variant='secondary'>
-						<MenuIcon />
+						<MenuIcon className='w-5 h-5' />
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align='start'>
@@ -152,27 +151,33 @@ const MainMenu = () => {
 					</DropdownMenuSub>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem>
-						<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-							<FocusIcon className='mr-2 w-4 h-4' />
-							<span>Focus Mode</span>
+						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
+							<span className='inline-flex items-center'>
+								<FocusIcon className='mr-2 w-4 h-4' />
+								<span>Focus Mode</span>
+							</span>
 							<DropdownMenuShortcut className='ml-16'>
 								Alt+M
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
-						<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-							<RefreshCwIcon className='mr-2 w-4 h-4' />
-							<span>Reset Editor</span>
+						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
+							<span className='inline-flex items-center'>
+								<RefreshCwIcon className='mr-2 w-4 h-4' />
+								<span>Reset Editor</span>
+							</span>
 							<DropdownMenuShortcut className='ml-16'>
 								Alt+R
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
-						<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-							<SettingsIcon className='mr-2 w-4 h-4' />
-							<span>Preferences</span>
+						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
+							<span className='inline-flex items-center'>
+								<SettingsIcon className='mr-2 w-4 h-4' />
+								<span>Preferences</span>
+							</span>
 							<DropdownMenuShortcut className='ml-16'>
 								Alt+S
 							</DropdownMenuShortcut>
