@@ -18,7 +18,7 @@ import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Dialog, DialogContent } from '~/components/ui/dialog'
 import { SHORTCUTS } from '~/lib/constants'
-import { HelpDialogProps } from '~/lib/types'
+import { HelpDialogProps, PreferencesDialogProps } from '~/lib/types'
 
 const SplashDialogButton = ({
 	icon,
@@ -48,9 +48,13 @@ const SplashDialogButton = ({
 
 type SplashDialogProps = {
 	createPost?: () => void
-} & HelpDialogProps
+} & HelpDialogProps &
+	PreferencesDialogProps
 
-const SplashDialog = ({ setHelpOpen }: SplashDialogProps) => {
+const SplashDialog = ({
+	setHelpOpen,
+	setPreferencesOpen,
+}: SplashDialogProps) => {
 	return (
 		<Dialog defaultOpen={true}>
 			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
@@ -98,6 +102,7 @@ const SplashDialog = ({ setHelpOpen }: SplashDialogProps) => {
 											<SettingsIcon className='mr-2 w-4 h-4' />
 										}
 										label='Preferences'
+										onClick={() => setPreferencesOpen(true)}
 										shortcut={SHORTCUTS.PREFERENCES}
 									/>
 								</li>
