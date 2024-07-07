@@ -18,19 +18,23 @@ import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Dialog, DialogContent } from '~/components/ui/dialog'
 import { SHORTCUTS } from '~/lib/constants'
+import { HelpDialogProps } from '~/lib/types'
 
 const SplashDialogButton = ({
 	icon,
 	label,
+	onClick,
 	shortcut,
 }: {
 	icon: ReactNode
 	label: string
+	onClick?: (...args: unknown[]) => void
 	shortcut?: string
 }) => {
 	return (
 		<Button
 			className='w-[calc(100%+1rem)] justify-between -ml-4'
+			onClick={onClick}
 			variant='ghost'
 		>
 			<span className='inline-flex items-center'>
@@ -42,7 +46,11 @@ const SplashDialogButton = ({
 	)
 }
 
-const SplashDialog = () => {
+type SplashDialogProps = {
+	createPost?: () => void
+} & HelpDialogProps
+
+const SplashDialog = ({ setHelpOpen }: SplashDialogProps) => {
 	return (
 		<Dialog defaultOpen={true}>
 			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
@@ -169,6 +177,7 @@ const SplashDialog = () => {
 											<CircleHelpIcon className='mr-2 w-4 h-4' />
 										}
 										label='Help'
+										onClick={() => setHelpOpen(true)}
 										shortcut='?'
 									/>
 								</li>

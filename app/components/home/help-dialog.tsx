@@ -11,16 +11,11 @@ import {
 } from '~/components/ui/dialog'
 import { Separator } from '~/components/ui/separator'
 import { SHORTCUTS } from '~/lib/constants'
+import { HelpDialogProps } from '~/lib/types'
 
-const HelpDialog = ({
-	onOpenChange,
-	open,
-}: {
-	onOpenChange: (open: boolean) => void
-	open: boolean
-}) => {
+const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 	return (
-		<Dialog onOpenChange={onOpenChange} open={open}>
+		<Dialog onOpenChange={setHelpOpen} open={helpOpen}>
 			<DialogContent className='w-[48rem] max-w-none flex flex-col gap-8'>
 				<DialogHeader className='flex flex-col gap-2'>
 					<DialogTitle>Help</DialogTitle>

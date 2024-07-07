@@ -1,3 +1,6 @@
+import { ReactNode } from 'react'
+
+import { LinksFunction } from '@remix-run/node'
 import {
 	Links,
 	Meta,
@@ -5,9 +8,6 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from '@remix-run/react'
-import { ReactNode } from 'react'
-
-import { LinksFunction } from '@remix-run/node'
 
 import stylesheet from '~/globals.css?url'
 

@@ -34,8 +34,13 @@ import {
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { SHORTCUTS } from '~/lib/constants'
+import { HelpDialogProps } from '~/lib/types'
 
-const MainMenu = () => {
+type MainMenuProps = {
+	createPost?: () => void
+} & HelpDialogProps
+
+const MainMenu = ({ setHelpOpen }: MainMenuProps) => {
 	return (
 		<div className='absolute top-4 left-4'>
 			<DropdownMenu>
@@ -233,7 +238,7 @@ const MainMenu = () => {
 							<span>Instagram</span>
 						</a>
 					</DropdownMenuItem>
-					<DropdownMenuItem>
+					<DropdownMenuItem onClick={() => setHelpOpen(true)}>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
 							<span className='inline-flex items-center'>
 								<CircleHelpIcon className='mr-2 w-4 h-4' />
