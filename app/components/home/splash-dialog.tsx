@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 
 import { Link } from '@remix-run/react'
 
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {
 	CircleHelpIcon,
 	FileTextIcon,
@@ -16,7 +17,13 @@ import {
 import KeyboardShortcut from '~/components/home/keyboard-shortcut'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
-import { Dialog, DialogContent } from '~/components/ui/dialog'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '~/components/ui/dialog'
 import { SHORTCUTS } from '~/lib/constants'
 import { HelpDialogProps, PreferencesDialogProps } from '~/lib/types'
 
@@ -58,6 +65,14 @@ const SplashDialog = ({
 	return (
 		<Dialog defaultOpen={true}>
 			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
+				<VisuallyHidden>
+					<DialogHeader>
+						<DialogTitle>Splash Dialog</DialogTitle>
+						<DialogDescription>
+							List of common actions you can do in Aurelius
+						</DialogDescription>
+					</DialogHeader>
+				</VisuallyHidden>
 				<div className='flex flex-col min-h-[36rem] h-auto w-full rounded-lg overflow-hidden divide-y divide-subtle'>
 					<div className='relative w-full h-[16rem] flex items-start justify-start p-8'>
 						<img
