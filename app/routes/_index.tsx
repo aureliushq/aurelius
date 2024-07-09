@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, startTransition, useState } from 'react'
 
 import type { MetaFunction } from '@remix-run/node'
 
@@ -16,24 +16,32 @@ export default function Index() {
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 
+	const handlePreferencesOpen = (state: boolean) => {
+		startTransition(() => {
+			setPreferencesOpen(state)
+		})
+	}
+
 	return (
 		<>
 			<div className='w-screen h-screen'>
 				<MainMenu
 					setHelpOpen={setHelpOpen}
-					setPreferencesOpen={setPreferencesOpen}
+					setPreferencesOpen={handlePreferencesOpen}
 				/>
 				<SplashDialog
 					setHelpOpen={setHelpOpen}
-					setPreferencesOpen={setPreferencesOpen}
+					setPreferencesOpen={handlePreferencesOpen}
 				/>
 				<HelpButton setHelpOpen={setHelpOpen} />
 			</div>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />
-			<PreferencesDialog
-				preferencesOpen={preferencesOpen}
-				setPreferencesOpen={setPreferencesOpen}
-			/>
+			<Suspense>
+				<PreferencesDialog
+					preferencesOpen={preferencesOpen}
+					setPreferencesOpen={setPreferencesOpen}
+				/>
+			</Suspense>
 		</>
 	)
 }
