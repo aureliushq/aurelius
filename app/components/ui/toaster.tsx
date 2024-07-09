@@ -21,7 +21,7 @@ export function Toaster() {
 				...props
 			}) {
 				return (
-					<Toast key={id} {...props}>
+					<Toast className='px-4 py-2 pr-6' key={id} {...props}>
 						<div className='grid gap-1'>
 							{title && <ToastTitle>{title}</ToastTitle>}
 							{description && (

@@ -1,3 +1,9 @@
+import {
+	EditorToolbarMode,
+	MusicChannels,
+	WritingDailyGoalType,
+} from '~/lib/types'
+
 export const SHORTCUTS = {
 	HELP: '?',
 	NEW_POST: 'Alt+N',
@@ -8,3 +14,20 @@ export const SHORTCUTS = {
 	RESET_EDITOR: 'Alt+R',
 	PREFERENCES: 'Alt+P',
 }
+
+export const CHANNELS = [
+	{ value: MusicChannels.LOFI_HIP_HOP, label: 'LoFi Hip Hop' },
+	{ value: MusicChannels.CHILL_SYNTH, label: 'Chill Synth' },
+	{ value: MusicChannels.CHILLSTEP, label: 'Chillstep' },
+	{ value: MusicChannels.POST_ROCK, label: 'Post Rock' },
+]
+
+export const DAILY_GOAL_TYPE = [
+	{ value: WritingDailyGoalType.DURATION, label: 'Duration' },
+	{ value: WritingDailyGoalType.WORD_COUNT, label: 'Word Count' },
+]
+
+export const TOOLBAR_MODES = [
+	{ value: EditorToolbarMode.FIXED, label: 'Fixed' },
+	{ value: EditorToolbarMode.FLOATING, label: 'Floating' },
+]
