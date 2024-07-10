@@ -1,40 +1,49 @@
-# Welcome to Remix!
+# Aurelius
 
--   📖 [Remix docs](https://remix.run/docs)
+Writing app for modern writers
+
+
+## Features
+
+- Great writing experience
+- Markdown shortcuts
+- Timed writing sessions
+- Writing goals for building a habit
+- Tons of keyboard shortcuts
+- Local-first: all data is stored on your device
+- Sync data between devices with a unique sync code
+- Focus mode
+- Music player with multiple genres of focus music or play a youtube video or playlist
+
 
 ## Development
 
-Run the dev server:
+Clone the project
 
-```shellscript
-npm run dev
+```bash
+  git clone https://github.com/i4o-oss/aurelius
 ```
 
-## Deployment
+Go to the project directory
 
-First, build your app for production:
-
-```sh
-npm run build
+```bash
+  cd aurelius
 ```
 
-Then run the app in production mode:
+Install dependencies
 
-```sh
-npm start
+```bash
+  pnpm install
 ```
 
-Now you'll need to pick a host to deploy it to.
+Start the server
 
-### DIY
+```bash
+  pnpm run dev
+```
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
 
-Make sure to deploy the output of `npm run build`
+## Known Issues
 
--   `build/server`
--   `build/client`
+- `displaySplashDialog` in synced device(s) is `false` on load so dialog doesn't show. Works fine in primary device.
 
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
