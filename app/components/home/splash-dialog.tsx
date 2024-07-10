@@ -16,6 +16,7 @@ import {
 	TimerIcon,
 } from 'lucide-react'
 import KeyboardShortcut from '~/components/home/keyboard-shortcut'
+import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
 import {
@@ -31,11 +32,13 @@ import { SettingsRow } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
 
 const SplashDialogButton = ({
+	badge,
 	icon,
 	label,
 	onClick,
 	shortcut,
 }: {
+	badge?: string
 	icon: ReactNode
 	label: string
 	onClick?: (...args: unknown[]) => void
@@ -50,6 +53,11 @@ const SplashDialogButton = ({
 			<span className='inline-flex items-center'>
 				{icon}
 				{label}
+				{badge && (
+					<Badge className='ml-2' variant='outline'>
+						{badge}
+					</Badge>
+				)}
 			</span>
 			{shortcut ? <KeyboardShortcut keys={shortcut} /> : null}
 		</Button>
@@ -184,6 +192,7 @@ const SplashDialog = ({
 								<li className='w-full flex items-center justify-between'>
 									<Link className='w-full' to='/login'>
 										<SplashDialogButton
+											badge='Coming Soon'
 											icon={
 												<LogInIcon className='mr-2 w-4 h-4' />
 											}
@@ -198,6 +207,7 @@ const SplashDialog = ({
 										rel='noreferrer noopener'
 									>
 										<SplashDialogButton
+											badge='Coming Soon'
 											icon={
 												<RocketIcon className='mr-2 w-4 h-4' />
 											}

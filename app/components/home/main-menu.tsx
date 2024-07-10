@@ -20,6 +20,7 @@ import {
 	TwitterIcon,
 } from 'lucide-react'
 import KeyboardShortcut from '~/components/home/keyboard-shortcut'
+import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import {
 	DropdownMenu,
@@ -255,12 +256,18 @@ const MainMenu = ({ setHelpOpen, setPreferencesOpen }: MainMenuProps) => {
 						<span className='w-full h-full flex items-center justify-start cursor-pointer'>
 							<RocketIcon className='mr-2 w-4 h-4' />
 							<span>Plus</span>
+							<Badge className='ml-2' variant='outline'>
+								Coming Soon
+							</Badge>
 						</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
 						<span className='w-full h-full flex items-center justify-start cursor-pointer'>
 							<LogInIcon className='mr-2 w-4 h-4' />
 							<span>Sign Up</span>
+							<Badge className='ml-2' variant='outline'>
+								Coming Soon
+							</Badge>
 						</span>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
