@@ -4,12 +4,7 @@ import { useState } from 'react'
 import { Form } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import {
-	ExtractRow,
-	PositiveInt,
-	String1000,
-	parseMnemonic,
-} from '@evolu/common'
+import { PositiveInt, String1000, parseMnemonic } from '@evolu/common'
 import { useEvolu, useQuery } from '@evolu/react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Effect, Exit } from 'effect'
@@ -54,15 +49,9 @@ import { useToast } from '~/components/ui/use-toast'
 import { CHANNELS, DAILY_GOAL_TYPE, TOOLBAR_MODES } from '~/lib/constants'
 import { PreferencesDialogProps, WritingDailyGoalType } from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
-import evolu from '~/services/evolu/client'
+import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
-
-const settingsQuery = evolu.createQuery(
-	(db) => db.selectFrom('settings').selectAll(),
-	{}
-)
-type SettingsRow = ExtractRow<typeof settingsQuery>
 
 // TODO: Autosave settings on change
 
@@ -600,41 +589,41 @@ const DangerZone = () => {
 	)
 }
 
-const Profile = () => {
-	return (
-		<Form className='flex flex-col gap-4'>
-			<div className='flex items-center justify-between'>
-				<Label className='flex flex-col gap-2'>Name</Label>
-				<Input
-					className='max-w-64'
-					id='name'
-					placeholder='Name'
-					type='text'
-				/>
-			</div>
-			<Separator />
-			<div className='flex items-center justify-between'>
-				<Label className='flex flex-col gap-2'>Bio</Label>
-				<Input
-					className='max-w-64'
-					id='bio'
-					placeholder='Bio'
-					type='text'
-				/>
-			</div>
-			<Separator />
-			<div className='flex items-center justify-between'>
-				<Label className='flex flex-col gap-2'>Username</Label>
-				<Input
-					className='max-w-64'
-					id='username'
-					placeholder='Username'
-					type='text'
-				/>
-			</div>
-		</Form>
-	)
-}
+// const Profile = () => {
+// 	return (
+// 		<Form className='flex flex-col gap-4'>
+// 			<div className='flex items-center justify-between'>
+// 				<Label className='flex flex-col gap-2'>Name</Label>
+// 				<Input
+// 					className='max-w-64'
+// 					id='name'
+// 					placeholder='Name'
+// 					type='text'
+// 				/>
+// 			</div>
+// 			<Separator />
+// 			<div className='flex items-center justify-between'>
+// 				<Label className='flex flex-col gap-2'>Bio</Label>
+// 				<Input
+// 					className='max-w-64'
+// 					id='bio'
+// 					placeholder='Bio'
+// 					type='text'
+// 				/>
+// 			</div>
+// 			<Separator />
+// 			<div className='flex items-center justify-between'>
+// 				<Label className='flex flex-col gap-2'>Username</Label>
+// 				<Input
+// 					className='max-w-64'
+// 					id='username'
+// 					placeholder='Username'
+// 					type='text'
+// 				/>
+// 			</div>
+// 		</Form>
+// 	)
+// }
 
 const PreferencesDialog = ({
 	preferencesOpen,

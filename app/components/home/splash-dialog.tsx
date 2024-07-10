@@ -1,7 +1,8 @@
-import { ReactNode } from 'react'
+import { FormEvent, ReactNode } from 'react'
 
-import { Link } from '@remix-run/react'
+import { Form, Link } from '@remix-run/react'
 
+import { useEvolu } from '@evolu/react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {
 	CircleHelpIcon,
@@ -26,6 +27,8 @@ import {
 } from '~/components/ui/dialog'
 import { SHORTCUTS } from '~/lib/constants'
 import { HelpDialogProps, PreferencesDialogProps } from '~/lib/types'
+import { SettingsRow } from '~/services/evolu/client'
+import { Database } from '~/services/evolu/database'
 
 const SplashDialogButton = ({
 	icon,
@@ -54,16 +57,31 @@ const SplashDialogButton = ({
 }
 
 type SplashDialogProps = {
-	createPost?: () => void
+	settings: SettingsRow
 } & HelpDialogProps &
 	PreferencesDialogProps
 
 const SplashDialog = ({
 	setHelpOpen,
 	setPreferencesOpen,
+	settings,
 }: SplashDialogProps) => {
+	const { update } = useEvolu<Database>()
+
+	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const formData = new FormData(event.currentTarget)
+		const displaySplashDialog = formData.get('dont-show-again') !== 'on'
+		update('settings', {
+			id: settings.id,
+			displaySplashDialog,
+		})
+	}
+
+	// TODO: synced devices is not picking up the correct value initially. it changes after a bit but it should be instant. investigate why.
+
 	return (
-		<Dialog defaultOpen={true}>
+		<Dialog defaultOpen={!!settings?.displaySplashDialog}>
 			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
 				<VisuallyHidden>
 					<DialogHeader>
@@ -210,9 +228,15 @@ const SplashDialog = ({
 						{/*	</p>*/}
 						{/*</div>*/}
 					</div>
-					<div className='w-full px-8 py-4 flex items-center gap-2'>
+					<Form
+						className='w-full px-8 py-4 flex items-center gap-2'
+						onChange={handleChange}
+					>
 						<div className='items-center flex space-x-2'>
-							<Checkbox id='dont-show-again' />
+							<Checkbox
+								name='dont-show-again'
+								id='dont-show-again'
+							/>
 							<label
 								htmlFor='dont-show-again'
 								className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
@@ -220,7 +244,7 @@ const SplashDialog = ({
 								Don&apos;t show this again.
 							</label>
 						</div>
-					</div>
+					</Form>
 				</div>
 			</DialogContent>
 		</Dialog>

@@ -10,7 +10,7 @@ import {
 import { EvoluProvider } from '@evolu/react'
 import { Toaster } from '~/components/ui/toaster'
 import stylesheet from '~/globals.css?url'
-import evolu from '~/services/evolu/client'
+import { evolu } from '~/services/evolu/client'
 
 export const links: LinksFunction = () => [
 	{ rel: 'stylesheet', href: stylesheet },

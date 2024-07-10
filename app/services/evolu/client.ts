@@ -1,5 +1,5 @@
 import * as S from '@effect/schema/Schema'
-import { SqliteBoolean } from '@evolu/common'
+import { ExtractRow, SqliteBoolean } from '@evolu/common'
 import { createEvolu } from '@evolu/common-web'
 import { PositiveInt, String1000 } from '@evolu/react'
 import {
@@ -10,7 +10,7 @@ import {
 import { Database } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
 
-const evolu = createEvolu(Database, {
+export const evolu = createEvolu(Database, {
 	// syncUrl: 'http://localhost:3000',
 	initialData: (evolu) => {
 		evolu.create('settings', {
@@ -32,4 +32,10 @@ const evolu = createEvolu(Database, {
 	},
 })
 
-export default evolu
+export const settingsQuery = evolu.createQuery(
+	(db) => db.selectFrom('settings').selectAll(),
+	{
+		logQueryExecutionTime: true,
+	}
+)
+export type SettingsRow = ExtractRow<typeof settingsQuery>
