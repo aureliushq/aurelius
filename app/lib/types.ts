@@ -8,6 +8,11 @@ export type PreferencesDialogProps = {
 	setPreferencesOpen: (open: boolean) => void
 }
 
+export type WritingSessionDialogProps = {
+	writingSessionOpen?: boolean
+	setWritingSessionOpen: (open: boolean) => void
+}
+
 export enum EditorToolbarMode {
 	FIXED = 'FIXED',
 	FLOATING = 'FLOATING',

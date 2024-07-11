@@ -18,13 +18,17 @@ import {
 	TimerIcon,
 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '~/components/ui/dialog'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from '~/components/ui/popover'
 import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import {
@@ -34,7 +38,7 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
-import { WritingSessionSettings } from '~/lib/types'
+import { WritingSessionDialogProps, WritingSessionSettings } from '~/lib/types'
 import { formatTime } from '~/lib/utils'
 
 const HelpTooltip = ({ children }: { children: string | ReactNode }) => {
@@ -72,16 +76,18 @@ const SessionTimer = ({
 	)
 }
 
-const WritingSessionTimer = ({
-	writingSessionSettings,
-	setWritingSessionSettings,
-}: {
-	writingSessionSettings: WritingSessionSettings
+type WritingSessionTimerProps = {
 	setWritingSessionSettings: Dispatch<SetStateAction<WritingSessionSettings>>
-}) => {
+	writingSessionSettings: WritingSessionSettings
+} & WritingSessionDialogProps
+
+const WritingSessionTimer = ({
+	setWritingSessionOpen,
+	setWritingSessionSettings,
+	writingSessionOpen,
+	writingSessionSettings,
+}: WritingSessionTimerProps) => {
 	const [elapsedMinutes, setElapsedMinutes] = useState(0)
-	const [writingSessionPopoverOpen, setWritingSessionPopoverOpen] =
-		useState(false)
 	const sessionTimer = useTimer()
 	const { toast } = useToast()
 
@@ -116,7 +122,7 @@ const WritingSessionTimer = ({
 
 		// start the timer
 		sessionTimer.start()
-		setWritingSessionPopoverOpen(false)
+		setWritingSessionOpen(false)
 	}
 
 	const stopWritingSession = () => {
@@ -207,11 +213,11 @@ const WritingSessionTimer = ({
 				</div>
 			)}
 			{!sessionTimer.isStarted() && !sessionTimer.isRunning() && (
-				<Popover
-					onOpenChange={setWritingSessionPopoverOpen}
-					open={writingSessionPopoverOpen}
+				<Dialog
+					onOpenChange={setWritingSessionOpen}
+					open={writingSessionOpen}
 				>
-					<PopoverTrigger asChild>
+					<DialogTrigger asChild>
 						<Button
 							className='w-9 h-9'
 							size='icon'
@@ -219,117 +225,102 @@ const WritingSessionTimer = ({
 						>
 							<TimerIcon className='w-4 h-4' />
 						</Button>
-					</PopoverTrigger>
-					<PopoverContent className='w-80' align='end' sideOffset={8}>
-						<div className='grid gap-4'>
-							<div className='space-y-2'>
-								<h4 className='font-medium leading-none'>
-									New Writing Session
-								</h4>
-								<p className='text-sm text-muted-foreground'>
-									Configure the session to your liking.
-								</p>
+					</DialogTrigger>
+					<DialogContent className='w-[32rem] grid gap-4'>
+						<DialogHeader>
+							<DialogTitle>New Writing Session</DialogTitle>
+							<DialogDescription>
+								Configure the session to your liking.
+							</DialogDescription>
+						</DialogHeader>
+						<Form
+							className='flex flex-col gap-2'
+							onSubmit={startWritingSession}
+						>
+							<div className='grid grid-cols-3 items-center gap-4 h-10'>
+								<Label
+									className='col-span-2 flex items-center'
+									htmlFor='session-duration'
+								>
+									How long do you want to write?
+								</Label>
+								<Input
+									className='col-span-1'
+									defaultValue={
+										writingSessionSettings.targetDuration
+									}
+									name='session-duration'
+									type='number'
+								/>
 							</div>
-							<Form
-								className='grid gap-1'
-								onSubmit={startWritingSession}
-							>
-								<div className='grid grid-cols-3 items-center gap-4 h-10'>
-									<Label
-										className='col-span-2 flex items-center'
-										htmlFor='session-duration'
-									>
-										Target Duration
-										<HelpTooltip>
-											Set the target duration for the
-											writing session in minutes.
-										</HelpTooltip>
-									</Label>
-									<Input
-										className='col-span-1'
-										defaultValue={
-											writingSessionSettings.targetDuration
+							<div className='grid grid-cols-3 items-center gap-4 h-10'>
+								<Label
+									className='col-span-2 flex items-center'
+									htmlFor='focus-mode'
+								>
+									Focus Mode
+									<HelpTooltip>
+										Enable focus mode. This will hide all
+										the UI elements and only show the
+										editor. <br /> Hover on the top left
+										side of the screen to show the menu
+										button.
+									</HelpTooltip>
+								</Label>
+								<div className='col-span-1 flex justify-end'>
+									<Switch
+										className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'
+										defaultChecked={
+											writingSessionSettings.focusMode
 										}
-										name='session-duration'
-										type='number'
+										name='focus-mode'
 									/>
 								</div>
-								<div className='grid grid-cols-3 items-center gap-4 h-10'>
-									<Label
-										className='col-span-2 flex items-center'
-										htmlFor='focus-mode'
-									>
-										Focus Mode
-										<HelpTooltip>
-											Enable focus mode. This will hide
-											all the UI elements and only show
-											the editor. <br /> Hover on the top
-											left side of the screen to show the
-											menu button.
-										</HelpTooltip>
-									</Label>
-									<div className='col-span-1 flex justify-end'>
-										<Switch
-											className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'
-											defaultChecked={
-												writingSessionSettings.focusMode
-											}
-											name='focus-mode'
-										/>
-									</div>
+							</div>
+							<div className='grid grid-cols-3 items-center gap-4 h-10'>
+								<Label
+									className='col-span-2 flex items-center'
+									htmlFor='music'
+								>
+									Play music to help with focus
+								</Label>
+								<div className='col-span-1 flex justify-end'>
+									<Switch
+										className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'
+										defaultChecked={
+											writingSessionSettings.music
+										}
+										name='music'
+									/>
 								</div>
-								<div className='grid grid-cols-3 items-center gap-4 h-10'>
-									<Label
-										className='col-span-2 flex items-center'
-										htmlFor='music'
-									>
-										Music
-										<HelpTooltip>
-											Play music during the writing
-											session. Select the music channel to
-											play in Preferences.
-										</HelpTooltip>
-									</Label>
-									<div className='col-span-1 flex justify-end'>
-										<Switch
-											className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'
-											defaultChecked={
-												writingSessionSettings.music
-											}
-											name='music'
-										/>
-									</div>
+							</div>
+							<div className='grid grid-cols-3 items-center gap-4 h-10'>
+								<Label
+									className='col-span-2 flex items-center'
+									htmlFor='notify'
+								>
+									Notify when target duration is reached
+								</Label>
+								<div className='col-span-1 flex justify-end'>
+									<Switch
+										className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'
+										defaultChecked={
+											writingSessionSettings.notifyOnTargetDuration
+										}
+										name='notify-on-target-duration'
+									/>
 								</div>
-								<div className='grid grid-cols-3 items-center gap-4 h-10'>
-									<Label
-										className='col-span-2 flex items-center'
-										htmlFor='notify'
-									>
-										Notify on target duration
-										<HelpTooltip>
-											Receive a notification when the
-											target duration is reached.
-										</HelpTooltip>
-									</Label>
-									<div className='col-span-1 flex justify-end'>
-										<Switch
-											className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'
-											defaultChecked={
-												writingSessionSettings.notifyOnTargetDuration
-											}
-											name='notify-on-target-duration'
-										/>
-									</div>
-								</div>
-								<div className='flex items-center justify-end h-10'>
+							</div>
+							<DialogFooter>
+								<div className='flex items-center justify-end mt-2'>
 									<Button size='sm' type='submit'>
 										Start Session
 									</Button>
 								</div>
-							</Form>
-						</div>
-					</PopoverContent>
-				</Popover>
+							</DialogFooter>
+						</Form>
+					</DialogContent>
+				</Dialog>
 			)}
 		</section>
 	)

@@ -27,7 +27,11 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog'
 import { SHORTCUTS } from '~/lib/constants'
-import { HelpDialogProps, PreferencesDialogProps } from '~/lib/types'
+import {
+	HelpDialogProps,
+	PreferencesDialogProps,
+	WritingSessionDialogProps,
+} from '~/lib/types'
 import { SettingsRow } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
 
@@ -67,12 +71,14 @@ const SplashDialogButton = ({
 type SplashDialogProps = {
 	settings: SettingsRow
 } & HelpDialogProps &
-	PreferencesDialogProps
+	PreferencesDialogProps &
+	WritingSessionDialogProps
 
 const SplashDialog = ({
 	setHelpOpen,
 	setPreferencesOpen,
 	settings,
+	setWritingSessionOpen,
 }: SplashDialogProps) => {
 	const { update } = useEvolu<Database>()
 
@@ -134,6 +140,9 @@ const SplashDialog = ({
 											<TimerIcon className='mr-2 w-4 h-4' />
 										}
 										label='New Writing Session'
+										onClick={() =>
+											setWritingSessionOpen(true)
+										}
 										shortcut={SHORTCUTS.NEW_WRITING_SESSION}
 									/>
 								</li>

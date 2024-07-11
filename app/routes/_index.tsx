@@ -27,6 +27,7 @@ export default function Index() {
 	const { rows } = useQuery(settingsQuery)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
+	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
 		useState<WritingSessionSettings>({
 			targetDuration: 30,
@@ -49,16 +50,20 @@ export default function Index() {
 				<MainMenu
 					setHelpOpen={setHelpOpen}
 					setPreferencesOpen={handlePreferencesOpen}
+					setWritingSessionOpen={setWritingSessionOpen}
 				/>
 				<Suspense>
 					<SplashDialog
 						setHelpOpen={setHelpOpen}
 						setPreferencesOpen={handlePreferencesOpen}
 						settings={settings}
+						setWritingSessionOpen={setWritingSessionOpen}
 					/>
 				</Suspense>
 				<WritingSessionTimer
+					setWritingSessionPopoverOpen={setWritingSessionOpen}
 					setWritingSessionSettings={setWritingSessionSettings}
+					writingSessionPopoverOpen={writingSessionOpen}
 					writingSessionSettings={writingSessionSettings}
 				/>
 				<div className='absolute bottom-4 right-4 flex items-center gap-4'>

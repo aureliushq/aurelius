@@ -35,14 +35,23 @@ import {
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { SHORTCUTS } from '~/lib/constants'
-import { HelpDialogProps, PreferencesDialogProps } from '~/lib/types'
+import {
+	HelpDialogProps,
+	PreferencesDialogProps,
+	WritingSessionDialogProps,
+} from '~/lib/types'
 
 type MainMenuProps = {
 	createPost?: () => void
 } & HelpDialogProps &
-	PreferencesDialogProps
+	PreferencesDialogProps &
+	WritingSessionDialogProps
 
-const MainMenu = ({ setHelpOpen, setPreferencesOpen }: MainMenuProps) => {
+const MainMenu = ({
+	setHelpOpen,
+	setPreferencesOpen,
+	setWritingSessionOpen,
+}: MainMenuProps) => {
 	return (
 		<div className='absolute top-4 left-4'>
 			<DropdownMenu>
@@ -90,7 +99,9 @@ const MainMenu = ({ setHelpOpen, setPreferencesOpen }: MainMenuProps) => {
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent>
-								<DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => setWritingSessionOpen(true)}
+								>
 									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
 										<TimerIcon className='mr-2 w-4 h-4' />
 										<span>New Writing Session</span>
