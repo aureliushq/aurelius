@@ -9,12 +9,14 @@ import HelpButton from '~/components/home/help-button'
 import HelpDialog from '~/components/home/help-dialog'
 import MainMenu from '~/components/home/main-menu'
 import SplashDialog from '~/components/home/splash-dialog'
+import WritingSessionTimer from '~/components/home/writing-session-timer'
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
+import { WritingSessionSettings } from '~/lib/types'
 import { settingsQuery } from '~/services/evolu/client'
 
 export const meta: MetaFunction = () => {
@@ -25,6 +27,13 @@ export default function Index() {
 	const { rows } = useQuery(settingsQuery)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
+	const [writingSessionSettings, setWritingSessionSettings] =
+		useState<WritingSessionSettings>({
+			targetDuration: 30,
+			focusMode: true,
+			music: true,
+			notifyOnTargetDuration: true,
+		})
 
 	const settings = rows[0]
 
@@ -48,6 +57,10 @@ export default function Index() {
 						settings={settings}
 					/>
 				</Suspense>
+				<WritingSessionTimer
+					setWritingSessionSettings={setWritingSessionSettings}
+					writingSessionSettings={writingSessionSettings}
+				/>
 				<div className='absolute bottom-4 right-4 flex items-center gap-4'>
 					<TooltipProvider>
 						<Tooltip>

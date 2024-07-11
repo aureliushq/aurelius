@@ -24,3 +24,10 @@ export enum MusicChannels {
 	CHILLSTEP = 'CHILLSTEP',
 	POST_ROCK = 'POST_ROCK',
 }
+
+export type WritingSessionSettings = {
+	targetDuration: number
+	focusMode: boolean
+	music: boolean
+	notifyOnTargetDuration: boolean
+}
