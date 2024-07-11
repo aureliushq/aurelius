@@ -530,6 +530,12 @@ const Sync = () => {
 					</DialogContent>
 				</Dialog>
 			</div>
+			<div className='py-4'>
+				<span className='flex flex-col gap-2 italic text-sm text-muted-foreground'>
+					Note: Sync is end-to-end encrypted so Aurelius servers
+					can&apos;t read your data.
+				</span>
+			</div>
 		</div>
 	)
 }

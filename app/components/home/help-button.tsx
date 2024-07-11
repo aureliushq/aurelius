@@ -8,7 +8,7 @@ const HelpButton = ({ setHelpOpen }: HelpDialogProps) => {
 			className='w-9 h-9'
 			onClick={() => setHelpOpen(true)}
 			size='icon'
-			variant='secondary'
+			variant='outline'
 		>
 			<CircleHelpIcon className='w-4 h-4' />
 		</Button>

@@ -47,7 +47,7 @@ const MainMenu = ({ setHelpOpen, setPreferencesOpen }: MainMenuProps) => {
 		<div className='absolute top-4 left-4'>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button className='w-9 h-9' size='icon' variant='secondary'>
+					<Button className='w-9 h-9' size='icon' variant='outline'>
 						<MenuIcon className='w-4 h-4' />
 					</Button>
 				</DropdownMenuTrigger>
