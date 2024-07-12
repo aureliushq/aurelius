@@ -213,9 +213,13 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 							<SelectValue placeholder='Fonts' />
 						</SelectTrigger>
 						<SelectContent>
-							{ALL_FONTS.map((mode) => (
-								<SelectItem key={mode.value} value={mode.value}>
-									{mode.label}
+							{ALL_FONTS.map((font) => (
+								<SelectItem
+									className={`${font.value}`}
+									key={font.value}
+									value={font.value}
+								>
+									{font.label}
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -237,9 +241,13 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 							<SelectValue placeholder='Fonts' />
 						</SelectTrigger>
 						<SelectContent>
-							{ALL_FONTS.map((mode) => (
-								<SelectItem key={mode.value} value={mode.value}>
-									{mode.label}
+							{ALL_FONTS.map((font) => (
+								<SelectItem
+									className={`${font.value}`}
+									key={font.value}
+									value={font.value}
+								>
+									{font.label}
 								</SelectItem>
 							))}
 						</SelectContent>
