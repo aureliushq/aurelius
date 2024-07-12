@@ -19,13 +19,16 @@ export const NonEmptyString100 = String.pipe(
 
 export const SettingsTable = table({
 	id: SettingsId,
-	displaySplashDialog: S.NullOr(SqliteBoolean),
+	bodyFont: NonEmptyString100,
 	defaultToolbarMode: NonEmptyString100,
-	writingDailyGoal: NonEmptyString100,
-	writingDailyTarget: S.NullOr(PositiveInt),
+	displaySplashDialog: S.NullOr(SqliteBoolean),
 	exportImageFooter: String1000,
 	exportImageWatermark: SqliteBoolean,
 	musicChannel: NonEmptyString100,
+	theme: NonEmptyString100,
+	titleFont: NonEmptyString100,
+	writingDailyGoal: NonEmptyString100,
+	writingDailyTarget: S.NullOr(PositiveInt),
 	youtubeLink: String1000,
 })
 export type SettingsTable = typeof SettingsTable.Type

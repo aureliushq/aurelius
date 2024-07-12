@@ -1,5 +1,4 @@
-import { FormEvent, useEffect } from 'react'
-import { useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 import { Form } from '@remix-run/react'
 
@@ -46,8 +45,20 @@ import { Switch } from '~/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Textarea } from '~/components/ui/textarea'
 import { useToast } from '~/components/ui/use-toast'
-import { CHANNELS, DAILY_GOAL_TYPE, TOOLBAR_MODES } from '~/lib/constants'
-import { PreferencesDialogProps, WritingDailyGoalType } from '~/lib/types'
+import {
+	ALL_FONTS,
+	CHANNELS,
+	DAILY_GOAL_TYPE,
+	SITE_THEMES,
+	TOOLBAR_MODES,
+} from '~/lib/constants'
+import {
+	EditorSansSerifFonts,
+	EditorSerifFonts,
+	PreferencesDialogProps,
+	SiteTheme,
+	WritingDailyGoalType,
+} from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
 import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
@@ -65,8 +76,8 @@ const SavedToastContent = () => (
 )
 
 const Editor = ({ settings }: { settings: SettingsRow }) => {
-	const { update } = useEvolu<Database>()
 	const { toast } = useToast()
+	const { update } = useEvolu<Database>()
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -88,44 +99,167 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 
 	return (
 		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-			<div className='flex items-center justify-between'>
-				<Label className='flex flex-col gap-2'>
-					Display splash screen
-					<small className='text-xs font-light'>
-						Display the popup that lists all the common actions when
-						you load the website
-					</small>
-				</Label>
-				<Switch
-					defaultChecked={!!settings.displaySplashDialog}
-					name='show-splash-dialog'
-				/>
+			<section className='flex flex-col gap-4'>
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Display splash screen
+						<small className='text-xs font-light'>
+							Display the popup that lists all the common actions
+							when you load the website
+						</small>
+					</Label>
+					<Switch
+						defaultChecked={!!settings.displaySplashDialog}
+						name='show-splash-dialog'
+					/>
+				</div>
+				<Separator />
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Default editor toolbar mode
+						<small className='text-xs font-light'>
+							Whether to always show the formatting toolbar or
+							only when text is selected
+						</small>
+					</Label>
+					<Select
+						defaultValue={settings.defaultToolbarMode as string}
+						name='editor-toolbar-mode'
+					>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Theme' />
+						</SelectTrigger>
+						<SelectContent>
+							{TOOLBAR_MODES.map((mode) => (
+								<SelectItem key={mode.value} value={mode.value}>
+									{mode.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+			</section>
+			<div className='flex justify-start'>
+				<Button size='sm' type='submit'>
+					Save
+				</Button>
 			</div>
-			<Separator />
-			<div className='flex items-center justify-between'>
-				<Label className='flex flex-col gap-2'>
-					Default editor toolbar mode
-					<small className='text-xs font-light'>
-						Whether to always show the formatting toolbar or only
-						when text is selected
-					</small>
-				</Label>
-				<Select
-					defaultValue={settings.defaultToolbarMode as string}
-					name='editor-toolbar-mode'
-				>
-					<SelectTrigger className='w-[180px]'>
-						<SelectValue placeholder='Theme' />
-					</SelectTrigger>
-					<SelectContent>
-						{TOOLBAR_MODES.map((mode) => (
-							<SelectItem key={mode.value} value={mode.value}>
-								{mode.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</div>
+		</Form>
+	)
+}
+
+const Appearance = ({ settings }: { settings: SettingsRow }) => {
+	const { toast } = useToast()
+	const { update } = useEvolu<Database>()
+
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const formData = new FormData(event.currentTarget)
+
+		const bodyFont = formData.get('body-font') as string
+		const theme = formData.get('theme') as string
+		const titleFont = formData.get('title-font') as string
+
+		update('settings', {
+			id: settings.id,
+			bodyFont: S.decodeSync(NonEmptyString100)(bodyFont),
+			theme: S.decodeSync(NonEmptyString100)(theme),
+			titleFont: S.decodeSync(NonEmptyString100)(titleFont),
+		})
+		toast({
+			description: <SavedToastContent />,
+		})
+	}
+
+	return (
+		<Form className='flex flex-col gap-8' onSubmit={handleSubmit}>
+			<section className='flex flex-col gap-4'>
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Theme
+						<small className='text-xs font-light'>
+							Choose Aurelius' default theme
+						</small>
+					</Label>
+					<Select
+						defaultValue={
+							SITE_THEMES.find(
+								(theme) => theme.value === SiteTheme.SYSTEM
+							)?.value as string
+						}
+						name='theme'
+					>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Fonts' />
+						</SelectTrigger>
+						<SelectContent>
+							{SITE_THEMES.map((mode) => (
+								<SelectItem key={mode.value} value={mode.value}>
+									{mode.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+				<Separator />
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Title font
+						<small className='text-xs font-light'>
+							Set the font for the title
+						</small>
+					</Label>
+					<Select
+						defaultValue={
+							ALL_FONTS.find(
+								(font) =>
+									font.value === EditorSansSerifFonts.INTER
+							)?.value as string
+						}
+						name='title-font'
+					>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Fonts' />
+						</SelectTrigger>
+						<SelectContent>
+							{ALL_FONTS.map((mode) => (
+								<SelectItem key={mode.value} value={mode.value}>
+									{mode.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+				<Separator />
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Body font
+						<small className='text-xs font-light'>
+							Set the font for the title
+						</small>
+					</Label>
+					<Select
+						defaultValue={
+							ALL_FONTS.find(
+								(font) =>
+									font.value === EditorSerifFonts.MERRIWEATHER
+							)?.value as string
+						}
+						name='body-font'
+					>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Fonts' />
+						</SelectTrigger>
+						<SelectContent>
+							{ALL_FONTS.map((mode) => (
+								<SelectItem key={mode.value} value={mode.value}>
+									{mode.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+			</section>
 			<div className='flex justify-start'>
 				<Button size='sm' type='submit'>
 					Save
@@ -165,7 +299,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 
 	return (
 		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Daily Goal
 					<small className='text-xs font-light'>
@@ -194,7 +328,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 				</Select>
 			</div>
 			<Separator />
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				{dailyGoalType === WritingDailyGoalType.DURATION ? (
 					<>
 						<Label className='flex flex-col gap-2'>
@@ -262,7 +396,7 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 
 	return (
 		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Footer Text
 					<small className='text-xs font-light'>
@@ -282,7 +416,7 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 				/>
 			</div>
 			<Separator />
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Watermark
 					<small className='text-xs font-light'>
@@ -337,7 +471,7 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 
 	return (
 		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Channels
 					<small className='text-xs font-light'>
@@ -364,7 +498,7 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 				</Select>
 			</div>
 			<Separator />
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					YouTube Video/Playlist
 					<small className='text-xs font-light'>
@@ -440,7 +574,7 @@ const Sync = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Sync Code
 					<small className='text-xs font-light'>
@@ -495,7 +629,7 @@ const Sync = () => {
 				</Dialog>
 			</div>
 			<Separator />
-			<div className='flex items-center justify-between'>
+			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Import Data from another device
 					<small className='text-xs font-light'>
@@ -540,7 +674,7 @@ const Sync = () => {
 	)
 }
 
-const DangerZone = () => {
+const Advanced = () => {
 	const { resetOwner } = useEvolu<Database>()
 	const { toast } = useToast()
 
@@ -556,80 +690,147 @@ const DangerZone = () => {
 	}
 
 	return (
-		<div className='flex items-center justify-between'>
-			<Label className='flex flex-col gap-2'>
-				Delete All Data
-				<small className='text-xs font-light'>
-					Delete all your data from this browser/device.
-				</small>
-			</Label>
-			<AlertDialog>
-				<AlertDialogTrigger asChild>
-					<Button size='sm' variant='destructive'>
-						Delete My Data
-					</Button>
-				</AlertDialogTrigger>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Are you sure?</AlertDialogTitle>
-						<AlertDialogDescription>
-							This will delete your data from this browser/device.
-							If you want to recover your data later, make sure
-							you have synced your data with another device.
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
-						<AlertDialogAction asChild>
-							<Button
-								className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
-								onClick={confirmDelete}
-							>
-								Yes, I&apos;m sure
+		<div className='flex flex-col gap-8'>
+			<section className='flex flex-col gap-4'>
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Export your data
+						<small className='text-xs font-light'>
+							Download all of your data in a single JSON file.
+						</small>
+					</Label>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button size='sm' variant='secondary'>
+								Export
 							</Button>
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									Are you sure?
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									This will delete your data from this
+									browser/device. If you want to recover your
+									data later, make sure you have synced your
+									data with another device.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction asChild>
+									<Button
+										className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+										onClick={confirmDelete}
+									>
+										Yes, I&apos;m sure
+									</Button>
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
+				</div>
+			</section>
+			<section className='flex flex-col gap-4'>
+				<h3 className='font-semibold text-muted-foreground mt-4'>
+					Danger Zone
+				</h3>
+				<div className='flex items-center justify-between p-4 border border-destructive bg-destructive/10 rounded-lg'>
+					<Label className='flex flex-col gap-2'>
+						Delete All Data
+						<small className='text-xs font-light'>
+							Delete all your data from this browser/device.
+						</small>
+					</Label>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button size='sm' variant='destructive'>
+								Delete My Data
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									Are you sure?
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									This will delete your data from this
+									browser/device. If you want to recover your
+									data later, make sure you have synced your
+									data with another device.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction asChild>
+									<Button
+										className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+										onClick={confirmDelete}
+									>
+										Yes, I&apos;m sure
+									</Button>
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
+				</div>
+			</section>
 		</div>
 	)
 }
 
-// const Profile = () => {
-// 	return (
-// 		<Form className='flex flex-col gap-4'>
-// 			<div className='flex items-center justify-between'>
-// 				<Label className='flex flex-col gap-2'>Name</Label>
-// 				<Input
-// 					className='max-w-64'
-// 					id='name'
-// 					placeholder='Name'
-// 					type='text'
-// 				/>
-// 			</div>
-// 			<Separator />
-// 			<div className='flex items-center justify-between'>
-// 				<Label className='flex flex-col gap-2'>Bio</Label>
-// 				<Input
-// 					className='max-w-64'
-// 					id='bio'
-// 					placeholder='Bio'
-// 					type='text'
-// 				/>
-// 			</div>
-// 			<Separator />
-// 			<div className='flex items-center justify-between'>
-// 				<Label className='flex flex-col gap-2'>Username</Label>
-// 				<Input
-// 					className='max-w-64'
-// 					id='username'
-// 					placeholder='Username'
-// 					type='text'
-// 				/>
-// 			</div>
-// 		</Form>
-// 	)
-// }
+const Profile = () => {
+	// return (
+	// 	<Form className='flex flex-col gap-4'>
+	// 		<div className='flex items-center justify-between'>
+	// 			<Label className='flex flex-col gap-2'>Name</Label>
+	// 			<Input
+	// 				className='max-w-64'
+	// 				id='name'
+	// 				placeholder='Name'
+	// 				type='text'
+	// 			/>
+	// 		</div>
+	// 		<Separator />
+	// 		<div className='flex items-center justify-between'>
+	// 			<Label className='flex flex-col gap-2'>Bio</Label>
+	// 			<Input
+	// 				className='max-w-64'
+	// 				id='bio'
+	// 				placeholder='Bio'
+	// 				type='text'
+	// 			/>
+	// 		</div>
+	// 		<Separator />
+	// 		<div className='flex items-center justify-between'>
+	// 			<Label className='flex flex-col gap-2'>Username</Label>
+	// 			<Input
+	// 				className='max-w-64'
+	// 				id='username'
+	// 				placeholder='Username'
+	// 				type='text'
+	// 			/>
+	// 		</div>
+	// 	</Form>
+	// )
+
+	// show a coming soon message
+	return (
+		<div className='flex flex-col gap-4'>
+			<p className='text-lg text-muted-foreground'>Coming soon...</p>
+		</div>
+	)
+}
+
+const APIKeys = () => {
+	// show a coming soon message
+	return (
+		<div className='flex flex-col gap-4'>
+			<p className='text-lg text-muted-foreground'>Coming soon...</p>
+		</div>
+	)
+}
 
 const PreferencesDialog = ({
 	preferencesOpen,
@@ -643,6 +844,11 @@ const PreferencesDialog = ({
 			id: 'editor',
 			label: 'Editor',
 			content: <Editor settings={settings} />,
+		},
+		{
+			id: 'appearance',
+			label: 'Appearance',
+			content: <Appearance settings={settings} />,
 		},
 		{
 			id: 'writing',
@@ -665,19 +871,27 @@ const PreferencesDialog = ({
 			content: <Sync />,
 		},
 		{
-			id: 'danger-zone',
-			label: 'Danger Zone',
-			content: <DangerZone />,
+			id: 'advanced',
+			label: 'Advanced',
+			content: <Advanced />,
 		},
 	]
 
-	// const USER_TABS = [
-	// 	{
-	// 		id: 'profile',
-	// 		label: 'Profile',
-	// 		content: <Profile />,
-	// 	},
-	// ]
+	const USER_TABS = [
+		{
+			id: 'profile',
+			label: 'Profile',
+			content: <Profile />,
+		},
+	]
+
+	const DEVELOPERS_TABS = [
+		{
+			id: 'api-keys',
+			label: 'API Keys',
+			content: <APIKeys />,
+		},
+	]
 
 	return (
 		<Dialog onOpenChange={setPreferencesOpen} open={preferencesOpen}>
@@ -711,35 +925,53 @@ const PreferencesDialog = ({
 										))}
 									</TabsList>
 								</section>
-								{/*<section className='flex flex-col gap-4'>*/}
-								{/*	<Label className='text-muted-foreground px-8 font-semibold'>*/}
-								{/*		Account*/}
-								{/*	</Label>*/}
-								{/*	<TabsList className='w-full h-full flex-col justify-start px-4 py-0 bg-transparent'>*/}
-								{/*		{USER_TABS.map((tab) => (*/}
-								{/*			<TabsTrigger*/}
-								{/*				key={tab.id}*/}
-								{/*				className='w-full justify-start px-4 data-[state=active]:bg-primary/75'*/}
-								{/*				value={tab.id}*/}
-								{/*			>*/}
-								{/*				{tab.label}*/}
-								{/*			</TabsTrigger>*/}
-								{/*		))}*/}
-								{/*	</TabsList>*/}
-								{/*</section>*/}
+								<section className='flex flex-col gap-4'>
+									<Label className='text-muted-foreground px-8 font-semibold'>
+										Account
+									</Label>
+									<TabsList className='w-full h-full flex-col justify-start px-4 py-0 bg-transparent'>
+										{USER_TABS.map((tab) => (
+											<TabsTrigger
+												key={tab.id}
+												className='w-full justify-start px-4 data-[state=active]:bg-primary/75'
+												value={tab.id}
+											>
+												{tab.label}
+											</TabsTrigger>
+										))}
+									</TabsList>
+								</section>
+								<section className='flex flex-col gap-4'>
+									<Label className='text-muted-foreground px-8 font-semibold'>
+										Developers
+									</Label>
+									<TabsList className='w-full h-full flex-col justify-start px-4 py-0 bg-transparent'>
+										{DEVELOPERS_TABS.map((tab) => (
+											<TabsTrigger
+												key={tab.id}
+												className='w-full justify-start px-4 data-[state=active]:bg-primary/75'
+												value={tab.id}
+											>
+												{tab.label}
+											</TabsTrigger>
+										))}
+									</TabsList>
+								</section>
 							</div>
 						</ScrollArea>
 						<Separator className='h-full' orientation='vertical' />
 						<ScrollArea className='w-full h-full min-h-[40rem] max-h-[40rem] flex-1 flex-grow grid-cols-2 gap-2 px-8 py-6'>
-							{[...TABS].map((tab) => (
-								<TabsContent
-									className='px-4'
-									key={tab.id}
-									value={tab.id}
-								>
-									{tab.content}
-								</TabsContent>
-							))}
+							{[...TABS, ...USER_TABS, ...DEVELOPERS_TABS].map(
+								(tab) => (
+									<TabsContent
+										className='px-4'
+										key={tab.id}
+										value={tab.id}
+									>
+										{tab.content}
+									</TabsContent>
+								)
+							)}
 						</ScrollArea>
 					</div>
 				</Tabs>

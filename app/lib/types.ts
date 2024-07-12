@@ -18,6 +18,26 @@ export enum EditorToolbarMode {
 	FLOATING = 'FLOATING',
 }
 
+export enum EditorSerifFonts {
+	LIBRE_BASKERVILLE = 'font-libre-baskerville',
+	MERRIWEATHER = 'font-merriweather',
+	NOTO_SERIF = 'font-noto-serif',
+	PT_SERIF = 'font-pt-serif',
+}
+
+export enum EditorSansSerifFonts {
+	INTER = 'font-inter',
+	LATO = 'font-lato',
+	OPEN_SANS = 'font-open-sans',
+	ROBOTO = 'font-roboto',
+}
+
+export enum SiteTheme {
+	LIGHT = 'light',
+	DARK = 'dark',
+	SYSTEM = 'system',
+}
+
 export enum WritingDailyGoalType {
 	DURATION = 'DURATION',
 	WORD_COUNT = 'WORD_COUNT',
