@@ -182,11 +182,7 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 						</small>
 					</Label>
 					<Select
-						defaultValue={
-							SITE_THEMES.find(
-								(theme) => theme.value === SiteTheme.SYSTEM
-							)?.value as string
-						}
+						defaultValue={settings.theme as string}
 						name='theme'
 					>
 						<SelectTrigger className='w-[180px]'>
@@ -210,12 +206,7 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 						</small>
 					</Label>
 					<Select
-						defaultValue={
-							ALL_FONTS.find(
-								(font) =>
-									font.value === EditorSansSerifFonts.INTER
-							)?.value as string
-						}
+						defaultValue={settings.titleFont as string}
 						name='title-font'
 					>
 						<SelectTrigger className='w-[180px]'>
@@ -239,12 +230,7 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 						</small>
 					</Label>
 					<Select
-						defaultValue={
-							ALL_FONTS.find(
-								(font) =>
-									font.value === EditorSerifFonts.MERRIWEATHER
-							)?.value as string
-						}
+						defaultValue={settings.bodyFont as string}
 						name='body-font'
 					>
 						<SelectTrigger className='w-[180px]'>
