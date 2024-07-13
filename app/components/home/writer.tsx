@@ -1,102 +1,22 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
-import { BubbleMenu } from '@tiptap/extension-bubble-menu'
-import { CharacterCount } from '@tiptap/extension-character-count'
-import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
-import { FontFamily } from '@tiptap/extension-font-family'
-import { Highlight } from '@tiptap/extension-highlight'
-import { Link } from '@tiptap/extension-link'
-import { Placeholder } from '@tiptap/extension-placeholder'
-import { TextStyle } from '@tiptap/extension-text-style'
-import { Youtube } from '@tiptap/extension-youtube'
-import { Editor, EditorContent, useEditor } from '@tiptap/react'
-import { StarterKit } from '@tiptap/starter-kit'
-import { common, createLowlight } from 'lowlight'
-import { useAutoSave } from '~/lib/hooks'
+import { Editor, EditorContent } from '@tiptap/react'
 import { SettingsRow } from '~/services/evolu/client'
 
-const lowlight = createLowlight(common)
-
 const Writer = ({
-	setIsSaving,
+	editor,
+	getContent,
 	settings,
-	setWordCount,
+	setTitle,
+	title,
 }: {
-	setIsSaving: Dispatch<SetStateAction<boolean>>
+	editor: Editor | null
+	getContent: () => string
 	settings: SettingsRow
-	setWordCount: Dispatch<SetStateAction<number>>
+	setTitle: Dispatch<SetStateAction<string>>
+	title: string
 }) => {
 	const titleRef = useRef<HTMLTextAreaElement>(null)
-
-	const [title, setTitle] = useState<string>('')
-
-	const savePost = (content: string) => {
-		setIsSaving(true)
-		// TODO: save post to database
-		setTimeout(() => {
-			setIsSaving(false)
-		}, 3000)
-	}
-
-	const [getContent, setContent] = useAutoSave({
-		data: '',
-		onSave: savePost,
-		interval: 10000,
-		debounce: 3000,
-	})
-
-	const editor = useEditor({
-		content: getContent(),
-		editorProps: {
-			attributes: {
-				class: '',
-			},
-		},
-		extensions: [
-			BubbleMenu.configure({
-				tippyOptions: {
-					arrow: true,
-				},
-			}),
-			// SuperImage.configure({
-			// 	inline: true,
-			// 	allowBase64: true,
-			// 	HTMLAttributes: {
-			// 		class: 'super-image',
-			// 	},
-			// }),
-			CodeBlockLowlight.configure({
-				lowlight,
-			}),
-			Youtube.configure({
-				width: 762,
-				height: 432,
-			}),
-			// TaskList,
-			// TaskItem.configure({
-			// 	nested: true,
-			// }),
-			Link.configure({ linkOnPaste: true, openOnClick: false }),
-			Placeholder.configure({
-				placeholder: 'Start writing...',
-			}),
-			Highlight.configure({ multicolor: true }),
-			StarterKit.configure({
-				heading: {
-					levels: [2, 3, 4, 5, 6],
-				},
-			}),
-			CharacterCount,
-			TextStyle,
-			FontFamily,
-		],
-		onUpdate({ editor }) {
-			let html = editor.isEmpty ? '' : editor.getHTML()
-			const wordCount = editor.storage.characterCount.words()
-			setContent(html)
-			setWordCount(wordCount)
-		},
-	})
 
 	useEffect(() => {
 		if (!title && !getContent()) {

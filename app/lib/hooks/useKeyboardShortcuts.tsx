@@ -45,6 +45,11 @@ const allShortcuts: AllShortcuts = {
 		modifiers: {},
 		description: 'Preferences',
 	},
+	[EditorShortcuts.RESET_EDITOR]: {
+		key: 'r',
+		modifiers: {},
+		description: 'Reset Editor',
+	},
 	[EditorShortcuts.SPLASH_DIALOG]: {
 		key: 's',
 		modifiers: {},

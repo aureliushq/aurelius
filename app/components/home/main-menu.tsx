@@ -204,14 +204,27 @@ const MainMenu = ({ focusMode, triggerShortcut }: MainMenuProps) => {
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem>
+					<DropdownMenuItem
+						onClick={() =>
+							triggerShortcut(EditorShortcuts.RESET_EDITOR)
+						}
+					>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
 							<span className='inline-flex items-center'>
 								<RefreshCwIcon className='mr-2 w-4 h-4' />
 								<span>Reset Editor</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								<KeyboardShortcut keys={''} />
+								<KeyboardShortcut
+									keys={getShortcutWithModifiers(
+										allShortcuts[
+											EditorShortcuts.RESET_EDITOR
+										].key,
+										allShortcuts[
+											EditorShortcuts.RESET_EDITOR
+										].modifiers
+									)}
+								/>
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>

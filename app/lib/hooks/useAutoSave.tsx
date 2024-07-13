@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-type SetDataFunction<TData> = (
+export type SetDataFunction<TData> = (
 	newData: TData | ((data: TData) => TData)
 ) => void
 
