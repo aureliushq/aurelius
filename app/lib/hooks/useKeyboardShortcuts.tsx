@@ -48,7 +48,7 @@ const allShortcuts: AllShortcuts = {
 	[EditorShortcuts.SPLASH_DIALOG]: {
 		key: 's',
 		modifiers: {},
-		description: 'Splash Dialog',
+		description: 'Show Splash Screen',
 	},
 	[EditorShortcuts.WRITING_SESSION]: {
 		key: 'w',
