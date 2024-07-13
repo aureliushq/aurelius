@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
 import { Editor, EditorContent } from '@tiptap/react'
+import EditorToolbar from '~/components/home/editor-toolbar'
 import { SettingsRow } from '~/services/evolu/client'
 
 const Writer = ({
@@ -33,7 +34,8 @@ const Writer = ({
 
 	return (
 		<section className='flex h-full w-full flex-grow flex-col items-center justify-start'>
-			<div className='flex h-full w-full flex-col items-center justify-start gap-4 px-4 py-24 md:py-16 lg:px-0'>
+			<EditorToolbar editor={editor as Editor} />
+			<div className='flex h-full w-full flex-col items-center justify-start gap-4 px-4 pb-24 md:pb-16 lg:px-0 pt-32'>
 				<div className='w-full max-w-2xl'>
 					<textarea
 						autoFocus

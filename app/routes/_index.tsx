@@ -11,6 +11,7 @@ import { Highlight } from '@tiptap/extension-highlight'
 import { Link } from '@tiptap/extension-link'
 import { Placeholder } from '@tiptap/extension-placeholder'
 import { TextStyle } from '@tiptap/extension-text-style'
+import { Underline } from '@tiptap/extension-underline'
 import { Youtube } from '@tiptap/extension-youtube'
 import { useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
@@ -150,6 +151,7 @@ export default function Index() {
 			CharacterCount,
 			TextStyle,
 			FontFamily,
+			Underline,
 		],
 		onUpdate({ editor }) {
 			let html = editor.isEmpty ? '' : editor.getHTML()

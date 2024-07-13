@@ -162,7 +162,7 @@ const WritingSessionTimer = ({
 		<div
 			className={`absolute top-4 right-4 flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 		>
-			<section className='flex items-center gap-2 h-10'>
+			<section className='flex items-center gap-2 h-9'>
 				{sessionTimer.isStarted() && (
 					<div className='flex items-center h-9 bg-background rounded-lg border border-border'>
 						{sessionTimer.isRunning() && (

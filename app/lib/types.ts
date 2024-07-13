@@ -65,3 +65,23 @@ export enum EditorShortcuts {
 	SPLASH_DIALOG = 'splashDialog',
 	WRITING_SESSION = 'writingSession',
 }
+
+export enum EditorTextStyles {
+	BOLD = 'bold',
+	ITALIC = 'italic',
+	UNDERLINE = 'underline',
+}
+
+export enum EditorHeadings {
+	NORMAL = 'normal',
+	H2 = 'h2',
+	H3 = 'h3',
+	H4 = 'h4',
+}
+
+export enum EditorOtherOptions {
+	QUOTE = 'quote',
+	LINK = 'link',
+	CODE = 'code',
+	HIGHLIGHT = 'highlight',
+}
