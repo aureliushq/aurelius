@@ -21,6 +21,7 @@ import HelpButton from '~/components/home/help-button'
 import HelpDialog from '~/components/home/help-dialog'
 import MainMenu from '~/components/home/main-menu'
 import ResetEditor from '~/components/home/reset-editor'
+import Saving from '~/components/home/saving'
 import SplashDialog from '~/components/home/splash-dialog'
 import Writer from '~/components/home/writer'
 import WritingSessionTimer from '~/components/home/writing-session-timer'
@@ -165,8 +166,6 @@ export default function Index() {
 		setWordCount(0)
 	}
 
-	console.log(getContent())
-
 	return (
 		<>
 			<div className='w-screen h-screen relative'>
@@ -174,21 +173,13 @@ export default function Index() {
 					focusMode={focusMode}
 					triggerShortcut={triggerShortcut}
 				/>
-				<div
-					className={`absolute top-4 right-4 flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
-				>
-					{isSaving && (
-						<span className='text-sm text-muted-foreground px-2'>
-							Saving...
-						</span>
-					)}
-					<WritingSessionTimer
-						setWritingSessionOpen={setWritingSessionOpen}
-						setWritingSessionSettings={setWritingSessionSettings}
-						writingSessionOpen={writingSessionOpen}
-						writingSessionSettings={writingSessionSettings}
-					/>
-				</div>
+				<WritingSessionTimer
+					focusMode={focusMode}
+					setWritingSessionOpen={setWritingSessionOpen}
+					setWritingSessionSettings={setWritingSessionSettings}
+					writingSessionOpen={writingSessionOpen}
+					writingSessionSettings={writingSessionSettings}
+				/>
 				<div
 					className={`absolute bottom-4 right-4 flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 				>
@@ -199,6 +190,7 @@ export default function Index() {
 					className={`absolute bottom-4 left-4 h-9 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 				>
 					<span className='text-sm text-muted-foreground px-2'>{`${wordCount} words`}</span>
+					<Saving isSaving={isSaving} />
 				</div>
 				<Writer
 					editor={editor}
