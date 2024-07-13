@@ -3,7 +3,7 @@
 }
 
 .ProseMirror {
-    @apply w-full max-w-3xl min-h-[640px] outline-none border-none text-[1rem] text-foreground lg:text-[1.3rem] font-normal leading-relaxed;
+    @apply w-full max-w-2xl min-h-[640px] outline-none border-none text-[1rem] text-foreground lg:text-[1.2rem] font-normal leading-relaxed;
 }
 
 .ProseMirror.ProseMirror-focused {

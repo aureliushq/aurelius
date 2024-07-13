@@ -114,7 +114,7 @@ const Writer = ({
 	return (
 		<section className='flex h-full w-full flex-grow flex-col items-center justify-start'>
 			<div className='flex h-full w-full flex-col items-center justify-start gap-4 px-4 py-24 md:py-16 lg:px-0'>
-				<div className='w-full max-w-3xl'>
+				<div className='w-full max-w-2xl'>
 					<textarea
 						autoFocus
 						className={`min-h-[2rem] w-full resize-none overflow-y-hidden bg-transparent text-2xl font-semibold leading-snug text-foreground focus:outline-none lg:min-h-[6rem] lg:text-5xl lg:leading-snug ${settings?.titleFont}`}
