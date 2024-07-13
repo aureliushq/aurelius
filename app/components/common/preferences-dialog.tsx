@@ -828,10 +828,8 @@ const APIKeys = () => {
 const PreferencesDialog = ({
 	preferencesOpen,
 	setPreferencesOpen,
-}: PreferencesDialogProps) => {
-	const { rows } = useQuery(settingsQuery)
-	const settings = rows[0]
-
+	settings,
+}: { settings: SettingsRow } & PreferencesDialogProps) => {
 	const TABS = [
 		{
 			id: 'editor',

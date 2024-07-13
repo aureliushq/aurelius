@@ -61,4 +61,6 @@ export enum EditorShortcuts {
 	FOCUS_MODE = 'focusMode',
 	HELP = 'help',
 	PREFERENCES = 'preferences',
+	SPLASH_DIALOG = 'splashDialog',
+	WRITING_SESSION = 'writingSession',
 }

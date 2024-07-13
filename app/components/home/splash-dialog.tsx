@@ -27,12 +27,7 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import {
-	EditorShortcuts,
-	HelpDialogProps,
-	PreferencesDialogProps,
-	WritingSessionDialogProps,
-} from '~/lib/types'
+import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { SettingsRow } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
@@ -72,12 +67,15 @@ const SplashDialogButton = ({
 
 type SplashDialogProps = {
 	settings: SettingsRow
+	setSplashOpen: (open: boolean) => void
+	splashOpen?: boolean
 	triggerShortcut: (_: string) => void
-} & WritingSessionDialogProps
+}
 
 const SplashDialog = ({
 	settings,
-	setWritingSessionOpen,
+	setSplashOpen,
+	splashOpen,
 	triggerShortcut,
 }: SplashDialogProps) => {
 	const { update } = useEvolu<Database>()
@@ -95,7 +93,7 @@ const SplashDialog = ({
 	// TODO: synced devices is not picking up the correct value initially. it changes after a bit but it should be instant. investigate why.
 
 	return (
-		<Dialog defaultOpen={!!settings?.displaySplashDialog}>
+		<Dialog onOpenChange={setSplashOpen} open={splashOpen}>
 			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
 				<VisuallyHidden>
 					<DialogHeader>
@@ -141,9 +139,18 @@ const SplashDialog = ({
 										}
 										label='New Writing Session'
 										onClick={() =>
-											setWritingSessionOpen(true)
+											triggerShortcut(
+												EditorShortcuts.WRITING_SESSION
+											)
 										}
-										shortcut={''}
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[
+												EditorShortcuts.WRITING_SESSION
+											].key,
+											allShortcuts[
+												EditorShortcuts.WRITING_SESSION
+											].modifiers
+										)}
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>

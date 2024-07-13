@@ -45,6 +45,16 @@ const allShortcuts: AllShortcuts = {
 		modifiers: {},
 		description: 'Preferences',
 	},
+	[EditorShortcuts.SPLASH_DIALOG]: {
+		key: 's',
+		modifiers: {},
+		description: 'Splash Dialog',
+	},
+	[EditorShortcuts.WRITING_SESSION]: {
+		key: 'w',
+		modifiers: {},
+		description: 'New Writing Session',
+	},
 }
 
 // Global store for global shortcut actions

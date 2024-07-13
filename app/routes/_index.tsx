@@ -29,17 +29,25 @@ export default function Index() {
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
 		[EditorShortcuts.PREFERENCES]: () =>
-			setPreferencesOpen(!preferencesOpen),
+			handlePreferencesOpen(!preferencesOpen),
+		[EditorShortcuts.SPLASH_DIALOG]: () =>
+			handleSplashDialogOpen(!splashOpen),
+		[EditorShortcuts.WRITING_SESSION]: () =>
+			setWritingSessionOpen(!writingSessionOpen),
 	}
 
 	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
 
 	const { rows } = useQuery(settingsQuery)
+	const settings = rows[0]
 
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
+	const [splashOpen, setSplashOpen] = useState(
+		!!settings?.displaySplashDialog
+	)
 	const [wordCount, setWordCount] = useState<number>(0)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
@@ -50,11 +58,15 @@ export default function Index() {
 			notifyOnTargetDuration: true,
 		})
 
-	const settings = rows[0]
-
 	const handlePreferencesOpen = (state: boolean) => {
 		startTransition(() => {
 			setPreferencesOpen(state)
+		})
+	}
+
+	const handleSplashDialogOpen = (state: boolean) => {
+		startTransition(() => {
+			setSplashOpen(state)
 		})
 	}
 
@@ -63,7 +75,6 @@ export default function Index() {
 			<div className='w-screen h-screen relative'>
 				<MainMenu
 					focusMode={focusMode}
-					setWritingSessionOpen={setWritingSessionOpen}
 					triggerShortcut={triggerShortcut}
 				/>
 				<div
@@ -103,13 +114,15 @@ export default function Index() {
 			<Suspense>
 				<PreferencesDialog
 					preferencesOpen={preferencesOpen}
-					setPreferencesOpen={setPreferencesOpen}
+					setPreferencesOpen={handlePreferencesOpen}
+					settings={settings}
 				/>
 			</Suspense>
 			<Suspense>
 				<SplashDialog
 					settings={settings}
-					setWritingSessionOpen={setWritingSessionOpen}
+					setSplashOpen={handleSplashDialogOpen}
+					splashOpen={splashOpen}
 					triggerShortcut={triggerShortcut}
 				/>
 			</Suspense>

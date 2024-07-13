@@ -38,19 +38,15 @@ import {
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { EditorShortcuts, WritingSessionDialogProps } from '~/lib/types'
+import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 
 type MainMenuProps = {
 	focusMode: boolean
 	triggerShortcut: (shortcutName: string) => void
-} & WritingSessionDialogProps
+}
 
-const MainMenu = ({
-	focusMode,
-	setWritingSessionOpen,
-	triggerShortcut,
-}: MainMenuProps) => {
+const MainMenu = ({ focusMode, triggerShortcut }: MainMenuProps) => {
 	return (
 		<div
 			className={`absolute top-4 left-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
@@ -99,13 +95,28 @@ const MainMenu = ({
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent>
 								<DropdownMenuItem
-									onClick={() => setWritingSessionOpen(true)}
+									onClick={() =>
+										triggerShortcut(
+											EditorShortcuts.WRITING_SESSION
+										)
+									}
 								>
 									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
 										<TimerIcon className='mr-2 w-4 h-4' />
 										<span>New Writing Session</span>
 										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut keys={''} />
+											<KeyboardShortcut
+												keys={getShortcutWithModifiers(
+													allShortcuts[
+														EditorShortcuts
+															.WRITING_SESSION
+													].key,
+													allShortcuts[
+														EditorShortcuts
+															.WRITING_SESSION
+													].modifiers
+												)}
+											/>
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
