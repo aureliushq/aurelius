@@ -26,5 +26,5 @@ export const getShortcutWithModifiers = (
 	return `${Object.entries(modifiers)
 		.filter(([_, active]) => active)
 		.map(([mod]) => mod)
-		.join('+')}${key}`
+		.join('+')}+${key}`
 }

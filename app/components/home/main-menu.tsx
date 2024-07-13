@@ -38,25 +38,16 @@ import {
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import {
-	EditorShortcuts,
-	HelpDialogProps,
-	PreferencesDialogProps,
-	WritingSessionDialogProps,
-} from '~/lib/types'
+import { EditorShortcuts, WritingSessionDialogProps } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 
 type MainMenuProps = {
 	focusMode: boolean
 	triggerShortcut: (shortcutName: string) => void
-} & HelpDialogProps &
-	PreferencesDialogProps &
-	WritingSessionDialogProps
+} & WritingSessionDialogProps
 
 const MainMenu = ({
 	focusMode,
-	setHelpOpen,
-	setPreferencesOpen,
 	setWritingSessionOpen,
 	triggerShortcut,
 }: MainMenuProps) => {
@@ -213,14 +204,27 @@ const MainMenu = ({
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => setPreferencesOpen(true)}>
+					<DropdownMenuItem
+						onClick={() =>
+							triggerShortcut(EditorShortcuts.PREFERENCES)
+						}
+					>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
 							<span className='inline-flex items-center'>
 								<SettingsIcon className='mr-2 w-4 h-4' />
 								<span>Preferences</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								<KeyboardShortcut keys={''} />
+								<KeyboardShortcut
+									keys={getShortcutWithModifiers(
+										allShortcuts[
+											EditorShortcuts.PREFERENCES
+										].key,
+										allShortcuts[
+											EditorShortcuts.PREFERENCES
+										].modifiers
+									)}
+								/>
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>

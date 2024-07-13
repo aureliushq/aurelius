@@ -28,6 +28,8 @@ export default function Index() {
 	const shortcuts = {
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
+		[EditorShortcuts.PREFERENCES]: () =>
+			setPreferencesOpen(!preferencesOpen),
 	}
 
 	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
@@ -61,8 +63,6 @@ export default function Index() {
 			<div className='w-screen h-screen relative'>
 				<MainMenu
 					focusMode={focusMode}
-					setHelpOpen={setHelpOpen}
-					setPreferencesOpen={handlePreferencesOpen}
 					setWritingSessionOpen={setWritingSessionOpen}
 					triggerShortcut={triggerShortcut}
 				/>
@@ -108,7 +108,6 @@ export default function Index() {
 			</Suspense>
 			<Suspense>
 				<SplashDialog
-					setPreferencesOpen={handlePreferencesOpen}
 					settings={settings}
 					setWritingSessionOpen={setWritingSessionOpen}
 					triggerShortcut={triggerShortcut}

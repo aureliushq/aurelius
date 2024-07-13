@@ -60,4 +60,5 @@ export type WritingSessionSettings = {
 export enum EditorShortcuts {
 	FOCUS_MODE = 'focusMode',
 	HELP = 'help',
+	PREFERENCES = 'preferences',
 }

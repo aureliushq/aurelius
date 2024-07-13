@@ -39,6 +39,12 @@ const allShortcuts: AllShortcuts = {
 		modifiers: {},
 		description: 'Help',
 	},
+	// TODO: this is a global shortcut
+	[EditorShortcuts.PREFERENCES]: {
+		key: 'p',
+		modifiers: {},
+		description: 'Preferences',
+	},
 }
 
 // Global store for global shortcut actions

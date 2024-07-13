@@ -26,12 +26,14 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '~/components/ui/dialog'
+import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import {
 	EditorShortcuts,
 	HelpDialogProps,
 	PreferencesDialogProps,
 	WritingSessionDialogProps,
 } from '~/lib/types'
+import { getShortcutWithModifiers } from '~/lib/utils'
 import { SettingsRow } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
 
@@ -71,11 +73,9 @@ const SplashDialogButton = ({
 type SplashDialogProps = {
 	settings: SettingsRow
 	triggerShortcut: (_: string) => void
-} & PreferencesDialogProps &
-	WritingSessionDialogProps
+} & WritingSessionDialogProps
 
 const SplashDialog = ({
-	setPreferencesOpen,
 	settings,
 	setWritingSessionOpen,
 	triggerShortcut,
@@ -152,8 +152,19 @@ const SplashDialog = ({
 											<SettingsIcon className='mr-2 w-4 h-4' />
 										}
 										label='Preferences'
-										onClick={() => setPreferencesOpen(true)}
-										shortcut={''}
+										onClick={() =>
+											triggerShortcut(
+												EditorShortcuts.PREFERENCES
+											)
+										}
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[
+												EditorShortcuts.PREFERENCES
+											].key,
+											allShortcuts[
+												EditorShortcuts.PREFERENCES
+											].modifiers
+										)}
 									/>
 								</li>
 							</ul>
@@ -239,7 +250,12 @@ const SplashDialog = ({
 												EditorShortcuts.HELP
 											)
 										}
-										shortcut='?'
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[EditorShortcuts.HELP]
+												.key,
+											allShortcuts[EditorShortcuts.HELP]
+												.modifiers
+										)}
 									/>
 								</li>
 							</ul>
