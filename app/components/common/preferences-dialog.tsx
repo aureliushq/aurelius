@@ -551,7 +551,6 @@ const Sync = () => {
 				.then(
 					Exit.match({
 						onFailure: (error) => {
-							console.log(error)
 							toast({
 								title: 'Sync Failed',
 								description:

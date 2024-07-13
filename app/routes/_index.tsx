@@ -1,6 +1,6 @@
 import { Suspense, startTransition, useState } from 'react'
 
-import type { MetaFunction } from '@remix-run/node'
+import { LinksFunction, MetaFunction } from '@remix-run/node'
 
 import { useQuery } from '@evolu/react'
 import { ShieldCheckIcon } from 'lucide-react'
@@ -9,6 +9,7 @@ import HelpButton from '~/components/home/help-button'
 import HelpDialog from '~/components/home/help-dialog'
 import MainMenu from '~/components/home/main-menu'
 import SplashDialog from '~/components/home/splash-dialog'
+import Writer from '~/components/home/writer'
 import WritingSessionTimer from '~/components/home/writing-session-timer'
 import {
 	Tooltip,
@@ -18,15 +19,22 @@ import {
 } from '~/components/ui/tooltip'
 import { WritingSessionSettings } from '~/lib/types'
 import { settingsQuery } from '~/services/evolu/client'
+import writerStylesheet from '~/writer.css?url'
 
 export const meta: MetaFunction = () => {
 	return [{ title: 'Aurelius' }, { name: 'description', content: '' }]
 }
 
+export const links: LinksFunction = () => [
+	{ rel: 'stylesheet', href: writerStylesheet },
+]
+
 export default function Index() {
 	const { rows } = useQuery(settingsQuery)
 	const [helpOpen, setHelpOpen] = useState(false)
+	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
+	const [wordCount, setWordCount] = useState<number>(0)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
 		useState<WritingSessionSettings>({
@@ -46,26 +54,25 @@ export default function Index() {
 
 	return (
 		<>
-			<div className='w-screen h-screen'>
+			<div className='w-screen h-screen relative'>
 				<MainMenu
 					setHelpOpen={setHelpOpen}
 					setPreferencesOpen={handlePreferencesOpen}
 					setWritingSessionOpen={setWritingSessionOpen}
 				/>
-				<Suspense>
-					<SplashDialog
-						setHelpOpen={setHelpOpen}
-						setPreferencesOpen={handlePreferencesOpen}
-						settings={settings}
+				<div className='absolute top-4 right-4 flex items-center gap-4'>
+					{isSaving && (
+						<span className='text-sm text-muted-foreground px-2'>
+							Saving...
+						</span>
+					)}
+					<WritingSessionTimer
 						setWritingSessionOpen={setWritingSessionOpen}
+						setWritingSessionSettings={setWritingSessionSettings}
+						writingSessionOpen={writingSessionOpen}
+						writingSessionSettings={writingSessionSettings}
 					/>
-				</Suspense>
-				<WritingSessionTimer
-					setWritingSessionPopoverOpen={setWritingSessionOpen}
-					setWritingSessionSettings={setWritingSessionSettings}
-					writingSessionPopoverOpen={writingSessionOpen}
-					writingSessionSettings={writingSessionSettings}
-				/>
+				</div>
 				<div className='absolute bottom-4 right-4 flex items-center gap-4'>
 					<TooltipProvider>
 						<Tooltip>
@@ -84,12 +91,28 @@ export default function Index() {
 
 					<HelpButton setHelpOpen={setHelpOpen} />
 				</div>
+				<div className='absolute bottom-4 left-4 h-9 flex items-center'>
+					<span className='text-sm text-muted-foreground px-2'>{`${wordCount} words`}</span>
+				</div>
+				<Writer
+					setIsSaving={setIsSaving}
+					settings={settings}
+					setWordCount={setWordCount}
+				/>
 			</div>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />
 			<Suspense>
 				<PreferencesDialog
 					preferencesOpen={preferencesOpen}
 					setPreferencesOpen={setPreferencesOpen}
+				/>
+			</Suspense>
+			<Suspense>
+				<SplashDialog
+					setHelpOpen={setHelpOpen}
+					setPreferencesOpen={handlePreferencesOpen}
+					settings={settings}
+					setWritingSessionOpen={setWritingSessionOpen}
 				/>
 			</Suspense>
 		</>

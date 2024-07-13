@@ -157,7 +157,7 @@ const WritingSessionTimer = ({
 	}, [elapsedMinutes])
 
 	return (
-		<section className='flex items-center gap-2 h-10 absolute top-4 right-4'>
+		<section className='flex items-center gap-2 h-10'>
 			{sessionTimer.isStarted() && (
 				<div className='flex items-center h-9 bg-background rounded-lg border border-border'>
 					{sessionTimer.isRunning() && (
