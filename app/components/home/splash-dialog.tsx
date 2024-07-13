@@ -26,8 +26,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '~/components/ui/dialog'
-import { SHORTCUTS } from '~/lib/constants'
 import {
+	EditorShortcuts,
 	HelpDialogProps,
 	PreferencesDialogProps,
 	WritingSessionDialogProps,
@@ -70,15 +70,15 @@ const SplashDialogButton = ({
 
 type SplashDialogProps = {
 	settings: SettingsRow
-} & HelpDialogProps &
-	PreferencesDialogProps &
+	triggerShortcut: (_: string) => void
+} & PreferencesDialogProps &
 	WritingSessionDialogProps
 
 const SplashDialog = ({
-	setHelpOpen,
 	setPreferencesOpen,
 	settings,
 	setWritingSessionOpen,
+	triggerShortcut,
 }: SplashDialogProps) => {
 	const { update } = useEvolu<Database>()
 
@@ -131,7 +131,7 @@ const SplashDialog = ({
 											<FileTextIcon className='mr-2 w-4 h-4' />
 										}
 										label='New Post'
-										shortcut={SHORTCUTS.NEW_POST}
+										shortcut={''}
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
@@ -143,7 +143,7 @@ const SplashDialog = ({
 										onClick={() =>
 											setWritingSessionOpen(true)
 										}
-										shortcut={SHORTCUTS.NEW_WRITING_SESSION}
+										shortcut={''}
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
@@ -153,7 +153,7 @@ const SplashDialog = ({
 										}
 										label='Preferences'
 										onClick={() => setPreferencesOpen(true)}
-										shortcut={SHORTCUTS.PREFERENCES}
+										shortcut={''}
 									/>
 								</li>
 							</ul>
@@ -234,7 +234,11 @@ const SplashDialog = ({
 											<CircleHelpIcon className='mr-2 w-4 h-4' />
 										}
 										label='Help'
-										onClick={() => setHelpOpen(true)}
+										onClick={() =>
+											triggerShortcut(
+												EditorShortcuts.HELP
+											)
+										}
 										shortcut='?'
 									/>
 								</li>

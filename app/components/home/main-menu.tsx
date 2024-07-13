@@ -1,6 +1,7 @@
 import { Link } from '@remix-run/react'
 
 import {
+	BadgeInfoIcon,
 	CircleHelpIcon,
 	CirclePlusIcon,
 	DownloadIcon,
@@ -9,6 +10,7 @@ import {
 	ImageIcon,
 	InstagramIcon,
 	ListIcon,
+	ListTreeIcon,
 	LogInIcon,
 	MenuIcon,
 	PencilIcon,
@@ -16,6 +18,7 @@ import {
 	RefreshCwIcon,
 	RocketIcon,
 	SettingsIcon,
+	ShieldIcon,
 	TimerIcon,
 	TwitterIcon,
 } from 'lucide-react'
@@ -34,26 +37,33 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import { SHORTCUTS } from '~/lib/constants'
+import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import {
+	EditorShortcuts,
 	HelpDialogProps,
 	PreferencesDialogProps,
 	WritingSessionDialogProps,
 } from '~/lib/types'
+import { getShortcutWithModifiers } from '~/lib/utils'
 
 type MainMenuProps = {
-	createPost?: () => void
+	focusMode: boolean
+	triggerShortcut: (shortcutName: string) => void
 } & HelpDialogProps &
 	PreferencesDialogProps &
 	WritingSessionDialogProps
 
 const MainMenu = ({
+	focusMode,
 	setHelpOpen,
 	setPreferencesOpen,
 	setWritingSessionOpen,
+	triggerShortcut,
 }: MainMenuProps) => {
 	return (
-		<div className='absolute top-4 left-4'>
+		<div
+			className={`absolute top-4 left-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+		>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button className='w-9 h-9' size='icon' variant='outline'>
@@ -75,9 +85,7 @@ const MainMenu = ({
 										<CirclePlusIcon className='mr-2 w-4 h-4' />
 										<span>New Post</span>
 										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut
-												keys={SHORTCUTS.NEW_POST}
-											/>
+											<KeyboardShortcut keys={''} />
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -106,11 +114,7 @@ const MainMenu = ({
 										<TimerIcon className='mr-2 w-4 h-4' />
 										<span>New Writing Session</span>
 										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut
-												keys={
-													SHORTCUTS.NEW_WRITING_SESSION
-												}
-											/>
+											<KeyboardShortcut keys={''} />
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -145,9 +149,7 @@ const MainMenu = ({
 											<span>Image</span>
 										</span>
 										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut
-												keys={SHORTCUTS.EXPORT_AS_IMAGE}
-											/>
+											<KeyboardShortcut keys={''} />
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -170,11 +172,7 @@ const MainMenu = ({
 										</svg>
 										<span>Markdown</span>
 										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut
-												keys={
-													SHORTCUTS.EXPORT_AS_MARKDOWN
-												}
-											/>
+											<KeyboardShortcut keys={''} />
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
@@ -182,14 +180,25 @@ const MainMenu = ({
 						</DropdownMenuPortal>
 					</DropdownMenuSub>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem>
+					<DropdownMenuItem
+						onClick={() =>
+							triggerShortcut(EditorShortcuts.FOCUS_MODE)
+						}
+					>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
 							<span className='inline-flex items-center'>
 								<FocusIcon className='mr-2 w-4 h-4' />
 								<span>Focus Mode</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								<KeyboardShortcut keys={SHORTCUTS.FOCUS_MODE} />
+								<KeyboardShortcut
+									keys={getShortcutWithModifiers(
+										allShortcuts[EditorShortcuts.FOCUS_MODE]
+											.key,
+										allShortcuts[EditorShortcuts.FOCUS_MODE]
+											.modifiers
+									)}
+								/>
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
@@ -200,9 +209,7 @@ const MainMenu = ({
 								<span>Reset Editor</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								<KeyboardShortcut
-									keys={SHORTCUTS.RESET_EDITOR}
-								/>
+								<KeyboardShortcut keys={''} />
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
@@ -213,9 +220,7 @@ const MainMenu = ({
 								<span>Preferences</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								<KeyboardShortcut
-									keys={SHORTCUTS.PREFERENCES}
-								/>
+								<KeyboardShortcut keys={''} />
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
@@ -251,16 +256,52 @@ const MainMenu = ({
 							<span>Instagram</span>
 						</a>
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => setHelpOpen(true)}>
+					<DropdownMenuItem
+						onClick={() => triggerShortcut(EditorShortcuts.HELP)}
+					>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
 							<span className='inline-flex items-center'>
 								<CircleHelpIcon className='mr-2 w-4 h-4' />
 								<span>Help</span>
 							</span>
 							<DropdownMenuShortcut className='ml-16'>
-								<KeyboardShortcut keys={SHORTCUTS.HELP} />
+								<KeyboardShortcut
+									keys={getShortcutWithModifiers(
+										allShortcuts[EditorShortcuts.HELP].key,
+										allShortcuts[EditorShortcuts.HELP]
+											.modifiers
+									)}
+								/>
 							</DropdownMenuShortcut>
 						</span>
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem>
+						<Link
+							className='w-full h-full flex items-center justify-start cursor-pointer'
+							to='/about'
+						>
+							<BadgeInfoIcon className='mr-2 w-4 h-4' />
+							<span>About</span>
+						</Link>
+					</DropdownMenuItem>
+					<DropdownMenuItem>
+						<Link
+							className='w-full h-full flex items-center justify-start cursor-pointer'
+							to='/privacy'
+						>
+							<ShieldIcon className='mr-2 w-4 h-4' />
+							<span>Privacy</span>
+						</Link>
+					</DropdownMenuItem>
+					<DropdownMenuItem>
+						<Link
+							className='w-full h-full flex items-center justify-start cursor-pointer'
+							to='/changelog'
+						>
+							<ListTreeIcon className='mr-2 w-4 h-4' />
+							<span>Changelog</span>
+						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem>

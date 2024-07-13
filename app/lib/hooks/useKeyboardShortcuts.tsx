@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 
-type ModifierKeys = {
+import { EditorShortcuts } from '~/lib/types'
+
+export type ModifierKeys = {
 	ctrl?: boolean
 	alt?: boolean
 	shift?: boolean
 	meta?: boolean
 }
 
-type ShortcutConfig = {
+export type ShortcutConfig = {
 	key: string
 	modifiers: ModifierKeys
 	description: string
@@ -27,6 +29,16 @@ type ShortcutActions = {
 // Centralized record of all shortcuts
 const allShortcuts: AllShortcuts = {
 	// TODO: add all local shortcuts here
+	[EditorShortcuts.FOCUS_MODE]: {
+		key: 'f',
+		modifiers: {},
+		description: 'Focus Mode',
+	},
+	[EditorShortcuts.HELP]: {
+		key: '?',
+		modifiers: {},
+		description: 'Help',
+	},
 }
 
 // Global store for global shortcut actions

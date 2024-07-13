@@ -10,8 +10,13 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog'
 import { Separator } from '~/components/ui/separator'
-import { SHORTCUTS } from '~/lib/constants'
+import {
+	ShortcutConfig,
+	allShortcuts,
+	getGlobalShortcuts,
+} from '~/lib/hooks/useKeyboardShortcuts'
 import { HelpDialogProps } from '~/lib/types'
+import { getShortcutWithModifiers } from '~/lib/utils'
 
 const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 	return (
@@ -104,48 +109,28 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 							Keyboard Shortcuts
 						</h4>
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>New Post</p>
-								<KeyboardShortcut keys={SHORTCUTS.NEW_POST} />
-							</li>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>New Writing Session</p>
-								<KeyboardShortcut
-									keys={SHORTCUTS.NEW_WRITING_SESSION}
-								/>
-							</li>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>Export as Image</p>
-								<KeyboardShortcut
-									keys={SHORTCUTS.EXPORT_AS_IMAGE}
-								/>
-							</li>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>Export as Markdown</p>
-								<KeyboardShortcut
-									keys={SHORTCUTS.EXPORT_AS_MARKDOWN}
-								/>
-							</li>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>Focus Mode</p>
-								<KeyboardShortcut keys={SHORTCUTS.FOCUS_MODE} />
-							</li>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>Reset Editor</p>
-								<KeyboardShortcut
-									keys={SHORTCUTS.RESET_EDITOR}
-								/>
-							</li>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>Preferences</p>
-								<KeyboardShortcut
-									keys={SHORTCUTS.PREFERENCES}
-								/>
-							</li>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p>Help</p>
-								<KeyboardShortcut keys={SHORTCUTS.HELP} />
-							</li>
+							{[
+								...Object.entries(allShortcuts),
+								...Object.entries(getGlobalShortcuts()),
+							].map(([_, config], index) => {
+								const { description, key, modifiers } =
+									config as ShortcutConfig
+
+								return (
+									<li
+										className='flex items-center justify-between px-4 py-2'
+										key={index}
+									>
+										<p>{description}</p>
+										<KeyboardShortcut
+											keys={getShortcutWithModifiers(
+												key,
+												modifiers
+											)}
+										/>
+									</li>
+								)
+							})}
 						</ul>
 					</section>
 				</div>

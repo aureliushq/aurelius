@@ -56,3 +56,8 @@ export type WritingSessionSettings = {
 	music: boolean
 	notifyOnTargetDuration: boolean
 }
+
+export enum EditorShortcuts {
+	FOCUS_MODE = 'focusMode',
+	HELP = 'help',
+}

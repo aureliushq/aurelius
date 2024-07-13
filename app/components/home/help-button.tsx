@@ -1,12 +1,16 @@
 import { CircleHelpIcon } from 'lucide-react'
 import { Button } from '~/components/ui/button'
-import { HelpDialogProps } from '~/lib/types'
+import { EditorShortcuts } from '~/lib/types'
 
-const HelpButton = ({ setHelpOpen }: HelpDialogProps) => {
+const HelpButton = ({
+	triggerShortcut,
+}: {
+	triggerShortcut: (_: string) => void
+}) => {
 	return (
 		<Button
 			className='w-9 h-9'
-			onClick={() => setHelpOpen(true)}
+			onClick={() => triggerShortcut(EditorShortcuts.HELP)}
 			size='icon'
 			variant='outline'
 		>

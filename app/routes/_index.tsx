@@ -3,21 +3,16 @@ import { Suspense, startTransition, useState } from 'react'
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 
 import { useQuery } from '@evolu/react'
-import { ShieldCheckIcon } from 'lucide-react'
 import PreferencesDialog from '~/components/common/preferences-dialog'
+import E2EEIndicator from '~/components/home/e2ee-indicator'
 import HelpButton from '~/components/home/help-button'
 import HelpDialog from '~/components/home/help-dialog'
 import MainMenu from '~/components/home/main-menu'
 import SplashDialog from '~/components/home/splash-dialog'
 import Writer from '~/components/home/writer'
 import WritingSessionTimer from '~/components/home/writing-session-timer'
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from '~/components/ui/tooltip'
-import { WritingSessionSettings } from '~/lib/types'
+import { useKeyboardShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
+import { EditorShortcuts, WritingSessionSettings } from '~/lib/types'
 import { settingsQuery } from '~/services/evolu/client'
 import writerStylesheet from '~/writer.css?url'
 
@@ -30,7 +25,16 @@ export const links: LinksFunction = () => [
 ]
 
 export default function Index() {
+	const shortcuts = {
+		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
+		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
+	}
+
+	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+
 	const { rows } = useQuery(settingsQuery)
+
+	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
@@ -56,11 +60,15 @@ export default function Index() {
 		<>
 			<div className='w-screen h-screen relative'>
 				<MainMenu
+					focusMode={focusMode}
 					setHelpOpen={setHelpOpen}
 					setPreferencesOpen={handlePreferencesOpen}
 					setWritingSessionOpen={setWritingSessionOpen}
+					triggerShortcut={triggerShortcut}
 				/>
-				<div className='absolute top-4 right-4 flex items-center gap-4'>
+				<div
+					className={`absolute top-4 right-4 flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+				>
 					{isSaving && (
 						<span className='text-sm text-muted-foreground px-2'>
 							Saving...
@@ -73,25 +81,16 @@ export default function Index() {
 						writingSessionSettings={writingSessionSettings}
 					/>
 				</div>
-				<div className='absolute bottom-4 right-4 flex items-center gap-4'>
-					<TooltipProvider>
-						<Tooltip>
-							<TooltipTrigger className='p-0' asChild>
-								<ShieldCheckIcon className='w-5 h-5 text-primary' />
-							</TooltipTrigger>
-							<TooltipContent>
-								<p className='text-sm text-center'>
-									All your data is stored in your device. Sync
-									is end-to-end encrypted so <br /> Aurelius
-									servers can&apos;t read your data.
-								</p>
-							</TooltipContent>
-						</Tooltip>
-					</TooltipProvider>
+				<div
+					className={`absolute bottom-4 right-4 flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+				>
+					<E2EEIndicator />
 
-					<HelpButton setHelpOpen={setHelpOpen} />
+					<HelpButton triggerShortcut={triggerShortcut} />
 				</div>
-				<div className='absolute bottom-4 left-4 h-9 flex items-center'>
+				<div
+					className={`absolute bottom-4 left-4 h-9 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+				>
 					<span className='text-sm text-muted-foreground px-2'>{`${wordCount} words`}</span>
 				</div>
 				<Writer
@@ -109,10 +108,10 @@ export default function Index() {
 			</Suspense>
 			<Suspense>
 				<SplashDialog
-					setHelpOpen={setHelpOpen}
 					setPreferencesOpen={handlePreferencesOpen}
 					settings={settings}
 					setWritingSessionOpen={setWritingSessionOpen}
+					triggerShortcut={triggerShortcut}
 				/>
 			</Suspense>
 		</>
