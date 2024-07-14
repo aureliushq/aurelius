@@ -10,12 +10,12 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog'
 import { Separator } from '~/components/ui/separator'
+import { FORMATTING_SHORTCUTS } from '~/lib/constants'
 import {
-	ShortcutConfig,
 	allShortcuts,
 	getGlobalShortcuts,
 } from '~/lib/hooks/useKeyboardShortcuts'
-import { HelpDialogProps } from '~/lib/types'
+import { HelpDialogProps, ShortcutConfig } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 
 const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
@@ -40,23 +40,78 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 						</Link>
 					</div>
 				</DialogHeader>
-				<div className='grid grid-cols-2 gap-x-8'>
-					<section className='col-span-1 flex flex-col items-start justify-start gap-4'>
+				<div className='columns-2 gap-x-8'>
+					<section className='flex flex-col items-start justify-start gap-4 mb-4'>
 						<h4 className='text-base font-semibold'>
 							Formatting Shortcuts
 						</h4>
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
-							<li className='flex items-center justify-between px-4 py-2'>
-								<p># text</p>
-								<p>H1 heading</p>
-							</li>
+							{FORMATTING_SHORTCUTS.map((config, index) => {
+								const { description, key, modifiers } =
+									config as ShortcutConfig
+
+								return (
+									<li
+										className='flex items-center justify-between px-4 py-2'
+										key={index}
+									>
+										<p>{description}</p>
+										<KeyboardShortcut
+											keys={getShortcutWithModifiers(
+												key,
+												modifiers
+											)}
+										/>
+									</li>
+								)
+							})}
+						</ul>
+					</section>
+					<section className='col-span-1 flex flex-col items-start justify-start gap-4 mb-4'>
+						<h4 className='text-base font-semibold'>
+							Keyboard Shortcuts
+						</h4>
+						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
+							{[
+								...Object.entries(allShortcuts),
+								...Object.entries(getGlobalShortcuts()),
+							].map(([_, config], index) => {
+								const { description, key, modifiers } =
+									config as ShortcutConfig
+
+								return (
+									<li
+										className='flex items-center justify-between px-4 py-2'
+										key={index}
+									>
+										<p>{description}</p>
+										<KeyboardShortcut
+											keys={getShortcutWithModifiers(
+												key,
+												modifiers
+											)}
+										/>
+									</li>
+								)
+							})}
+						</ul>
+					</section>
+					<section className='break-inside-avoid-column flex flex-col items-start justify-start gap-4 mb-4'>
+						<h4 className='text-base font-semibold'>
+							Markdown Shortcuts
+						</h4>
+						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
 							<li className='flex items-center justify-between px-4 py-2'>
 								<p>## text</p>
-								<p>H2 heading</p>
+								<p>Heading 2</p>
 							</li>
 							<li className='flex items-center justify-between px-4 py-2'>
 								<p>### text</p>
-								<p>H3 heading</p>
+								<p>Heading 3</p>
+							</li>
+							<li className='flex items-center justify-between px-4 py-2'>
+								<p>#### text</p>
+								<p>Heading 4</p>
 							</li>
 							<li className='flex items-center justify-between px-4 py-2'>
 								<p>- text</p>
@@ -102,35 +157,6 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 								<p>---</p>
 								<p>Divider</p>
 							</li>
-						</ul>
-					</section>
-					<section className='col-span-1 flex flex-col items-start justify-start gap-4 mb-4'>
-						<h4 className='text-base font-semibold'>
-							Keyboard Shortcuts
-						</h4>
-						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
-							{[
-								...Object.entries(allShortcuts),
-								...Object.entries(getGlobalShortcuts()),
-							].map(([_, config], index) => {
-								const { description, key, modifiers } =
-									config as ShortcutConfig
-
-								return (
-									<li
-										className='flex items-center justify-between px-4 py-2'
-										key={index}
-									>
-										<p>{description}</p>
-										<KeyboardShortcut
-											keys={getShortcutWithModifiers(
-												key,
-												modifiers
-											)}
-										/>
-									</li>
-								)
-							})}
 						</ul>
 					</section>
 				</div>

@@ -1,30 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { EditorShortcuts } from '~/lib/types'
-
-export type ModifierKeys = {
-	ctrl?: boolean
-	alt?: boolean
-	shift?: boolean
-	meta?: boolean
-}
-
-export type ShortcutConfig = {
-	key: string
-	modifiers: ModifierKeys
-	description: string
-	global?: boolean
-}
-
-type ShortcutAction = () => void
-
-type AllShortcuts = {
-	[key: string]: ShortcutConfig
-}
-
-type ShortcutActions = {
-	[key: string]: ShortcutAction
-}
+import {
+	AllShortcuts,
+	EditorShortcuts,
+	ModifierKeys,
+	ShortcutAction,
+	ShortcutActions,
+} from '~/lib/types'
 
 // Centralized record of all shortcuts
 const allShortcuts: AllShortcuts = {

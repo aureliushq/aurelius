@@ -85,3 +85,27 @@ export enum EditorNodes {
 	CODE = 'codeBlock',
 	QUOTE = 'blockquote',
 }
+
+export type ModifierKeys = {
+	ctrl?: boolean
+	alt?: boolean
+	shift?: boolean
+	meta?: boolean
+}
+
+export type ShortcutConfig = {
+	key: string
+	modifiers: ModifierKeys
+	description: string
+	global?: boolean
+}
+
+export type ShortcutAction = () => void
+
+export type AllShortcuts = {
+	[key: string]: ShortcutConfig
+}
+
+export type ShortcutActions = {
+	[key: string]: ShortcutAction
+}

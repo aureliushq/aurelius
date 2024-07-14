@@ -3,6 +3,7 @@ import {
 	EditorSerifFonts,
 	EditorToolbarMode,
 	MusicChannels,
+	ShortcutConfig,
 	SiteTheme,
 	WritingDailyGoalType,
 } from '~/lib/types'
@@ -48,4 +49,37 @@ export const SITE_THEMES = [
 	{ value: SiteTheme.LIGHT, label: 'Light' },
 	{ value: SiteTheme.DARK, label: 'Dark' },
 	{ value: SiteTheme.SYSTEM, label: 'System' },
+]
+
+export const FORMATTING_SHORTCUTS: ShortcutConfig[] = [
+	{
+		key: 'b',
+		modifiers: { ctrl: true },
+		description: 'Bold',
+	},
+	{
+		key: 'i',
+		modifiers: { ctrl: true },
+		description: 'Italicize',
+	},
+	{
+		key: 'u',
+		modifiers: { ctrl: true },
+		description: 'Underline',
+	},
+	{
+		key: 'h',
+		modifiers: { ctrl: true, shift: true },
+		description: 'Highlight',
+	},
+	{
+		key: 'c',
+		modifiers: { ctrl: true, alt: true },
+		description: 'Code Block',
+	},
+	{
+		key: 'b',
+		modifiers: { ctrl: true, shift: true },
+		description: 'Blockquote',
+	},
 ]
