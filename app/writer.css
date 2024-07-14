@@ -3,7 +3,7 @@
 }
 
 .ProseMirror {
-    @apply w-full max-w-2xl min-h-[640px] outline-none border-none text-[1rem] text-foreground lg:text-[1.2rem] font-normal leading-relaxed;
+    @apply w-full max-w-2xl min-h-[640px] outline-none border-none text-foreground font-normal leading-relaxed;
 }
 
 .ProseMirror.ProseMirror-focused {
@@ -18,7 +18,11 @@
 }
 
 .ProseMirror > p {
-    @apply w-full;
+    @apply w-full mt-0;
+}
+
+.ProseMirror > p.is-editor-empty {
+    @apply mt-0;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
@@ -59,31 +63,31 @@
     @apply flex-auto;
 }
 
-.ProseMirror h1,
-.ProseMirror h2,
-.ProseMirror h3 {
-    @apply max-w-3xl;
-    font-weight: bold;
-    line-height: 1.1;
-}
+/*.ProseMirror h1,*/
+/*.ProseMirror h2,*/
+/*.ProseMirror h3 {*/
+/*    @apply max-w-3xl;*/
+/*    font-weight: bold;*/
+/*    line-height: 1.1;*/
+/*}*/
 
-.ProseMirror h1 {
-    @apply max-w-3xl;
-    font-size: 4em;
-    margin: 0.67em 0;
-}
+/*.ProseMirror h1 {*/
+/*    @apply max-w-3xl;*/
+/*    font-size: 4em;*/
+/*    margin: 0.67em 0;*/
+/*}*/
 
-.ProseMirror h2 {
-    @apply max-w-3xl;
-    font-size: 2.3rem;
-    margin: 0.75em 0;
-}
+/*.ProseMirror h2 {*/
+/*    @apply max-w-3xl;*/
+/*    font-size: 2.3rem;*/
+/*    margin: 0.75em 0;*/
+/*}*/
 
-.ProseMirror h3 {
-    @apply max-w-3xl;
-    font-size: 2rem;
-    margin: 0.83em 0;
-}
+/*.ProseMirror h3 {*/
+/*    @apply max-w-3xl;*/
+/*    font-size: 2rem;*/
+/*    margin: 0.83em 0;*/
+/*}*/
 
 .ProseMirror pre {
     @apply max-w-3xl rounded-lg bg-[#d5d6db] dark:bg-[#1a1b26];

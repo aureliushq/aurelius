@@ -7,6 +7,7 @@ import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 import { CharacterCount } from '@tiptap/extension-character-count'
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
 import { FontFamily } from '@tiptap/extension-font-family'
+import { Heading } from '@tiptap/extension-heading'
 import { Highlight } from '@tiptap/extension-highlight'
 import { Link } from '@tiptap/extension-link'
 import { Placeholder } from '@tiptap/extension-placeholder'
@@ -152,6 +153,9 @@ export default function Index() {
 			TextStyle,
 			FontFamily,
 			Underline,
+			Heading.configure({
+				levels: [2, 3, 4],
+			}),
 		],
 		onUpdate({ editor }) {
 			let html = editor.isEmpty ? '' : editor.getHTML()

@@ -48,7 +48,7 @@ const Writer = ({
 					/>
 				</div>
 				<div
-					className={`editor-wrapper flex h-auto min-h-max w-full items-start justify-center pb-12 ${settings?.bodyFont}`}
+					className={`editor-wrapper prose prose-invert flex h-auto min-h-max w-full items-start justify-center pb-12 ${settings?.bodyFont}`}
 				>
 					<EditorContent editor={editor as Editor} />
 				</div>

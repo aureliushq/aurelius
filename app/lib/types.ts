@@ -66,10 +66,12 @@ export enum EditorShortcuts {
 	WRITING_SESSION = 'writingSession',
 }
 
-export enum EditorTextStyles {
+export enum EditorMarks {
 	BOLD = 'bold',
 	ITALIC = 'italic',
 	UNDERLINE = 'underline',
+	LINK = 'link',
+	HIGHLIGHT = 'highlight',
 }
 
 export enum EditorHeadings {
@@ -79,9 +81,7 @@ export enum EditorHeadings {
 	H4 = 'h4',
 }
 
-export enum EditorOtherOptions {
-	QUOTE = 'quote',
-	LINK = 'link',
-	CODE = 'code',
-	HIGHLIGHT = 'highlight',
+export enum EditorNodes {
+	CODE = 'codeBlock',
+	QUOTE = 'blockquote',
 }
