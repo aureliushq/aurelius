@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import {
 	AllShortcuts,
@@ -28,7 +28,7 @@ const allShortcuts: AllShortcuts = {
 		description: 'Preferences',
 	},
 	[EditorShortcuts.RESET_EDITOR]: {
-		key: 'r',
+		key: 'e',
 		modifiers: {},
 		description: 'Reset Editor',
 	},
@@ -59,8 +59,6 @@ export const setGlobalShortcutAction = (
 }
 
 const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
-	const [, forceUpdate] = useState({})
-
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
 			if (

@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@conform-to/react':
-        specifier: ^1.1.5
-        version: 1.1.5(react@18.3.1)
-      '@conform-to/zod':
-        specifier: ^1.1.5
-        version: 1.1.5(zod@3.23.8)
       '@effect/schema':
         specifier: 0.68.21
         version: 0.68.21(effect@3.5.1)
@@ -182,9 +176,6 @@ importers:
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
-      react-hook-form:
-        specifier: ^7.52.1
-        version: 7.52.1(react@18.3.1)
       react-use-precision-timer:
         specifier: ^3.5.5
         version: 3.5.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -194,9 +185,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.4)
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.10.2
@@ -442,19 +430,6 @@ packages:
   '@babel/types@7.24.8':
     resolution: {integrity: sha512-SkSBEHwwJRU52QEVZBmMBnE5Ux2/6WU1grdYyOhpbCNxbmJrDuDCphBzKZSO3taf0zztp+qkWlymE5tVL5l0TA==}
     engines: {node: '>=6.9.0'}
-
-  '@conform-to/dom@1.1.5':
-    resolution: {integrity: sha512-tWI3YxWvDaZFSl4QN8Y0WbgBxsWEfcTrSMtKic3YTt/hGVJXjQ8qURBdsJXudzJ38zwAr5GhpLWmyI6BbG9+gA==}
-
-  '@conform-to/react@1.1.5':
-    resolution: {integrity: sha512-QyzJ8SIazHmez7qkMffypICDBwU+Ht5TPe+C4MTP2dro0N0Hu6LsfLq7mMWFJyAJ7IYxT1BMzfoFj28jheIIOw==}
-    peerDependencies:
-      react: '>=18'
-
-  '@conform-to/zod@1.1.5':
-    resolution: {integrity: sha512-ho/742wgfTWf2u5tKo4GT88xcKcvTOCDPOi4o1WEmePPmJNP5ezeMQSKSdKdS0rFinZl9ZTH8gV5FQUNPHAA7A==}
-    peerDependencies:
-      zod: ^3.21.0
 
   '@effect/platform@0.58.25':
     resolution: {integrity: sha512-UMynArcxdFWf3N8DKcN6cfFv9TEYOf9d3FKbnJZN3dLbKJtxieeCuoOsBZCtvPOS7m/kWabZC/HEjpOmpg2jRg==}
@@ -4964,9 +4939,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -5234,18 +5206,6 @@ snapshots:
       '@babel/helper-string-parser': 7.24.8
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
-
-  '@conform-to/dom@1.1.5': {}
-
-  '@conform-to/react@1.1.5(react@18.3.1)':
-    dependencies:
-      '@conform-to/dom': 1.1.5
-      react: 18.3.1
-
-  '@conform-to/zod@1.1.5(zod@3.23.8)':
-    dependencies:
-      '@conform-to/dom': 1.1.5
-      zod: 3.23.8
 
   '@effect/platform@0.58.25(@effect/schema@0.68.21(effect@3.5.1))(effect@3.5.1)':
     dependencies:
@@ -10317,7 +10277,5 @@ snapshots:
   yaml@2.4.5: {}
 
   yocto-queue@0.1.0: {}
-
-  zod@3.23.8: {}
 
   zwitch@2.0.4: {}
