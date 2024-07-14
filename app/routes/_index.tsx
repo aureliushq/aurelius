@@ -1,4 +1,4 @@
-import { Suspense, startTransition, useState } from 'react'
+import { Suspense, startTransition, useEffect, useRef, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 
@@ -45,6 +45,7 @@ const lowlight = createLowlight(common)
 
 export default function Index() {
 	const shortcuts = {
+		[EditorShortcuts.BLUR]: () => blurInputs(),
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
 		[EditorShortcuts.PREFERENCES]: () =>
@@ -61,6 +62,8 @@ export default function Index() {
 
 	const { rows } = useQuery(settingsQuery)
 	const settings = rows[0]
+
+	const titleRef = useRef<HTMLTextAreaElement>(null)
 
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
@@ -165,12 +168,32 @@ export default function Index() {
 		},
 	})
 
+	const blurInputs = () => {
+		if (titleRef.current) {
+			titleRef.current.blur()
+		}
+		editor?.commands.blur()
+	}
+
 	const confirmResetEditor = () => {
 		setTitle('')
 		setContent('')
 		editor?.commands.clearContent(true)
 		setWordCount(0)
 	}
+
+	useEffect(() => {
+		if (!title && !getContent()) {
+			titleRef.current?.focus()
+		}
+	}, [title, getContent()])
+
+	useEffect(() => {
+		if (titleRef.current) {
+			titleRef.current.style.height = 'inherit'
+			titleRef.current.style.height = `${titleRef.current.scrollHeight}px`
+		}
+	}, [title])
 
 	return (
 		<>

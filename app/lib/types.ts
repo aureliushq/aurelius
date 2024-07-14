@@ -58,6 +58,7 @@ export type WritingSessionSettings = {
 }
 
 export enum EditorShortcuts {
+	BLUR = 'blur',
 	FOCUS_MODE = 'focusMode',
 	HELP = 'help',
 	PREFERENCES = 'preferences',
@@ -94,10 +95,11 @@ export type ModifierKeys = {
 }
 
 export type ShortcutConfig = {
-	key: string
-	modifiers: ModifierKeys
 	description: string
 	global?: boolean
+	key: string
+	modifiers: ModifierKeys
+	runInInput?: boolean
 }
 
 export type ShortcutAction = () => void

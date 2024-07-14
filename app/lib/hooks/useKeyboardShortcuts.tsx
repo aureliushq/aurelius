@@ -11,36 +11,42 @@ import {
 // Centralized record of all shortcuts
 const allShortcuts: AllShortcuts = {
 	// TODO: add all local shortcuts here
+	[EditorShortcuts.BLUR]: {
+		description: 'Blur',
+		key: 'Escape',
+		modifiers: {},
+		runInInput: true,
+	},
 	[EditorShortcuts.FOCUS_MODE]: {
+		description: 'Focus Mode',
 		key: 'f',
 		modifiers: {},
-		description: 'Focus Mode',
 	},
 	[EditorShortcuts.HELP]: {
+		description: 'Help',
 		key: '?',
 		modifiers: {},
-		description: 'Help',
 	},
 	// TODO: this is a global shortcut
 	[EditorShortcuts.PREFERENCES]: {
+		description: 'Preferences',
 		key: 'p',
 		modifiers: {},
-		description: 'Preferences',
 	},
 	[EditorShortcuts.RESET_EDITOR]: {
+		description: 'Reset Editor',
 		key: 'e',
 		modifiers: {},
-		description: 'Reset Editor',
 	},
 	[EditorShortcuts.SPLASH_DIALOG]: {
+		description: 'Show Splash Screen',
 		key: 's',
 		modifiers: {},
-		description: 'Show Splash Screen',
 	},
 	[EditorShortcuts.WRITING_SESSION]: {
+		description: 'New Writing Session',
 		key: 'w',
 		modifiers: {},
-		description: 'New Writing Session',
 	},
 }
 
@@ -61,14 +67,11 @@ export const setGlobalShortcutAction = (
 const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
-			if (
+			const isInputField =
 				event.target instanceof HTMLElement &&
 				(event.target.tagName === 'INPUT' ||
 					event.target.tagName === 'TEXTAREA' ||
 					event.target.isContentEditable)
-			) {
-				return
-			}
 
 			const key = event.key.toLowerCase()
 			const modifiers: ModifierKeys = {
@@ -81,9 +84,10 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 			for (const shortcutName in allShortcuts) {
 				const shortcutConfig = allShortcuts[shortcutName]
 				const {
+					global,
 					key: shortcutKey,
 					modifiers: shortcutModifiers,
-					global,
+					runInInput,
 				} = shortcutConfig
 
 				if (
@@ -91,7 +95,8 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 					Object.entries(shortcutModifiers).every(
 						([mod, active]) =>
 							modifiers[mod as keyof ModifierKeys] === active
-					)
+					) &&
+					(runInInput || !isInputField)
 				) {
 					event.preventDefault()
 					if (global && globalShortcutActions[shortcutName]) {
