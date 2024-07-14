@@ -121,7 +121,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 
 	return (
 		<>
-			<Toolbar className='absolute top-4 flex items-center divide-x divide-border h-9 p-0 space-x-0'>
+			<Toolbar className='flex items-center divide-x divide-border h-9 p-0 space-x-0'>
 				<ToggleGroup
 					className='h-full gap-0 divide-x divide-border rounded-tl-md rounded-bl-md rounded-none overflow-hidden'
 					onValueChange={handleEditorMarksChange}

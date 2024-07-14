@@ -4,15 +4,15 @@ Writing app for modern writers
 
 ## Features
 
--   Great writing experience
--   Markdown shortcuts
--   Timed writing sessions
--   Writing goals for building a habit
--   Tons of keyboard shortcuts
--   Local-first: all data is stored on your device
--   Sync data between devices with a unique sync code
--   Focus mode
--   Music player with multiple genres of focus music or play a youtube video or playlist
+- Great writing experience
+- Markdown shortcuts
+- Timed writing sessions
+- Writing goals for building a habit
+- Tons of keyboard shortcuts
+- Local-first: all data is stored on your device
+- Sync data between devices with a unique sync code
+- Focus mode
+- Music player with multiple genres of focus music or play a youtube video or playlist
 
 ## Development
 
@@ -42,4 +42,5 @@ Start the server
 
 ## Known Issues
 
--   `displaySplashDialog` in synced device(s) is `false` on load so dialog doesn't show. Works fine in primary device.
+- `displaySplashDialog` in synced device(s) is `false` on load so dialog doesn't show. Works fine in primary device.
+- Changing toolbar mode from `floating` to `fixed` crashes the app.

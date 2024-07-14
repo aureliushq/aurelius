@@ -1,9 +1,17 @@
+.editor-wrapper {
+    @apply max-w-3xl;
+}
+
 .editor-wrapper > div {
     @apply flex w-full max-w-3xl items-start justify-center;
 }
 
+.editor-wrapper .tippy-box {
+    @apply !max-w-none;
+}
+
 .ProseMirror {
-    @apply w-full max-w-2xl min-h-[640px] outline-none border-none text-foreground font-normal leading-relaxed;
+    @apply w-full max-w-3xl min-h-[640px] outline-none border-none text-xl text-foreground font-normal leading-relaxed;
 }
 
 .ProseMirror.ProseMirror-focused {
