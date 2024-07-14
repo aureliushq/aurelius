@@ -14,24 +14,23 @@ import { Database } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
 
 export const evolu = createEvolu(Database, {
-	// syncUrl: 'http://localhost:3000',
 	initialData: (evolu) => {
 		evolu.create('settings', {
 			bodyFont: S.decodeSync(NonEmptyString100)(
 				EditorSerifFonts.MERRIWEATHER
 			),
-			defaultToolbarMode: S.decodeSync(NonEmptyString100)(
-				EditorToolbarMode.FIXED
-			),
-			displaySplashDialog: S.decodeSync(SqliteBoolean)(1),
 			exportImageFooter: S.decodeSync(String1000)(''),
 			exportImageWatermark: S.decodeSync(SqliteBoolean)(1),
 			musicChannel: S.decodeSync(NonEmptyString100)(
 				MusicChannels.LOFI_HIP_HOP
 			),
+			showSplashDialog: S.decodeSync(SqliteBoolean)(1),
 			theme: S.decodeSync(NonEmptyString100)(SiteTheme.SYSTEM),
 			titleFont: S.decodeSync(NonEmptyString100)(
 				EditorSansSerifFonts.INTER
+			),
+			toolbarMode: S.decodeSync(NonEmptyString100)(
+				EditorToolbarMode.FIXED
 			),
 			writingDailyGoal: S.decodeSync(NonEmptyString100)(
 				WritingDailyGoalType.DURATION

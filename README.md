@@ -42,5 +42,5 @@ Start the server
 
 ## Known Issues
 
-- `displaySplashDialog` in synced device(s) is `false` on load so dialog doesn't show. Works fine in primary device.
+- `showSplashDialog` in synced device(s) is `false` on load so dialog doesn't show. Works fine in primary device.
 - Changing toolbar mode from `floating` to `fixed` crashes the app.

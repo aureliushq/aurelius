@@ -83,10 +83,10 @@ const SplashDialog = ({
 	const handleChange = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
-		const displaySplashDialog = formData.get('dont-show-again') !== 'on'
+		const showSplashDialog = formData.get('dont-show-again') !== 'on'
 		update('settings', {
 			id: settings.id,
-			displaySplashDialog,
+			showSplashDialog,
 		})
 	}
 

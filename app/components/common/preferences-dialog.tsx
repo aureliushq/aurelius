@@ -83,14 +83,13 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 
-		const displaySplashDialog = formData.get('show-splash-dialog') === 'on'
-		const defaultToolbarMode = formData.get('editor-toolbar-mode') as string
+		const showSplashDialog = formData.get('show-splash-dialog') === 'on'
+		const toolbarMode = formData.get('editor-toolbar-mode') as string
 
 		update('settings', {
 			id: settings.id,
-			displaySplashDialog,
-			defaultToolbarMode:
-				S.decodeSync(NonEmptyString100)(defaultToolbarMode),
+			showSplashDialog,
+			toolbarMode: S.decodeSync(NonEmptyString100)(toolbarMode),
 		})
 		toast({
 			description: <SavedToastContent />,
@@ -109,7 +108,7 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 						</small>
 					</Label>
 					<Switch
-						defaultChecked={!!settings.displaySplashDialog}
+						defaultChecked={!!settings.showSplashDialog}
 						name='show-splash-dialog'
 					/>
 				</div>
@@ -123,7 +122,7 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 						</small>
 					</Label>
 					<Select
-						defaultValue={settings.defaultToolbarMode as string}
+						defaultValue={settings.toolbarMode as string}
 						name='editor-toolbar-mode'
 					>
 						<SelectTrigger className='w-[180px]'>

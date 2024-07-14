@@ -19,8 +19,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 		return (
 			<section className='flex h-full w-full flex-grow flex-col items-center justify-start'>
 				{editor &&
-					settings?.defaultToolbarMode ===
-						EditorToolbarMode.FIXED && (
+					settings?.toolbarMode === EditorToolbarMode.FIXED && (
 						<div className='absolute top-4'>
 							<EditorToolbar editor={editor as Editor} />
 						</div>
@@ -41,7 +40,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 						className={`editor-wrapper prose prose-invert flex h-auto min-h-max w-full items-start justify-center pb-12 ${settings?.bodyFont}`}
 					>
 						{editor &&
-							settings?.defaultToolbarMode ===
+							settings?.toolbarMode ===
 								EditorToolbarMode.FLOATING && (
 								<BubbleMenu editor={editor as Editor}>
 									<EditorToolbar editor={editor as Editor} />

@@ -70,9 +70,7 @@ export default function Index() {
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
-	const [splashOpen, setSplashOpen] = useState(
-		!!settings?.displaySplashDialog
-	)
+	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
 	const [title, setTitle] = useState<string>('')
 	const [wordCount, setWordCount] = useState<number>(0)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
