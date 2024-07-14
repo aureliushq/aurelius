@@ -4,7 +4,7 @@ import { Form } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
 import { PositiveInt, String1000, parseMnemonic } from '@evolu/common'
-import { useEvolu, useQuery } from '@evolu/react'
+import { useEvolu } from '@evolu/react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Effect, Exit } from 'effect'
 import { CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'lucide-react'
@@ -52,13 +52,7 @@ import {
 	SITE_THEMES,
 	TOOLBAR_MODES,
 } from '~/lib/constants'
-import {
-	EditorSansSerifFonts,
-	EditorSerifFonts,
-	PreferencesDialogProps,
-	SiteTheme,
-	WritingDailyGoalType,
-} from '~/lib/types'
+import { PreferencesDialogProps, WritingDailyGoalType } from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
 import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
@@ -101,9 +95,9 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 			<section className='flex flex-col gap-4'>
 				<div className='flex items-center justify-between h-10'>
 					<Label className='flex flex-col gap-2'>
-						Display splash screen
+						Show splash screen
 						<small className='text-xs font-light'>
-							Display the popup that lists all the common actions
+							Show the popup that lists all the common actions
 							when you load the website
 						</small>
 					</Label>
@@ -115,7 +109,7 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 				<Separator />
 				<div className='flex items-center justify-between h-10'>
 					<Label className='flex flex-col gap-2'>
-						Default editor toolbar mode
+						Editor toolbar mode
 						<small className='text-xs font-light'>
 							Whether to always show the formatting toolbar or
 							only when text is selected
@@ -773,54 +767,28 @@ const Advanced = () => {
 }
 
 const Profile = () => {
-	// return (
-	// 	<Form className='flex flex-col gap-4'>
-	// 		<div className='flex items-center justify-between'>
-	// 			<Label className='flex flex-col gap-2'>Name</Label>
-	// 			<Input
-	// 				className='max-w-64'
-	// 				id='name'
-	// 				placeholder='Name'
-	// 				type='text'
-	// 			/>
-	// 		</div>
-	// 		<Separator />
-	// 		<div className='flex items-center justify-between'>
-	// 			<Label className='flex flex-col gap-2'>Bio</Label>
-	// 			<Input
-	// 				className='max-w-64'
-	// 				id='bio'
-	// 				placeholder='Bio'
-	// 				type='text'
-	// 			/>
-	// 		</div>
-	// 		<Separator />
-	// 		<div className='flex items-center justify-between'>
-	// 			<Label className='flex flex-col gap-2'>Username</Label>
-	// 			<Input
-	// 				className='max-w-64'
-	// 				id='username'
-	// 				placeholder='Username'
-	// 				type='text'
-	// 			/>
-	// 		</div>
-	// 	</Form>
-	// )
-
-	// show a coming soon message
 	return (
-		<div className='flex flex-col gap-4'>
-			<p className='text-lg text-muted-foreground'>Coming soon...</p>
-		</div>
-	)
-}
-
-const APIKeys = () => {
-	// show a coming soon message
-	return (
-		<div className='flex flex-col gap-4'>
-			<p className='text-lg text-muted-foreground'>Coming soon...</p>
-		</div>
+		<Form className='flex flex-col gap-4'>
+			<div className='flex items-center justify-between'>
+				<Label className='flex flex-col gap-2'>
+					Name
+					<small className='text-xs font-light'>
+						Your name to display in the app
+					</small>
+				</Label>
+				<Input
+					className='max-w-64'
+					id='name'
+					placeholder='Name'
+					type='text'
+				/>
+			</div>
+			<div className='flex justify-start'>
+				<Button size='sm' type='submit'>
+					Save
+				</Button>
+			</div>
+		</Form>
 	)
 }
 
@@ -875,14 +843,6 @@ const PreferencesDialog = ({
 		},
 	]
 
-	const DEVELOPERS_TABS = [
-		{
-			id: 'api-keys',
-			label: 'API Keys',
-			content: <APIKeys />,
-		},
-	]
-
 	return (
 		<Dialog onOpenChange={setPreferencesOpen} open={preferencesOpen}>
 			<DialogContent className='w-[64rem] max-w-none max-h-[96rem] min-h-[40rem] p-0'>
@@ -931,37 +891,19 @@ const PreferencesDialog = ({
 										))}
 									</TabsList>
 								</section>
-								<section className='flex flex-col gap-4'>
-									<Label className='text-muted-foreground px-8 font-semibold'>
-										Developers
-									</Label>
-									<TabsList className='w-full h-full flex-col justify-start px-4 py-0 bg-transparent'>
-										{DEVELOPERS_TABS.map((tab) => (
-											<TabsTrigger
-												key={tab.id}
-												className='w-full justify-start px-4 data-[state=active]:bg-primary/75'
-												value={tab.id}
-											>
-												{tab.label}
-											</TabsTrigger>
-										))}
-									</TabsList>
-								</section>
 							</div>
 						</ScrollArea>
 						<Separator className='h-full' orientation='vertical' />
 						<ScrollArea className='w-full h-full min-h-[40rem] max-h-[40rem] flex-1 flex-grow grid-cols-2 gap-2 px-8 py-6'>
-							{[...TABS, ...USER_TABS, ...DEVELOPERS_TABS].map(
-								(tab) => (
-									<TabsContent
-										className='px-4'
-										key={tab.id}
-										value={tab.id}
-									>
-										{tab.content}
-									</TabsContent>
-								)
-							)}
+							{[...TABS, ...USER_TABS].map((tab) => (
+								<TabsContent
+									className='px-4'
+									key={tab.id}
+									value={tab.id}
+								>
+									{tab.content}
+								</TabsContent>
+							))}
 						</ScrollArea>
 					</div>
 				</Tabs>

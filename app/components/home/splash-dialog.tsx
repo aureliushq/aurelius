@@ -212,39 +212,6 @@ const SplashDialog = ({
 							</ul>
 						</div>
 						<div className='col-span-1 py-2 flex flex-col'>
-							<h3 className='text-sm font-semibold text-foreground mb-4'>
-								Account
-							</h3>
-							<ul className='w-full flex flex-col items-center text-sm gap-2'>
-								<li className='w-full flex items-center justify-between'>
-									<Link className='w-full' to='/login'>
-										<SplashDialogButton
-											badge='Coming Soon'
-											icon={
-												<LogInIcon className='mr-2 w-4 h-4' />
-											}
-											label='Sign Up'
-										/>
-									</Link>
-								</li>
-								<li className='w-full flex items-center justify-between'>
-									<a
-										className='w-full'
-										href='https://plus.aurelius.ink'
-										rel='noreferrer noopener'
-									>
-										<SplashDialogButton
-											badge='Coming Soon'
-											icon={
-												<RocketIcon className='mr-2 w-4 h-4' />
-											}
-											label='Try Aurelius Plus!'
-										/>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div className='col-span-1 py-2 flex flex-col'>
 							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
@@ -267,12 +234,17 @@ const SplashDialog = ({
 								</li>
 							</ul>
 						</div>
-						{/*<div className='col-span-1 flex flex-col'>*/}
-						{/*	<p className='leading-relaxed italic text-xs text-foreground'>*/}
-						{/*		All your data will be saved locally in the*/}
-						{/*		browser.*/}
-						{/*	</p>*/}
-						{/*</div>*/}
+						<div className='col-span-1' />
+						<div className='col-span-2 flex flex-col'>
+							<p className='leading-relaxed italic text-xs text-foreground'>
+								Note: All your data will be saved locally in the
+								browser.{' '}
+								<Link className='underline' to='/privacy'>
+									Learn more
+								</Link>
+								.
+							</p>
+						</div>
 					</div>
 					<Form
 						className='w-full px-8 py-4 flex items-center gap-2'

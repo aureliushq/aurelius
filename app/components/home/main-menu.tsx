@@ -331,25 +331,6 @@ const MainMenu = ({ focusMode, triggerShortcut }: MainMenuProps) => {
 							<span>Changelog</span>
 						</Link>
 					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem>
-						<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-							<RocketIcon className='mr-2 w-4 h-4' />
-							<span>Plus</span>
-							<Badge className='ml-2' variant='outline'>
-								Coming Soon
-							</Badge>
-						</span>
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-							<LogInIcon className='mr-2 w-4 h-4' />
-							<span>Sign Up</span>
-							<Badge className='ml-2' variant='outline'>
-								Coming Soon
-							</Badge>
-						</span>
-					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>
