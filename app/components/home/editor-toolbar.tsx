@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import { Level } from '@tiptap/extension-heading'
 import { Editor } from '@tiptap/react'
 import {
 	BoldIcon,
@@ -23,18 +22,18 @@ import { Toolbar } from '~/components/ui/toolbar'
 import { EditorHeadings, EditorMarks, EditorNodes } from '~/lib/types'
 
 const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
-	const [activeHeadingMark, setActiveHeadingMark] = useState<string>(
-		EditorHeadings.NORMAL
-	)
-	const [activeMarks, setActiveMarks] = useState<string[]>([])
-	const [activeNodes, setActiveNodes] = useState<string[]>([])
-
 	const EDITOR_HEADINGS = [
 		{ label: 'Normal', value: EditorHeadings.NORMAL },
 		{ label: 'Heading 2', value: EditorHeadings.H2 },
 		{ label: 'Heading 3', value: EditorHeadings.H3 },
 		{ label: 'Heading 4', value: EditorHeadings.H4 },
 	]
+
+	const [activeHeadingMark, setActiveHeadingMark] = useState<string>(
+		EditorHeadings.NORMAL
+	)
+	const [activeMarks, setActiveMarks] = useState<string[]>([])
+	const [activeNodes, setActiveNodes] = useState<string[]>([])
 
 	const handleEditorMarksChange = (values: string[]) => {
 		setActiveMarks(values)
