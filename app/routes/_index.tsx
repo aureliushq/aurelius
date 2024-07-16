@@ -1,4 +1,4 @@
-import { Suspense, startTransition, useEffect, useRef, useState } from 'react'
+import { Suspense, startTransition, useRef, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 
@@ -22,7 +22,6 @@ import EditorToolbar from '~/components/home/editor-toolbar'
 import HelpButton from '~/components/home/help-button'
 import HelpDialog from '~/components/home/help-dialog'
 import MainMenu from '~/components/home/main-menu'
-import mainMenu from '~/components/home/main-menu'
 import ResetEditor from '~/components/home/reset-editor'
 import Saving from '~/components/home/saving'
 import SplashDialog from '~/components/home/splash-dialog'
