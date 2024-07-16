@@ -113,10 +113,9 @@ const GettingStarted = () => {
 			</p>
 			<p>
 				<em>
-					Important: All your data is stored locally in your browser,
-					not in a central database. To use Aurelius across multiple
-					devices, you'll need to sync your data. For syncing, go to
-					Preferences (press{' '}
+					Important: All your data is stored locally in your browser.
+					To use Aurelius across multiple devices, you'll need to sync
+					your data. For syncing, go to Preferences (press{' '}
 				</em>
 				<code>p</code>
 				<em>
@@ -157,7 +156,7 @@ const GettingStarted = () => {
 				<a
 					target='_blank'
 					rel='noopener noreferrer nofollow'
-					href='https://twitter.com/aurelius_ink'
+					href='https://x.com/aurelius_ink'
 				>
 					X
 				</a>{' '}
