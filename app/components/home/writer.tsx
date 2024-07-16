@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, forwardRef } from 'react'
+import { Dispatch, SetStateAction, forwardRef, useEffect, useRef } from 'react'
 
 import { BubbleMenu, Editor, EditorContent } from '@tiptap/react'
 import EditorToolbar from '~/components/home/editor-toolbar'
@@ -16,22 +16,39 @@ type WriterProps = {
 
 const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 	({ editor, getContent, settings, setTitle, title }, titleRef) => {
+		const internalRef = useRef<HTMLTextAreaElement | null>(null)
+
+		useEffect(() => {
+			if (!title && !getContent()) {
+				internalRef.current?.focus()
+			}
+		}, [title, getContent()])
+
+		useEffect(() => {
+			const textarea = internalRef.current
+			if (textarea) {
+				textarea.style.height = 'inherit'
+				textarea.style.height = `${textarea.scrollHeight}px`
+			}
+		}, [title])
+
 		return (
-			<section className='flex h-full w-full flex-grow flex-col items-center justify-start'>
-				{editor &&
-					settings?.toolbarMode === EditorToolbarMode.FIXED && (
-						<div className='absolute top-4'>
-							<EditorToolbar editor={editor as Editor} />
-						</div>
-					)}
+			<section className='flex h-full w-full flex-grow flex-col items-center justify-start z-9'>
 				<div className='flex h-full w-full flex-col items-center justify-start gap-6 px-4 pb-24 md:pb-16 lg:px-0 pt-32'>
-					<div className='w-full max-w-3xl'>
+					<div className='w-full max-w-2xl'>
 						<Textarea
 							autoFocus
-							className={`w-full border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex items-center resize-none overflow-y-hidden bg-transparent text-2xl font-semibold leading-snug text-foreground focus:outline-none lg:text-5xl lg:leading-snug ${settings?.titleFont}`}
+							className={`w-full min-h-[48px] border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex items-center resize-none overflow-y-hidden bg-transparent text-xl font-semibold leading-snug text-foreground focus:outline-none lg:text-3xl lg:leading-snug ${settings?.titleFont}`}
 							onChange={(e) => setTitle(e.target.value)}
 							placeholder='Untitled'
-							ref={titleRef}
+							ref={(element) => {
+								internalRef.current = element
+								if (typeof titleRef === 'function') {
+									titleRef(element)
+								} else if (titleRef) {
+									titleRef.current = element
+								}
+							}}
 							rows={1}
 							value={title}
 						/>
