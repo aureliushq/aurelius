@@ -1,5 +1,10 @@
 import * as S from '@effect/schema/Schema'
-import { ExtractRow, NonEmptyString1000, SqliteBoolean } from '@evolu/common'
+import {
+	ExtractRow,
+	NonEmptyString1000,
+	SqliteBoolean,
+	createIndexes,
+} from '@evolu/common'
 import { createEvolu } from '@evolu/common-web'
 import { PositiveInt, String1000 } from '@evolu/react'
 import { Temporal } from 'temporal-polyfill'
@@ -20,8 +25,17 @@ import {
 	WritingId,
 } from '~/services/evolu/schema'
 
+const indexes = createIndexes((create) => [
+	create('indexPostSlug').on('post').column('slug'),
+	create('indexPostCreatedAt').on('post').column('createdAt'),
+	create('indexWritingSlug').on('writing').column('slug'),
+	create('indexWritingCreatedAt').on('writing').column('createdAt'),
+	create('indexWritingEffortSlug').on('writingEffort').column('slug'),
+])
+
 export const evolu = createEvolu(Database, {
 	name: 'Aurelius',
+	indexes,
 	initialData: (evolu) => {
 		evolu.create('settings', {
 			bodyFont: S.decodeSync(NonEmptyString100)(
@@ -83,6 +97,7 @@ export const postQuery = evolu.createQuery(
 	(db) => db.selectFrom('post').selectAll(),
 	{
 		logQueryExecutionTime: true,
+		logExplainQueryPlan: true,
 	}
 )
 export type PostRow = ExtractRow<typeof postQuery>
@@ -91,6 +106,7 @@ export const settingsQuery = evolu.createQuery(
 	(db) => db.selectFrom('settings').selectAll(),
 	{
 		logQueryExecutionTime: true,
+		logExplainQueryPlan: true,
 	}
 )
 export type SettingsRow = ExtractRow<typeof settingsQuery>
@@ -99,6 +115,7 @@ export const writingAllQuery = evolu.createQuery(
 	(db) => db.selectFrom('writing').selectAll(),
 	{
 		logQueryExecutionTime: true,
+		logExplainQueryPlan: true,
 	}
 )
 export type WritingRow = ExtractRow<typeof writingAllQuery>
@@ -108,6 +125,7 @@ export const writingByIdQuery = (id: WritingId) =>
 		(db) => db.selectFrom('writing').selectAll().where('id', '=', id),
 		{
 			logQueryExecutionTime: true,
+			logExplainQueryPlan: true,
 		}
 	)
 
@@ -116,6 +134,7 @@ export const writingBySlugQuery = (slug: NonEmptyString100) =>
 		(db) => db.selectFrom('writing').selectAll().where('slug', '=', slug),
 		{
 			logQueryExecutionTime: true,
+			logExplainQueryPlan: true,
 		}
 	)
 
@@ -130,6 +149,7 @@ export const writingByWritingEffortIdQuery = (
 				.where('writingEffortId', '=', writingEffortId),
 		{
 			logQueryExecutionTime: true,
+			logExplainQueryPlan: true,
 		}
 	)
 
@@ -137,6 +157,7 @@ export const writingEffortAllQuery = evolu.createQuery(
 	(db) => db.selectFrom('writingEffort').selectAll(),
 	{
 		logQueryExecutionTime: true,
+		logExplainQueryPlan: true,
 	}
 )
 export type WritingEffortRow = ExtractRow<typeof writingEffortAllQuery>
@@ -146,6 +167,7 @@ export const writingEffortByIdQuery = (id: WritingEffortId) =>
 		(db) => db.selectFrom('writingEffort').selectAll().where('id', '=', id),
 		{
 			logQueryExecutionTime: true,
+			logExplainQueryPlan: true,
 		}
 	)
 
@@ -155,6 +177,7 @@ export const writingEffortBySlugQuery = (slug: NonEmptyString100) =>
 			db.selectFrom('writingEffort').selectAll().where('slug', '=', slug),
 		{
 			logQueryExecutionTime: true,
+			logExplainQueryPlan: true,
 		}
 	)
 
@@ -162,6 +185,7 @@ export const writingSessionQuery = evolu.createQuery(
 	(db) => db.selectFrom('writingSession').selectAll(),
 	{
 		logQueryExecutionTime: true,
+		logExplainQueryPlan: true,
 	}
 )
 export type WritingSessionRow = ExtractRow<typeof writingSessionQuery>
