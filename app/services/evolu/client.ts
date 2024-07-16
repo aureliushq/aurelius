@@ -9,7 +9,6 @@ import {
 	EditorSerifFonts,
 	EditorToolbarMode,
 	MusicChannels,
-	SiteTheme,
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { Database } from '~/services/evolu/database'
@@ -34,7 +33,6 @@ export const evolu = createEvolu(Database, {
 				MusicChannels.LOFI_HIP_HOP
 			),
 			showSplashDialog: S.decodeSync(SqliteBoolean)(1),
-			theme: S.decodeSync(NonEmptyString100)(SiteTheme.SYSTEM),
 			titleFont: S.decodeSync(NonEmptyString100)(
 				EditorSansSerifFonts.INTER
 			),
