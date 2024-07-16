@@ -1,7 +1,9 @@
 import * as S from '@effect/schema/Schema'
-import { ExtractRow, SqliteBoolean } from '@evolu/common'
+import { ExtractRow, NonEmptyString1000, SqliteBoolean } from '@evolu/common'
 import { createEvolu } from '@evolu/common-web'
 import { PositiveInt, String1000 } from '@evolu/react'
+import { Temporal } from 'temporal-polyfill'
+import { GETTING_STARTED_GUIDE } from '~/lib/constants'
 import {
 	EditorSansSerifFonts,
 	EditorSerifFonts,
@@ -11,9 +13,16 @@ import {
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { Database } from '~/services/evolu/database'
-import { NonEmptyString100 } from '~/services/evolu/schema'
+import {
+	Content,
+	NonEmptyString100,
+	SqliteDateTime,
+	WritingEffortId,
+	WritingId,
+} from '~/services/evolu/schema'
 
 export const evolu = createEvolu(Database, {
+	name: 'Aurelius',
 	initialData: (evolu) => {
 		evolu.create('settings', {
 			bodyFont: S.decodeSync(NonEmptyString100)(
@@ -38,8 +47,47 @@ export const evolu = createEvolu(Database, {
 			writingDailyTarget: S.decodeSync(PositiveInt)(30),
 			youtubeLink: S.decodeSync(String1000)(''),
 		})
+		// create a default writing effort for posts
+		evolu.create('writingEffort', {
+			days: S.decodeSync(S.NonEmptyArray(NonEmptyString100))([
+				'monday',
+				'tuesday',
+				'wednesday',
+				'thursday',
+				'friday',
+			]),
+			name: S.decodeSync(NonEmptyString100)('Posts'),
+			slug: S.decodeSync(NonEmptyString100)('posts'),
+			targetWordCount: S.decodeSync(PositiveInt)(300),
+			time: S.decodeSync(SqliteDateTime)(
+				Temporal.PlainTime.from('12:30:00').toString()
+			),
+		})
+		// create a default writing effort for help content
+		const { id: helpWritingEffortId } = evolu.create('writingEffort', {
+			name: S.decodeSync(NonEmptyString100)('Help'),
+			slug: S.decodeSync(NonEmptyString100)('help'),
+		})
+		// create a getting started guide under help
+		evolu.create('writing', {
+			content: S.decodeSync(Content)(GETTING_STARTED_GUIDE.content),
+			slug: S.decodeSync(NonEmptyString100)('getting-started'),
+			title: S.decodeSync(NonEmptyString1000)(
+				GETTING_STARTED_GUIDE.title
+			),
+			wordCount: null,
+			writingEffortId: helpWritingEffortId,
+		})
 	},
 })
+
+export const postQuery = evolu.createQuery(
+	(db) => db.selectFrom('post').selectAll(),
+	{
+		logQueryExecutionTime: true,
+	}
+)
+export type PostRow = ExtractRow<typeof postQuery>
 
 export const settingsQuery = evolu.createQuery(
 	(db) => db.selectFrom('settings').selectAll(),
@@ -48,3 +96,74 @@ export const settingsQuery = evolu.createQuery(
 	}
 )
 export type SettingsRow = ExtractRow<typeof settingsQuery>
+
+export const writingAllQuery = evolu.createQuery(
+	(db) => db.selectFrom('writing').selectAll(),
+	{
+		logQueryExecutionTime: true,
+	}
+)
+export type WritingRow = ExtractRow<typeof writingAllQuery>
+
+export const writingByIdQuery = (id: WritingId) =>
+	evolu.createQuery(
+		(db) => db.selectFrom('writing').selectAll().where('id', '=', id),
+		{
+			logQueryExecutionTime: true,
+		}
+	)
+
+export const writingBySlugQuery = (slug: NonEmptyString100) =>
+	evolu.createQuery(
+		(db) => db.selectFrom('writing').selectAll().where('slug', '=', slug),
+		{
+			logQueryExecutionTime: true,
+		}
+	)
+
+export const writingByWritingEffortIdQuery = (
+	writingEffortId: WritingEffortId
+) =>
+	evolu.createQuery(
+		(db) =>
+			db
+				.selectFrom('writing')
+				.selectAll()
+				.where('writingEffortId', '=', writingEffortId),
+		{
+			logQueryExecutionTime: true,
+		}
+	)
+
+export const writingEffortAllQuery = evolu.createQuery(
+	(db) => db.selectFrom('writingEffort').selectAll(),
+	{
+		logQueryExecutionTime: true,
+	}
+)
+export type WritingEffortRow = ExtractRow<typeof writingEffortAllQuery>
+
+export const writingEffortByIdQuery = (id: WritingEffortId) =>
+	evolu.createQuery(
+		(db) => db.selectFrom('writingEffort').selectAll().where('id', '=', id),
+		{
+			logQueryExecutionTime: true,
+		}
+	)
+
+export const writingEffortBySlugQuery = (slug: NonEmptyString100) =>
+	evolu.createQuery(
+		(db) =>
+			db.selectFrom('writingEffort').selectAll().where('slug', '=', slug),
+		{
+			logQueryExecutionTime: true,
+		}
+	)
+
+export const writingSessionQuery = evolu.createQuery(
+	(db) => db.selectFrom('writingSession').selectAll(),
+	{
+		logQueryExecutionTime: true,
+	}
+)
+export type WritingSessionRow = ExtractRow<typeof writingSessionQuery>
