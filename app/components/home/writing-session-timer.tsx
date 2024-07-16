@@ -160,7 +160,7 @@ const WritingSessionTimer = ({
 
 	return (
 		<div
-			className={`absolute top-4 right-4 flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+			className={`flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 		>
 			<section className='flex items-center gap-2 h-9'>
 				{sessionTimer.isStarted() && (

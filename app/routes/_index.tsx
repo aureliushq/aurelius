@@ -2,7 +2,6 @@ import { Suspense, startTransition, useEffect, useRef, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 
-import { useQuery } from '@evolu/react'
 import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 import { CharacterCount } from '@tiptap/extension-character-count'
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
@@ -14,23 +13,34 @@ import { Placeholder } from '@tiptap/extension-placeholder'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Underline } from '@tiptap/extension-underline'
 import { Youtube } from '@tiptap/extension-youtube'
-import { useEditor } from '@tiptap/react'
+import { Editor, useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import PreferencesDialog from '~/components/common/preferences-dialog'
 import E2EEIndicator from '~/components/home/e2ee-indicator'
+import EditorToolbar from '~/components/home/editor-toolbar'
 import HelpButton from '~/components/home/help-button'
 import HelpDialog from '~/components/home/help-dialog'
 import MainMenu from '~/components/home/main-menu'
+import mainMenu from '~/components/home/main-menu'
 import ResetEditor from '~/components/home/reset-editor'
 import Saving from '~/components/home/saving'
 import SplashDialog from '~/components/home/splash-dialog'
 import Writer from '~/components/home/writer'
 import WritingSessionTimer from '~/components/home/writing-session-timer'
-import { useAutoSave } from '~/lib/hooks'
+import { ScrollArea } from '~/components/ui/scroll-area'
+import {
+	useAutoSave,
+	useSettingsQuery,
+	useWritingEffortQuery,
+} from '~/lib/hooks'
 import { useKeyboardShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { EditorShortcuts, WritingSessionSettings } from '~/lib/types'
-import { settingsQuery } from '~/services/evolu/client'
+import useWritingQuery from '~/lib/hooks/useWritingQuery'
+import {
+	EditorShortcuts,
+	EditorToolbarMode,
+	WritingSessionSettings,
+} from '~/lib/types'
 import writerStylesheet from '~/writer.css?url'
 
 export const meta: MetaFunction = () => {
@@ -48,6 +58,7 @@ export default function Index() {
 		[EditorShortcuts.BLUR]: () => blurInputs(),
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
+		[EditorShortcuts.MAIN_MENU]: () => setMainMenuOpen(!mainMenuOpen),
 		[EditorShortcuts.PREFERENCES]: () =>
 			handlePreferencesOpen(!preferencesOpen),
 		[EditorShortcuts.RESET_EDITOR]: () =>
@@ -60,18 +71,30 @@ export default function Index() {
 
 	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
 
-	const { rows } = useQuery(settingsQuery)
-	const settings = rows[0]
+	const settingsQuery = useSettingsQuery()
+	const settings = settingsQuery.read.first()
+
+	const writingEffortQuery = useWritingEffortQuery()
+	const writingEffort = writingEffortQuery.read.findBySlug('help')
+
+	const writingQuery = useWritingQuery()
+	const helpPosts = writingQuery.read.findByWritingEffortId(writingEffort?.id)
+	const gettingStartedGuide = helpPosts?.find(
+		(post) => post.slug === 'getting-started'
+	)
 
 	const titleRef = useRef<HTMLTextAreaElement>(null)
 
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
+	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
 	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
-	const [title, setTitle] = useState<string>('')
+	const [title, setTitle] = useState<string>(
+		gettingStartedGuide?.title as string
+	)
 	const [wordCount, setWordCount] = useState<number>(0)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
@@ -91,7 +114,7 @@ export default function Index() {
 	}
 
 	const [getContent, setContent] = useAutoSave({
-		data: '',
+		data: gettingStartedGuide?.content as string,
 		onSave: savePost,
 		interval: 10000,
 		debounce: 3000,
@@ -180,45 +203,51 @@ export default function Index() {
 		setWordCount(0)
 	}
 
-	useEffect(() => {
-		if (!title && !getContent()) {
-			titleRef.current?.focus()
-		}
-	}, [title, getContent()])
-
-	useEffect(() => {
-		if (titleRef.current) {
-			titleRef.current.style.height = 'inherit'
-			titleRef.current.style.height = `${titleRef.current.scrollHeight}px`
-		}
-	}, [title])
-
 	return (
 		<>
-			<div className='w-screen h-screen relative'>
-				<MainMenu
-					focusMode={focusMode}
-					triggerShortcut={triggerShortcut}
-				/>
-				<WritingSessionTimer
-					focusMode={focusMode}
-					setWritingSessionOpen={setWritingSessionOpen}
-					setWritingSessionSettings={setWritingSessionSettings}
-					writingSessionOpen={writingSessionOpen}
-					writingSessionSettings={writingSessionSettings}
-				/>
-				<div
-					className={`absolute bottom-4 right-4 flex items-center gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
-				>
-					<E2EEIndicator />
-					<HelpButton triggerShortcut={triggerShortcut} />
-				</div>
-				<div
-					className={`absolute bottom-4 left-4 h-9 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
-				>
-					<span className='text-sm text-muted-foreground px-2'>{`${wordCount} words`}</span>
-					<Saving isSaving={isSaving} />
-				</div>
+			<ScrollArea className='w-screen h-screen relative'>
+				<section className='w-screen fixed top-0 left-0 grid grid-cols-5 z-10'>
+					<div className='flex items-center justify-start p-4'>
+						<MainMenu
+							focusMode={focusMode}
+							mainMenuOpen={mainMenuOpen}
+							setMainMenuOpen={setMainMenuOpen}
+							triggerShortcut={triggerShortcut}
+						/>
+					</div>
+					<div className='col-span-3 bg-background p-4 flex items-center justify-center'>
+						{editor &&
+							settings?.toolbarMode ===
+								EditorToolbarMode.FIXED && (
+								<EditorToolbar editor={editor as Editor} />
+							)}
+					</div>
+					<div className='flex items-center justify-end p-4'>
+						<WritingSessionTimer
+							focusMode={focusMode}
+							setWritingSessionOpen={setWritingSessionOpen}
+							setWritingSessionSettings={
+								setWritingSessionSettings
+							}
+							writingSessionOpen={writingSessionOpen}
+							writingSessionSettings={writingSessionSettings}
+						/>
+					</div>
+				</section>
+				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
+					<div
+						className={`p-4 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+					>
+						<span className='text-sm text-muted-foreground px-2'>{`${wordCount} words`}</span>
+						<Saving isSaving={isSaving} />
+					</div>
+					<div
+						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+					>
+						<E2EEIndicator />
+						<HelpButton triggerShortcut={triggerShortcut} />
+					</div>
+				</section>
 				<Writer
 					editor={editor}
 					getContent={getContent}
@@ -226,7 +255,7 @@ export default function Index() {
 					setTitle={setTitle}
 					title={title}
 				/>
-			</div>
+			</ScrollArea>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />
 			<Suspense>
 				<PreferencesDialog

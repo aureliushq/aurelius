@@ -1,9 +1,9 @@
 .editor-wrapper {
-    @apply max-w-3xl;
+    @apply max-w-2xl;
 }
 
 .editor-wrapper > div {
-    @apply flex w-full max-w-3xl items-start justify-center;
+    @apply flex w-full max-w-2xl items-start justify-center;
 }
 
 .editor-wrapper .tippy-box {
@@ -11,7 +11,7 @@
 }
 
 .ProseMirror {
-    @apply w-full max-w-3xl min-h-[640px] outline-none border-none text-xl text-foreground font-normal leading-relaxed;
+    @apply w-full max-w-2xl min-h-[640px] outline-none border-none text-base text-foreground font-normal leading-relaxed;
 }
 
 .ProseMirror.ProseMirror-focused {
@@ -85,17 +85,17 @@
 /*    margin: 0.67em 0;*/
 /*}*/
 
-/*.ProseMirror h2 {*/
+.ProseMirror h2 {
 /*    @apply max-w-3xl;*/
 /*    font-size: 2.3rem;*/
-/*    margin: 0.75em 0;*/
-/*}*/
+    margin: 0.75rem 0;
+}
 
-/*.ProseMirror h3 {*/
+.ProseMirror h3 {
 /*    @apply max-w-3xl;*/
 /*    font-size: 2rem;*/
-/*    margin: 0.83em 0;*/
-/*}*/
+    margin: 0.83rem 0;
+}
 
 .ProseMirror pre {
     @apply max-w-3xl rounded-lg bg-[#d5d6db] dark:bg-[#1a1b26];
@@ -112,21 +112,18 @@
 }
 
 .ProseMirror p code {
-    @apply rounded-lg bg-[#d5d6db] px-2 py-1 text-[#565a6e] dark:bg-[#1a1b26] dark:text-[#9aa5ce];
-    font-size: 1.1rem;
-    /* background: #0d0d0d; */
+    @apply rounded-lg bg-[#d5d6db] px-1 py-0.5 font-normal text-[#565a6e] dark:bg-[#1a1b26] dark:text-muted-foreground;
+    font-size: 1rem;
+    background: #0d0d0d;
     font-family: 'JetBrainsMono', monospace;
 }
 
 .ProseMirror blockquote {
-    @apply max-w-3xl;
-    padding-left: 1rem;
-    border-left: 2px solid;
+    @apply max-w-3xl px-4 py-1 border-l-2 !border-primary bg-accent/30;
 }
 
 .ProseMirror a {
-    @apply max-w-3xl;
-    color: #2cb67d;
+    @apply max-w-3xl text-primary;
 }
 
 .ProseMirror figure {
@@ -155,4 +152,8 @@
     max-width: 100vw;
     margin: auto calc(50% - 100vw);
     transform: translateX(calc(100vw - 50%));
+}
+
+.ProseMirror hr {
+    @apply my-10;
 }
