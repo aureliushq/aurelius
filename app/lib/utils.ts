@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { ModifierKeys, ShortcutConfig } from '~/lib/hooks/useKeyboardShortcuts'
+import { ModifierKeys } from '~/lib/types'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -28,3 +28,14 @@ export const getShortcutWithModifiers = (
 		.map(([mod]) => mod)
 		.join('+')}+${key}`
 }
+
+export const capitalize = ({
+	str,
+	lower = false,
+}: {
+	str: string
+	lower: boolean
+}) =>
+	(lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
+		match.toUpperCase()
+	)
