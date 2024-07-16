@@ -1,3 +1,4 @@
+import { content } from '~/components/common/getting-started'
 import {
 	EditorSansSerifFonts,
 	EditorSerifFonts,
@@ -83,3 +84,8 @@ export const FORMATTING_SHORTCUTS: ShortcutConfig[] = [
 		description: 'Blockquote',
 	},
 ]
+
+export const GETTING_STARTED_GUIDE = {
+	title: 'Getting started with Aurelius',
+	content: content,
+}
