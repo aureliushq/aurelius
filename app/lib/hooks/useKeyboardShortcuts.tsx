@@ -28,6 +28,12 @@ const allShortcuts: AllShortcuts = {
 		modifiers: {},
 	},
 	// TODO: this is a global shortcut
+	[EditorShortcuts.MAIN_MENU]: {
+		description: 'Main Menu',
+		key: 'm',
+		modifiers: { ctrl: true, shift: true },
+	},
+	// TODO: this is a global shortcut
 	[EditorShortcuts.PREFERENCES]: {
 		description: 'Preferences',
 		key: 'p',
@@ -45,7 +51,7 @@ const allShortcuts: AllShortcuts = {
 	},
 	[EditorShortcuts.WRITING_SESSION]: {
 		description: 'New Writing Session',
-		key: 'w',
+		key: 't',
 		modifiers: {},
 	},
 }

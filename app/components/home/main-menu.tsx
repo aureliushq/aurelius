@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react'
+
 import { Link } from '@remix-run/react'
 
 import {
@@ -11,19 +13,16 @@ import {
 	InstagramIcon,
 	ListIcon,
 	ListTreeIcon,
-	LogInIcon,
 	MenuIcon,
 	PencilIcon,
 	RefreshCcwIcon,
 	RefreshCwIcon,
-	RocketIcon,
 	SettingsIcon,
 	ShieldIcon,
 	TimerIcon,
 	TwitterIcon,
 } from 'lucide-react'
 import KeyboardShortcut from '~/components/home/keyboard-shortcut'
-import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import {
 	DropdownMenu,
@@ -43,15 +42,22 @@ import { getShortcutWithModifiers } from '~/lib/utils'
 
 type MainMenuProps = {
 	focusMode: boolean
+	mainMenuOpen: boolean
+	setMainMenuOpen: Dispatch<SetStateAction<boolean>>
 	triggerShortcut: (shortcutName: string) => void
 }
 
-const MainMenu = ({ focusMode, triggerShortcut }: MainMenuProps) => {
+const MainMenu = ({
+	focusMode,
+	mainMenuOpen,
+	setMainMenuOpen,
+	triggerShortcut,
+}: MainMenuProps) => {
 	return (
 		<div
-			className={`absolute top-4 left-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+			className={`transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 		>
-			<DropdownMenu>
+			<DropdownMenu onOpenChange={setMainMenuOpen} open={mainMenuOpen}>
 				<DropdownMenuTrigger asChild>
 					<Button className='w-9 h-9' size='icon' variant='outline'>
 						<MenuIcon className='w-4 h-4' />

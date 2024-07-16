@@ -61,6 +61,7 @@ export enum EditorShortcuts {
 	BLUR = 'blur',
 	FOCUS_MODE = 'focusMode',
 	HELP = 'help',
+	MAIN_MENU = 'mainMenu',
 	PREFERENCES = 'preferences',
 	RESET_EDITOR = 'resetEditor',
 	SPLASH_DIALOG = 'splashDialog',
