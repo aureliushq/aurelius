@@ -1,16 +1,19 @@
-import { LinksFunction } from '@remix-run/node'
+import { LinksFunction, LoaderFunction } from '@remix-run/node'
 import {
 	Links,
 	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useLoaderData,
 } from '@remix-run/react'
 
 import { EvoluProvider } from '@evolu/react'
+import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
 import { Toaster } from '~/components/ui/toaster'
 import stylesheet from '~/globals.css?url'
 import { evolu } from '~/services/evolu/client'
+import { themeSessionResolver } from '~/services/theme.server'
 
 export const links: LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.bunny.net' },
@@ -22,26 +25,48 @@ export const links: LinksFunction = () => [
 	{ rel: 'stylesheet', href: stylesheet },
 ]
 
-export default function App() {
+export const loader: LoaderFunction = async ({ request }) => {
+	const { getTheme } = await themeSessionResolver(request)
+	return {
+		theme: getTheme(),
+	}
+}
+
+function App() {
+	const data = useLoaderData<typeof loader>()
+	const [theme] = useTheme()
+
 	return (
-		<html className='dark' lang='en'>
+		<html className={theme ?? 'dark'} lang='en'>
 			<head>
+				<title>Aurelius</title>
 				<meta charSet='utf-8' />
 				<meta
 					name='viewport'
 					content='width=device-width, initial-scale=1'
 				/>
 				<Meta />
+				<PreventFlashOnWrongTheme ssrTheme={Boolean(data?.theme)} />
 				<Links />
 			</head>
 			<body className='w-screen h-screen !p-0'>
-				<EvoluProvider value={evolu}>
-					<Outlet />
-					<Toaster />
-				</EvoluProvider>
+				<Outlet />
+				<Toaster />
 				<ScrollRestoration />
 				<Scripts />
 			</body>
 		</html>
+	)
+}
+
+export default function AppWithProviders() {
+	const data = useLoaderData<typeof loader>()
+
+	return (
+		<ThemeProvider specifiedTheme={data?.theme} themeAction='/action/theme'>
+			<EvoluProvider value={evolu}>
+				<App />
+			</EvoluProvider>
+		</ThemeProvider>
 	)
 }

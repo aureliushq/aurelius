@@ -8,6 +8,7 @@ import { useEvolu } from '@evolu/react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Effect, Exit } from 'effect'
 import { CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'lucide-react'
+import { Theme, useTheme } from 'remix-themes'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -52,7 +53,11 @@ import {
 	SITE_THEMES,
 	TOOLBAR_MODES,
 } from '~/lib/constants'
-import { PreferencesDialogProps, WritingDailyGoalType } from '~/lib/types'
+import {
+	PreferencesDialogProps,
+	SiteTheme,
+	WritingDailyGoalType,
+} from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
 import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
@@ -142,6 +147,7 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 }
 
 const Appearance = ({ settings }: { settings: SettingsRow }) => {
+	const [theme, setTheme, { definedBy }] = useTheme()
 	const { toast } = useToast()
 	const { update } = useEvolu<Database>()
 
@@ -150,18 +156,24 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 		const formData = new FormData(event.currentTarget)
 
 		const bodyFont = formData.get('body-font') as string
-		const theme = formData.get('theme') as string
 		const titleFont = formData.get('title-font') as string
 
 		update('settings', {
 			id: settings.id,
 			bodyFont: S.decodeSync(NonEmptyString100)(bodyFont),
-			theme: S.decodeSync(NonEmptyString100)(theme),
 			titleFont: S.decodeSync(NonEmptyString100)(titleFont),
 		})
 		toast({
 			description: <SavedToastContent />,
 		})
+	}
+
+	const handleThemeChange = (theme: string) => {
+		if (theme === SiteTheme.SYSTEM) {
+			setTheme(null)
+		} else {
+			setTheme(theme as Theme)
+		}
 	}
 
 	return (
@@ -175,8 +187,13 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 						</small>
 					</Label>
 					<Select
-						defaultValue={settings.theme as string}
+						onValueChange={handleThemeChange}
 						name='theme'
+						value={
+							definedBy === 'SYSTEM'
+								? SiteTheme.SYSTEM
+								: theme ?? SiteTheme.DARK
+						}
 					>
 						<SelectTrigger className='w-[180px]'>
 							<SelectValue placeholder='Fonts' />

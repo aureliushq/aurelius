@@ -112,9 +112,7 @@
 }
 
 .ProseMirror p code {
-    @apply rounded-lg bg-[#d5d6db] px-1 py-0.5 font-normal text-[#565a6e] dark:bg-[#1a1b26] dark:text-muted-foreground;
-    font-size: 1rem;
-    background: #0d0d0d;
+    @apply rounded-lg bg-accent px-1 py-0.5 font-normal text-accent-foreground;
     font-family: 'JetBrainsMono', monospace;
 }
 
