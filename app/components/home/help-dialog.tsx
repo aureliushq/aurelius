@@ -1,15 +1,14 @@
-import { Link } from '@remix-run/react'
-
-import { ExternalLinkIcon } from 'lucide-react'
+// import { Link } from '@remix-run/react'
+// import { ExternalLinkIcon } from 'lucide-react'
 import KeyboardShortcut from '~/components/home/keyboard-shortcut'
-import { Button } from '~/components/ui/button'
+// import { Button } from '~/components/ui/button'
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 } from '~/components/ui/dialog'
-import { Separator } from '~/components/ui/separator'
+// import { Separator } from '~/components/ui/separator'
 import { FORMATTING_SHORTCUTS } from '~/lib/constants'
 import {
 	allShortcuts,
@@ -24,21 +23,21 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 			<DialogContent className='w-[48rem] max-w-none flex flex-col gap-8'>
 				<DialogHeader className='flex flex-col gap-2'>
 					<DialogTitle>Help</DialogTitle>
-					<Separator />
-					<div className='flex items-center gap-2'>
-						<Link to='/docs'>
-							<Button size='sm' variant='secondary'>
-								<ExternalLinkIcon className='w-4 h-4 mr-2' />
-								<span>Documentation</span>
-							</Button>
-						</Link>
-						<Link to='/blog'>
-							<Button size='sm' variant='secondary'>
-								<ExternalLinkIcon className='w-4 h-4 mr-2' />
-								<span>Read our blog</span>
-							</Button>
-						</Link>
-					</div>
+					{/*<Separator />*/}
+					{/*<div className='flex items-center gap-2'>*/}
+					{/*	<Link to='/docs'>*/}
+					{/*		<Button size='sm' variant='secondary'>*/}
+					{/*			<ExternalLinkIcon className='w-4 h-4 mr-2' />*/}
+					{/*			<span>Documentation</span>*/}
+					{/*		</Button>*/}
+					{/*	</Link>*/}
+					{/*	<Link to='/blog'>*/}
+					{/*		<Button size='sm' variant='secondary'>*/}
+					{/*			<ExternalLinkIcon className='w-4 h-4 mr-2' />*/}
+					{/*			<span>Read our blog</span>*/}
+					{/*		</Button>*/}
+					{/*	</Link>*/}
+					{/*</div>*/}
 				</DialogHeader>
 				<div className='columns-2 gap-x-8'>
 					<section className='flex flex-col items-start justify-start gap-4 mb-4'>
@@ -67,7 +66,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 							})}
 						</ul>
 					</section>
-					<section className='col-span-1 flex flex-col items-start justify-start gap-4 mb-4'>
+					<section className='break-inside-avoid-column flex flex-col items-start justify-start gap-4 mb-4'>
 						<h4 className='text-base font-semibold'>
 							Keyboard Shortcuts
 						</h4>
