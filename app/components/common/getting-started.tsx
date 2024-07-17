@@ -160,8 +160,7 @@ const GettingStarted = () => {
 				>
 					X
 				</a>{' '}
-				for tips, inspiration, and updates. Join the conversation and
-				share your Aurelius experience.
+				for tips, inspiration, and updates.
 			</p>
 		</>
 	)
