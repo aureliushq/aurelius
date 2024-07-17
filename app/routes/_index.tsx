@@ -1,4 +1,4 @@
-import { Suspense, startTransition, useRef, useState } from 'react'
+import { Suspense, startTransition, useEffect, useRef, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 
@@ -39,6 +39,7 @@ import {
 	EditorShortcuts,
 	EditorToolbarMode,
 	WritingSessionSettings,
+	WritingSessionStatus,
 } from '~/lib/types'
 import writerStylesheet from '~/writer.css?url'
 
@@ -103,6 +104,8 @@ export default function Index() {
 			music: true,
 			notifyOnTargetDuration: true,
 		})
+	const [writingSessionStatus, setWritingSessionStatus] =
+		useState<WritingSessionStatus>(WritingSessionStatus.NOT_STARTED)
 
 	const savePost = (content: string) => {
 		setIsSaving(true)
@@ -202,6 +205,15 @@ export default function Index() {
 		setWordCount(0)
 	}
 
+	useEffect(() => {
+		if (
+			writingSessionStatus === WritingSessionStatus.RUNNING &&
+			writingSessionSettings.focusMode
+		) {
+			setFocusMode(writingSessionSettings.focusMode)
+		}
+	}, [writingSessionSettings])
+
 	return (
 		<>
 			<ScrollArea className='w-screen h-screen relative'>
@@ -224,10 +236,12 @@ export default function Index() {
 					<div className='flex items-center justify-end p-4'>
 						<WritingSessionTimer
 							focusMode={focusMode}
+							setFocusMode={setFocusMode}
 							setWritingSessionOpen={setWritingSessionOpen}
 							setWritingSessionSettings={
 								setWritingSessionSettings
 							}
+							setWritingSessionStatus={setWritingSessionStatus}
 							wordCount={wordCount}
 							writingSessionOpen={writingSessionOpen}
 							writingSessionSettings={writingSessionSettings}

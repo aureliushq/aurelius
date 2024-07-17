@@ -41,7 +41,11 @@ import {
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
 import { useWritingSessionQuery } from '~/lib/hooks'
-import { WritingSessionDialogProps, WritingSessionSettings } from '~/lib/types'
+import {
+	WritingSessionDialogProps,
+	WritingSessionSettings,
+	WritingSessionStatus,
+} from '~/lib/types'
 import { formatTime } from '~/lib/utils'
 import { WordCount } from '~/services/evolu/schema'
 
@@ -82,15 +86,19 @@ const SessionTimer = ({
 
 type WritingSessionTimerProps = {
 	focusMode: boolean
+	setFocusMode: Dispatch<SetStateAction<boolean>>
 	setWritingSessionSettings: Dispatch<SetStateAction<WritingSessionSettings>>
+	setWritingSessionStatus: Dispatch<SetStateAction<WritingSessionStatus>>
 	wordCount: number
 	writingSessionSettings: WritingSessionSettings
 } & WritingSessionDialogProps
 
 const WritingSessionTimer = ({
 	focusMode,
+	setFocusMode,
 	setWritingSessionOpen,
 	setWritingSessionSettings,
+	setWritingSessionStatus,
 	wordCount,
 	writingSessionOpen,
 	writingSessionSettings,
@@ -103,12 +111,20 @@ const WritingSessionTimer = ({
 
 	const pauseWritingSession = () => {
 		sessionTimer.pause()
-		// TODO: pause the music, disable focus time if enabled
+		setWritingSessionStatus(WritingSessionStatus.PAUSED)
+		if (writingSessionSettings.focusMode) {
+			setFocusMode(false)
+		}
+		// TODO: pause the music
 	}
 
 	const resumeWritingSession = () => {
 		sessionTimer.resume()
-		// TODO: resume playing music if enabled, re-enable focus time if enabled
+		setWritingSessionStatus(WritingSessionStatus.RUNNING)
+		if (writingSessionSettings.focusMode) {
+			setFocusMode(true)
+		}
+		// TODO: resume playing music if enabled
 	}
 
 	const startWritingSession = async (event: FormEvent<HTMLFormElement>) => {
@@ -133,12 +149,17 @@ const WritingSessionTimer = ({
 		// start the timer
 		sessionTimer.start()
 		setWritingSessionOpen(false)
+		setWritingSessionStatus(WritingSessionStatus.RUNNING)
 	}
 
 	const stopWritingSession = () => {
 		const duration = sessionTimer.getElapsedRunningTime()
 		sessionTimer.stop()
-		// TODO: stop the music, disable focus time if enabled
+		setWritingSessionStatus(WritingSessionStatus.STOPPED)
+		if (writingSessionSettings.focusMode) {
+			setFocusMode(false)
+		}
+		// TODO: stop the music
 		writingSessionQuery.create('writingSession', {
 			duration: S.decodeSync(PositiveInt)(duration),
 			startingWordCount: S.decodeSync(WordCount)(startingWordCount),

@@ -57,6 +57,13 @@ export type WritingSessionSettings = {
 	notifyOnTargetDuration: boolean
 }
 
+export enum WritingSessionStatus {
+	NOT_STARTED = 'NOT_STARTED',
+	PAUSED = 'PAUSED',
+	RUNNING = 'RUNNING',
+	STOPPED = 'STOPPED',
+}
+
 export enum EditorShortcuts {
 	BLUR = 'blur',
 	FOCUS_MODE = 'focusMode',
