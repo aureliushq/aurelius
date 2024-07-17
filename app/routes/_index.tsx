@@ -210,6 +210,12 @@ export default function Index() {
 		) {
 			setFocusMode(writingSessionSettings.focusMode)
 		}
+		if (
+			writingSessionStatus === WritingSessionStatus.RUNNING &&
+			writingSessionSettings.music
+		) {
+			setIsMusicPlaying(writingSessionSettings.music)
+		}
 	}, [writingSessionSettings])
 
 	return (
@@ -235,7 +241,9 @@ export default function Index() {
 					<div className='flex items-center justify-end p-4'>
 						<WritingSessionTimer
 							focusMode={focusMode}
+							isMusicPlaying={isMusicPlaying}
 							setFocusMode={setFocusMode}
+							setIsMusicPlaying={setIsMusicPlaying}
 							setWritingSessionOpen={setWritingSessionOpen}
 							setWritingSessionSettings={
 								setWritingSessionSettings

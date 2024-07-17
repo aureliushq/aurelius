@@ -86,7 +86,9 @@ const SessionTimer = ({
 
 type WritingSessionTimerProps = {
 	focusMode: boolean
+	isMusicPlaying: boolean
 	setFocusMode: Dispatch<SetStateAction<boolean>>
+	setIsMusicPlaying: Dispatch<SetStateAction<boolean>>
 	setWritingSessionSettings: Dispatch<SetStateAction<WritingSessionSettings>>
 	setWritingSessionStatus: Dispatch<SetStateAction<WritingSessionStatus>>
 	wordCount: number
@@ -95,7 +97,9 @@ type WritingSessionTimerProps = {
 
 const WritingSessionTimer = ({
 	focusMode,
+	isMusicPlaying,
 	setFocusMode,
+	setIsMusicPlaying,
 	setWritingSessionOpen,
 	setWritingSessionSettings,
 	setWritingSessionStatus,
@@ -115,7 +119,9 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.focusMode) {
 			setFocusMode(false)
 		}
-		// TODO: pause the music
+		if (writingSessionSettings.music) {
+			setIsMusicPlaying(false)
+		}
 	}
 
 	const resumeWritingSession = () => {
@@ -124,7 +130,9 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.focusMode) {
 			setFocusMode(true)
 		}
-		// TODO: resume playing music if enabled
+		if (writingSessionSettings.music) {
+			setIsMusicPlaying(true)
+		}
 	}
 
 	const startWritingSession = async (event: FormEvent<HTMLFormElement>) => {
@@ -159,7 +167,9 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.focusMode) {
 			setFocusMode(false)
 		}
-		// TODO: stop the music
+		if (writingSessionSettings.music) {
+			setIsMusicPlaying(false)
+		}
 		writingSessionQuery.create('writingSession', {
 			duration: S.decodeSync(PositiveInt)(duration),
 			startingWordCount: S.decodeSync(WordCount)(startingWordCount),
