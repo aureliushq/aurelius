@@ -1,4 +1,5 @@
 import { Suspense, startTransition, useEffect, useRef, useState } from 'react'
+import ReactPlayer from 'react-player'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 
@@ -16,6 +17,7 @@ import { Youtube } from '@tiptap/extension-youtube'
 import { Editor, useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
+import { PauseIcon, PlayIcon } from 'lucide-react'
 import PreferencesDialog from '~/components/common/preferences-dialog'
 import E2EEIndicator from '~/components/home/e2ee-indicator'
 import EditorToolbar from '~/components/home/editor-toolbar'
@@ -27,7 +29,9 @@ import Saving from '~/components/home/saving'
 import SplashDialog from '~/components/home/splash-dialog'
 import Writer from '~/components/home/writer'
 import WritingSessionTimer from '~/components/home/writing-session-timer'
+import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
+import { MUSIC_STATIONS } from '~/lib/constants'
 import {
 	useAutoSave,
 	useSettingsQuery,
@@ -38,6 +42,7 @@ import useWritingQuery from '~/lib/hooks/useWritingQuery'
 import {
 	EditorShortcuts,
 	EditorToolbarMode,
+	MusicChannels,
 	WritingSessionSettings,
 	WritingSessionStatus,
 } from '~/lib/types'
@@ -87,6 +92,7 @@ export default function Index() {
 
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
+	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
@@ -147,13 +153,6 @@ export default function Index() {
 					arrow: true,
 				},
 			}),
-			// SuperImage.configure({
-			// 	inline: true,
-			// 	allowBase64: true,
-			// 	HTMLAttributes: {
-			// 		class: 'super-image',
-			// 	},
-			// }),
 			CodeBlockLowlight.configure({
 				lowlight,
 			}),
@@ -161,20 +160,13 @@ export default function Index() {
 				width: 762,
 				height: 432,
 			}),
-			// TaskList,
-			// TaskItem.configure({
-			// 	nested: true,
-			// }),
 			Link.configure({ linkOnPaste: true, openOnClick: false }),
 			Placeholder.configure({
 				placeholder: 'Start writing...',
 			}),
 			Highlight.configure({ multicolor: true }),
-			StarterKit.configure({
-				heading: {
-					levels: [2, 3, 4, 5, 6],
-				},
-			}),
+			// @ts-expect-error: not sure why this is throwing an error but I'm gonna replace it with individual packages anyway so it's fine
+			StarterKit.configure({}),
 			CharacterCount,
 			TextStyle,
 			FontFamily,
@@ -183,6 +175,12 @@ export default function Index() {
 				levels: [2, 3, 4],
 			}),
 		],
+		onCreate({ editor }) {
+			let html = editor.isEmpty ? '' : editor.getHTML()
+			const wordCount = editor.storage.characterCount.words()
+			setContent(html)
+			setWordCount(wordCount)
+		},
 		onUpdate({ editor }) {
 			let html = editor.isEmpty ? '' : editor.getHTML()
 			const wordCount = editor.storage.characterCount.words()
@@ -218,13 +216,14 @@ export default function Index() {
 		<>
 			<ScrollArea className='w-screen h-screen relative'>
 				<section className='w-screen fixed top-0 left-0 grid grid-cols-5 z-10'>
-					<div className='flex items-center justify-start p-4'>
+					<div className='flex items-center justify-start p-4 gap-4'>
 						<MainMenu
 							focusMode={focusMode}
 							mainMenuOpen={mainMenuOpen}
 							setMainMenuOpen={setMainMenuOpen}
 							triggerShortcut={triggerShortcut}
 						/>
+						<Saving isSaving={isSaving} />
 					</div>
 					<div className='col-span-3 bg-background p-4 flex items-center justify-center'>
 						{editor &&
@@ -252,12 +251,50 @@ export default function Index() {
 					<div
 						className={`p-4 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
-						<span className='text-sm text-muted-foreground px-2'>{`${wordCount} words`}</span>
-						<Saving isSaving={isSaving} />
+						{isMusicPlaying ? (
+							<Button
+								className='w-9 h-9'
+								onClick={() => setIsMusicPlaying?.(false)}
+								size='icon'
+								variant='outline'
+							>
+								<PauseIcon className='w-4 h-4' />
+							</Button>
+						) : (
+							<Button
+								className='w-9 h-9'
+								onClick={() => setIsMusicPlaying?.(true)}
+								size='icon'
+								variant='outline'
+							>
+								<PlayIcon className='w-4 h-4' />
+							</Button>
+						)}
+						<Suspense fallback={<div>Loading...</div>}>
+							<ReactPlayer
+								playing={isMusicPlaying}
+								// @ts-ignore
+								url={
+									settings?.youtubeLink ||
+									MUSIC_STATIONS[
+										settings?.musicChannel as MusicChannels
+									]
+								}
+								width='0'
+								height='0'
+								loop={true}
+								config={{
+									youtube: {
+										playerVars: { control: 1, start: 1 },
+									},
+								}}
+							/>
+						</Suspense>
 					</div>
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
+						<span className='text-sm text-muted-foreground'>{`${wordCount} words`}</span>
 						<E2EEIndicator />
 						<HelpButton triggerShortcut={triggerShortcut} />
 					</div>

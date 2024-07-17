@@ -16,6 +16,13 @@ export const CHANNELS = [
 	{ value: MusicChannels.POST_ROCK, label: 'Post Rock' },
 ]
 
+export const MUSIC_STATIONS = {
+	[MusicChannels.LOFI_HIP_HOP]: 'https://www.youtube.com/watch?v=jfKfPfyJRdk',
+	[MusicChannels.CHILL_SYNTH]: 'https://www.youtube.com/watch?v=4xDzrJKXOOY',
+	[MusicChannels.CHILLSTEP]: 'https://www.youtube.com/watch?v=5yx6BWlEVcY',
+	[MusicChannels.POST_ROCK]: 'https://www.youtube.com/watch?v=MRhplCpkPKE',
+}
+
 export const DAILY_GOAL_TYPE = [
 	{ value: WritingDailyGoalType.DURATION, label: 'Duration' },
 	{ value: WritingDailyGoalType.WORD_COUNT, label: 'Word Count' },
