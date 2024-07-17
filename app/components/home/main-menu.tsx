@@ -328,15 +328,15 @@ const MainMenu = ({
 							<span>Privacy</span>
 						</Link>
 					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<Link
-							className='w-full h-full flex items-center justify-start cursor-pointer'
-							to='/changelog'
-						>
-							<ListTreeIcon className='mr-2 w-4 h-4' />
-							<span>Changelog</span>
-						</Link>
-					</DropdownMenuItem>
+					{/*<DropdownMenuItem>*/}
+					{/*	<Link*/}
+					{/*		className='w-full h-full flex items-center justify-start cursor-pointer'*/}
+					{/*		to='/changelog'*/}
+					{/*	>*/}
+					{/*		<ListTreeIcon className='mr-2 w-4 h-4' />*/}
+					{/*		<span>Changelog</span>*/}
+					{/*	</Link>*/}
+					{/*</DropdownMenuItem>*/}
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>
