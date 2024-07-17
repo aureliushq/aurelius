@@ -181,11 +181,11 @@ export const writingEffortBySlugQuery = (slug: NonEmptyString100) =>
 		}
 	)
 
-export const writingSessionQuery = evolu.createQuery(
+export const writingSessionAllQuery = evolu.createQuery(
 	(db) => db.selectFrom('writingSession').selectAll(),
 	{
 		logQueryExecutionTime: true,
 		logExplainQueryPlan: true,
 	}
 )
-export type WritingSessionRow = ExtractRow<typeof writingSessionQuery>
+export type WritingSessionRow = ExtractRow<typeof writingSessionAllQuery>

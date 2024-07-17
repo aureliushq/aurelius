@@ -1,4 +1,5 @@
 import * as S from '@effect/schema/Schema'
+import { Number } from '@effect/schema/Schema'
 import {
 	NonEmptyString1000,
 	PositiveInt,
@@ -22,6 +23,11 @@ const TemporalString = S.String.pipe(S.brand('TemporalString'))
 
 export const SqliteDateTime = TemporalString.pipe(S.brand('SqliteDateTime'))
 export type SqliteDateTime = typeof SqliteDateTime.Type
+
+export const WordCount = Number.pipe(
+	S.greaterThanOrEqualTo(0),
+	S.brand('WordCount')
+)
 
 const SettingsId = id('Settings')
 export type SettingsId = typeof SettingsId.Type
@@ -83,7 +89,7 @@ export type WritingSessionId = typeof WritingSessionId.Type
 export const WritingSessionTable = table({
 	id: WritingSessionId,
 	duration: PositiveInt,
-	startingWordCount: PositiveInt,
-	endingWordCount: PositiveInt,
-	writingEffortId: WritingEffortId,
+	startingWordCount: WordCount,
+	endingWordCount: WordCount,
+	// TODO: connect to writing table
 })

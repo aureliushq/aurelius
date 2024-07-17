@@ -228,6 +228,7 @@ export default function Index() {
 							setWritingSessionSettings={
 								setWritingSessionSettings
 							}
+							wordCount={wordCount}
 							writingSessionOpen={writingSessionOpen}
 							writingSessionSettings={writingSessionSettings}
 						/>

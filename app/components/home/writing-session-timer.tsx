@@ -10,6 +10,8 @@ import { Timer, TimerRenderer, useTimer } from 'react-use-precision-timer'
 
 import { Form } from '@remix-run/react'
 
+import * as S from '@effect/schema/Schema'
+import { PositiveInt } from '@evolu/common'
 import {
 	CircleHelpIcon,
 	PauseIcon,
@@ -38,8 +40,10 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
+import { useWritingSessionQuery } from '~/lib/hooks'
 import { WritingSessionDialogProps, WritingSessionSettings } from '~/lib/types'
 import { formatTime } from '~/lib/utils'
+import { WordCount } from '~/services/evolu/schema'
 
 const HelpTooltip = ({ children }: { children: string | ReactNode }) => {
 	return (
@@ -79,6 +83,7 @@ const SessionTimer = ({
 type WritingSessionTimerProps = {
 	focusMode: boolean
 	setWritingSessionSettings: Dispatch<SetStateAction<WritingSessionSettings>>
+	wordCount: number
 	writingSessionSettings: WritingSessionSettings
 } & WritingSessionDialogProps
 
@@ -86,12 +91,15 @@ const WritingSessionTimer = ({
 	focusMode,
 	setWritingSessionOpen,
 	setWritingSessionSettings,
+	wordCount,
 	writingSessionOpen,
 	writingSessionSettings,
 }: WritingSessionTimerProps) => {
 	const [elapsedMinutes, setElapsedMinutes] = useState(0)
+	const [startingWordCount, setStartingWordCount] = useState(wordCount)
 	const sessionTimer = useTimer()
 	const { toast } = useToast()
+	const writingSessionQuery = useWritingSessionQuery()
 
 	const pauseWritingSession = () => {
 		sessionTimer.pause()
@@ -128,8 +136,14 @@ const WritingSessionTimer = ({
 	}
 
 	const stopWritingSession = () => {
+		const duration = sessionTimer.getElapsedRunningTime()
 		sessionTimer.stop()
-		// TODO: stop the music, disable focus time if enabled, save the progress
+		// TODO: stop the music, disable focus time if enabled
+		writingSessionQuery.create('writingSession', {
+			duration: S.decodeSync(PositiveInt)(duration),
+			startingWordCount: S.decodeSync(WordCount)(startingWordCount),
+			endingWordCount: S.decodeSync(WordCount)(wordCount),
+		})
 	}
 
 	useEffect(() => {
