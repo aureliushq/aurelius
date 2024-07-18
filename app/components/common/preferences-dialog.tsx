@@ -7,7 +7,12 @@ import { PositiveInt, String1000, parseMnemonic } from '@evolu/common'
 import { useEvolu } from '@evolu/react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Effect, Exit } from 'effect'
-import { CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'lucide-react'
+import {
+	CheckIcon,
+	ClipboardIcon,
+	ExternalLinkIcon,
+	TriangleAlertIcon,
+} from 'lucide-react'
 import { Theme, useTheme } from 'remix-themes'
 import {
 	AlertDialog,
@@ -45,21 +50,29 @@ import { Separator } from '~/components/ui/separator'
 import { Switch } from '~/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Textarea } from '~/components/ui/textarea'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
 import {
 	ALL_FONTS,
 	CHANNELS,
 	DAILY_GOAL_TYPE,
+	MUSIC_STATIONS,
 	SITE_THEMES,
 	TOOLBAR_MODES,
 } from '~/lib/constants'
 import {
+	MusicChannels,
 	PreferencesDialogProps,
 	SiteTheme,
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
-import { SettingsRow, settingsQuery } from '~/services/evolu/client'
+import { SettingsRow } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
 
@@ -455,16 +468,21 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 
 const Music = ({ settings }: { settings: SettingsRow }) => {
 	const { update } = useEvolu<Database>()
+	const [selectedChannel, setSelectedChannel] = useState(
+		settings.musicChannel as string
+	)
 	const { toast } = useToast()
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 
+		const enableMusicPlayer = formData.get('enable-music-player') === 'on'
 		const musicChannel = formData.get('music-channel') as string
 		const youtubeLink = formData.get('youtube-link') as string
 		update('settings', {
 			id: settings.id,
+			enableMusicPlayer,
 			musicChannel: S.decodeSync(NonEmptyString100)(musicChannel),
 			youtubeLink: S.decodeSync(String1000)(youtubeLink),
 		})
@@ -477,29 +495,78 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
 			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
+					Enable music player
+					<small className='text-xs font-light'>
+						Listen to focus music while you write.
+					</small>
+				</Label>
+				<div className='flex items-center'>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger>
+								<TriangleAlertIcon className='w-4 h-4 mr-4 text-yellow-500' />
+							</TooltipTrigger>
+							<TooltipContent>
+								<p className='text-sm text-center'>
+									Important: This feature uses YouTube for
+									music playback. Please be aware that
+									enabling it will allow YouTube to track your
+									activity on this site.
+									<br /> If you prefer to avoid tracking, you
+									can open the music channel link in a
+									separate tab and play it there instead.
+								</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
+					<Switch
+						defaultChecked={!!settings.enableMusicPlayer}
+						name='enable-music-player'
+					/>
+				</div>
+			</div>
+			<Separator />
+			<div className='flex items-center justify-between h-10'>
+				<Label className='flex flex-col gap-2'>
 					Channels
 					<small className='text-xs font-light'>
 						Genre of focus music to play in the music player
 					</small>
 				</Label>
-				<Select
-					defaultValue={settings.musicChannel as string}
-					name='music-channel'
-				>
-					<SelectTrigger className='w-[180px]'>
-						<SelectValue placeholder='Channels' />
-					</SelectTrigger>
-					<SelectContent>
-						{CHANNELS.map((channel) => (
-							<SelectItem
-								key={channel.value}
-								value={channel.value}
-							>
-								{channel.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
+				<div className='flex items-center gap-2'>
+					<Select
+						name='music-channel'
+						onValueChange={setSelectedChannel}
+						value={selectedChannel}
+					>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Channels' />
+						</SelectTrigger>
+						<SelectContent>
+							{CHANNELS.map((channel) => (
+								<SelectItem
+									key={channel.value}
+									value={channel.value}
+								>
+									{channel.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+					<a
+						href={
+							MUSIC_STATIONS[
+								selectedChannel as MusicChannels
+							] as string
+						}
+						target='_blank'
+						rel='noreferrer noopener'
+					>
+						<Button size='icon' type='button' variant='outline'>
+							<ExternalLinkIcon className='w-4 h-4' />
+						</Button>
+					</a>
+				</div>
 			</div>
 			<Separator />
 			<div className='flex items-center justify-between h-10'>
@@ -816,14 +883,14 @@ const PreferencesDialog = ({
 }: { settings: SettingsRow } & PreferencesDialogProps) => {
 	const TABS = [
 		{
-			id: 'editor',
-			label: 'Editor',
-			content: <Editor settings={settings} />,
-		},
-		{
 			id: 'appearance',
 			label: 'Appearance',
 			content: <Appearance settings={settings} />,
+		},
+		{
+			id: 'editor',
+			label: 'Editor',
+			content: <Editor settings={settings} />,
 		},
 		{
 			id: 'writing',

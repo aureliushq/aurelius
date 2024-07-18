@@ -35,6 +35,7 @@ export type SettingsId = typeof SettingsId.Type
 export const SettingsTable = table({
 	id: SettingsId,
 	bodyFont: NonEmptyString100,
+	enableMusicPlayer: SqliteBoolean,
 	exportImageFooter: String1000,
 	exportImageWatermark: SqliteBoolean,
 	musicChannel: NonEmptyString100,

@@ -107,7 +107,7 @@ export default function Index() {
 		useState<WritingSessionSettings>({
 			targetDuration: 30,
 			focusMode: true,
-			music: true,
+			music: !!settings?.enableMusicPlayer,
 			notifyOnTargetDuration: true,
 		})
 	const [writingSessionStatus, setWritingSessionStatus] =
@@ -240,6 +240,7 @@ export default function Index() {
 					</div>
 					<div className='flex items-center justify-end p-4'>
 						<WritingSessionTimer
+							enableMusicPlayer={!!settings?.enableMusicPlayer}
 							focusMode={focusMode}
 							isMusicPlaying={isMusicPlaying}
 							setFocusMode={setFocusMode}
@@ -256,49 +257,56 @@ export default function Index() {
 					</div>
 				</section>
 				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
-					<div
-						className={`p-4 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
-					>
-						{isMusicPlaying ? (
-							<Button
-								className='w-9 h-9'
-								onClick={() => setIsMusicPlaying?.(false)}
-								size='icon'
-								variant='outline'
-							>
-								<PauseIcon className='w-4 h-4' />
-							</Button>
-						) : (
-							<Button
-								className='w-9 h-9'
-								onClick={() => setIsMusicPlaying?.(true)}
-								size='icon'
-								variant='outline'
-							>
-								<PlayIcon className='w-4 h-4' />
-							</Button>
-						)}
-						<Suspense fallback={<div>Loading...</div>}>
-							<ReactPlayer
-								playing={isMusicPlaying}
-								// @ts-ignore
-								url={
-									settings?.youtubeLink ||
-									MUSIC_STATIONS[
-										settings?.musicChannel as MusicChannels
-									]
-								}
-								width='0'
-								height='0'
-								loop={true}
-								config={{
-									youtube: {
-										playerVars: { control: 1, start: 1 },
-									},
-								}}
-							/>
-						</Suspense>
-					</div>
+					{!!settings?.enableMusicPlayer ? (
+						<div
+							className={`p-4 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+						>
+							{isMusicPlaying ? (
+								<Button
+									className='w-9 h-9'
+									onClick={() => setIsMusicPlaying?.(false)}
+									size='icon'
+									variant='outline'
+								>
+									<PauseIcon className='w-4 h-4' />
+								</Button>
+							) : (
+								<Button
+									className='w-9 h-9'
+									onClick={() => setIsMusicPlaying?.(true)}
+									size='icon'
+									variant='outline'
+								>
+									<PlayIcon className='w-4 h-4' />
+								</Button>
+							)}
+							<Suspense fallback={<div>Loading...</div>}>
+								<ReactPlayer
+									playing={isMusicPlaying}
+									// @ts-ignore
+									url={
+										settings?.youtubeLink ||
+										MUSIC_STATIONS[
+											settings?.musicChannel as MusicChannels
+										]
+									}
+									width='0'
+									height='0'
+									loop={true}
+									config={{
+										youtube: {
+											playerVars: {
+												control: 1,
+												start: 1,
+											},
+										},
+									}}
+								/>
+							</Suspense>
+						</div>
+					) : (
+						<div />
+					)}
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>

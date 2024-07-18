@@ -18,6 +18,7 @@ import {
 	PlayIcon,
 	SquareIcon,
 	TimerIcon,
+	TriangleAlertIcon,
 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import {
@@ -85,6 +86,7 @@ const SessionTimer = ({
 }
 
 type WritingSessionTimerProps = {
+	enableMusicPlayer: boolean
 	focusMode: boolean
 	isMusicPlaying: boolean
 	setFocusMode: Dispatch<SetStateAction<boolean>>
@@ -96,6 +98,7 @@ type WritingSessionTimerProps = {
 } & WritingSessionDialogProps
 
 const WritingSessionTimer = ({
+	enableMusicPlayer,
 	focusMode,
 	isMusicPlaying,
 	setFocusMode,
@@ -119,7 +122,7 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.focusMode) {
 			setFocusMode(false)
 		}
-		if (writingSessionSettings.music) {
+		if (writingSessionSettings.music && isMusicPlaying) {
 			setIsMusicPlaying(false)
 		}
 	}
@@ -130,7 +133,7 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.focusMode) {
 			setFocusMode(true)
 		}
-		if (writingSessionSettings.music) {
+		if (writingSessionSettings.music && !isMusicPlaying) {
 			setIsMusicPlaying(true)
 		}
 	}
@@ -167,7 +170,7 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.focusMode) {
 			setFocusMode(false)
 		}
-		if (writingSessionSettings.music) {
+		if (writingSessionSettings.music && !isMusicPlaying) {
 			setIsMusicPlaying(false)
 		}
 		writingSessionQuery.create('writingSession', {
@@ -334,12 +337,29 @@ const WritingSessionTimer = ({
 									>
 										Play music to help with focus
 									</Label>
-									<div className='col-span-1 flex justify-end'>
+									<div className='col-span-1 flex items-center justify-end'>
+										{!enableMusicPlayer && (
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger>
+														<TriangleAlertIcon className='w-4 h-4 mr-4 text-yellow-500' />
+													</TooltipTrigger>
+													<TooltipContent>
+														<p className='text-sm text-center'>
+															Enable music player
+															in Preferences to
+															use this feature.
+														</p>
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										)}
 										<Switch
 											className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'
 											defaultChecked={
 												writingSessionSettings.music
 											}
+											disabled={!enableMusicPlayer}
 											name='music'
 										/>
 									</div>

@@ -41,6 +41,7 @@ export const evolu = createEvolu(Database, {
 			bodyFont: S.decodeSync(NonEmptyString100)(
 				EditorSerifFonts.MERRIWEATHER
 			),
+			enableMusicPlayer: S.decodeSync(SqliteBoolean)(0),
 			exportImageFooter: S.decodeSync(String1000)(''),
 			exportImageWatermark: S.decodeSync(SqliteBoolean)(1),
 			musicChannel: S.decodeSync(NonEmptyString100)(
