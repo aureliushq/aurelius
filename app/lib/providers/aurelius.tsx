@@ -6,14 +6,15 @@ const setTitle: Dispatch<SetStateAction<string>> = () => {}
 
 export type AureliusProviderData = {
 	content: string
-	settings: Partial<SettingsRow>
+	settings: SettingsRow
 	setTitle: Dispatch<SetStateAction<string>>
 	title: string
 }
 
 export const AureliusContext = createContext<AureliusProviderData>({
 	content: '',
-	settings: {},
+	// @ts-expect-error: tradeoff between having this comment in multiple places or one place
+	settings: null,
 	setTitle,
 	title: '',
 })

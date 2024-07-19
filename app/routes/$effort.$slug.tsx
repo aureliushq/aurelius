@@ -11,6 +11,8 @@ import {
 	evolu,
 	helpArticleBySlugQuery,
 	settingsQuery,
+	writingByWritingEffortQuery,
+	writingEffortBySlugQuery,
 } from '~/services/evolu/client'
 import writerStylesheet from '~/writer.css?url'
 
@@ -23,14 +25,29 @@ export const links: LinksFunction = () => [
 ]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-	// TODO: only load this the first time. after loading set local storage to prevent loading again. check local storage before loading.
-	const { row: helpArticle } = await evolu.loadQuery(
-		helpArticleBySlugQuery(params.slug || 'getting-started')
-	)
-	invariant(helpArticle, 'Help article not found')
 	const { row: settings } = await evolu.loadQuery(settingsQuery)
+	if (!params.effort || params.effort === 'help') {
+		const { row: helpArticle } = await evolu.loadQuery(
+			helpArticleBySlugQuery(params.slug || 'getting-started')
+		)
+		invariant(helpArticle, 'Help article not found')
 
-	return { writing: helpArticle, settings }
+		return { writing: helpArticle, settings }
+	} else {
+		const { row: effort } = await evolu.loadQuery(
+			writingEffortBySlugQuery(params.effort)
+		)
+		invariant(effort, 'Writing effort not found')
+		const { row: writing } = await evolu.loadQuery(
+			writingByWritingEffortQuery({
+				effortId: effort.id,
+				slug: params.slug,
+			})
+		)
+		invariant(writing, 'Content not found')
+
+		return { writing, settings }
+	}
 }
 
 const Index = () => {
