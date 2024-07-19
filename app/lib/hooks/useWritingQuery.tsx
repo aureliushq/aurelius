@@ -5,7 +5,7 @@ import {
 	writingAllQuery,
 	writingByIdQuery,
 	writingBySlugQuery,
-	writingByWritingEffortIdQuery,
+	writingByWritingEffortQuery,
 } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
 import {
@@ -35,7 +35,9 @@ const useWritingQuery = () => {
 				return row as WritingRow
 			},
 			findByWritingEffortId: (id: WritingEffortId) => {
-				const { rows } = useQuery(writingByWritingEffortIdQuery(id))
+				const { rows } = useQuery(
+					writingByWritingEffortQuery({ effortId: id })
+				)
 				return rows as WritingRow[]
 			},
 		},
