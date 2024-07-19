@@ -82,17 +82,38 @@ export const evolu = createEvolu(Database, {
 			slug: S.decodeSync(NonEmptyString100)('help'),
 		})
 		// create a getting started guide under help
-		evolu.create('writing', {
+		evolu.create('_help', {
 			content: S.decodeSync(Content)(GETTING_STARTED_GUIDE.content),
 			slug: S.decodeSync(NonEmptyString100)('getting-started'),
 			title: S.decodeSync(NonEmptyString1000)(
 				GETTING_STARTED_GUIDE.title
 			),
-			wordCount: null,
-			writingEffortId: helpWritingEffortId,
+			effortId: helpWritingEffortId,
 		})
 	},
 })
+
+export const helpArticleAllQuery = evolu.createQuery(
+	(db) => db.selectFrom('_help').selectAll(),
+	{
+		logQueryExecutionTime: true,
+		logExplainQueryPlan: true,
+	}
+)
+export type HelpArticleRow = ExtractRow<typeof helpArticleAllQuery>
+
+export const helpArticleBySlugQuery = (slug: string) =>
+	evolu.createQuery(
+		(db) =>
+			db
+				.selectFrom('_help')
+				.selectAll()
+				.where('slug', '=', S.decodeSync(NonEmptyString100)(slug)),
+		{
+			logQueryExecutionTime: true,
+			logExplainQueryPlan: true,
+		}
+	)
 
 export const postQuery = evolu.createQuery(
 	(db) => db.selectFrom('post').selectAll(),
@@ -139,15 +160,26 @@ export const writingBySlugQuery = (slug: NonEmptyString100) =>
 		}
 	)
 
-export const writingByWritingEffortIdQuery = (
-	writingEffortId: WritingEffortId
-) =>
+export const writingByWritingEffortQuery = ({
+	slug,
+	effortId,
+}: {
+	slug?: string
+	effortId: string
+}) =>
 	evolu.createQuery(
-		(db) =>
-			db
+		(db) => {
+			const query = db
 				.selectFrom('writing')
 				.selectAll()
-				.where('writingEffortId', '=', writingEffortId),
+				.where('effortId', '=', S.decodeSync(WritingEffortId)(effortId))
+
+			if (slug) {
+				query.where('slug', '=', S.decodeSync(NonEmptyString100)(slug))
+			}
+
+			return query
+		},
 		{
 			logQueryExecutionTime: true,
 			logExplainQueryPlan: true,
@@ -172,10 +204,13 @@ export const writingEffortByIdQuery = (id: WritingEffortId) =>
 		}
 	)
 
-export const writingEffortBySlugQuery = (slug: NonEmptyString100) =>
+export const writingEffortBySlugQuery = (slug: string) =>
 	evolu.createQuery(
 		(db) =>
-			db.selectFrom('writingEffort').selectAll().where('slug', '=', slug),
+			db
+				.selectFrom('writingEffort')
+				.selectAll()
+				.where('slug', '=', S.decodeSync(NonEmptyString100)(slug)),
 		{
 			logQueryExecutionTime: true,
 			logExplainQueryPlan: true,

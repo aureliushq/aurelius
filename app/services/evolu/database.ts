@@ -5,9 +5,11 @@ import {
 	WritingEffortTable,
 	WritingSessionTable,
 	WritingTable,
+	_HelpTable,
 } from '~/services/evolu/schema'
 
 const Database = database({
+	_help: _HelpTable,
 	post: PostTable,
 	settings: SettingsTable,
 	writing: WritingTable,

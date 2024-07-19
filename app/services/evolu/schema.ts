@@ -20,7 +20,6 @@ export const NonEmptyString100 = String.pipe(
 export type NonEmptyString100 = typeof NonEmptyString100.Type
 
 const TemporalString = S.String.pipe(S.brand('TemporalString'))
-
 export const SqliteDateTime = TemporalString.pipe(S.brand('SqliteDateTime'))
 export type SqliteDateTime = typeof SqliteDateTime.Type
 
@@ -60,6 +59,17 @@ export const WritingEffortTable = table({
 	time: S.NullOr(SqliteDateTime),
 })
 
+export const HelpId = id('HelpArticle')
+export type HelpId = typeof HelpId.Type
+
+export const _HelpTable = table({
+	id: HelpId,
+	content: Content,
+	slug: NonEmptyString100,
+	title: NonEmptyString1000,
+	effortId: WritingEffortId,
+})
+
 const PostId = id('Post')
 export type PostId = typeof PostId.Type
 
@@ -69,7 +79,7 @@ export const PostTable = table({
 	slug: NonEmptyString100,
 	title: NonEmptyString1000,
 	wordCount: PositiveInt,
-	writingEffortId: WritingEffortId,
+	effortId: WritingEffortId,
 })
 
 export const WritingId = id('Writing')
@@ -81,7 +91,7 @@ export const WritingTable = table({
 	slug: NonEmptyString100,
 	title: NonEmptyString1000,
 	wordCount: S.NullOr(PositiveInt),
-	writingEffortId: WritingEffortId,
+	effortId: WritingEffortId,
 })
 
 const WritingSessionId = id('WritingSession')
