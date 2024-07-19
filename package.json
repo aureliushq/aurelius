@@ -72,7 +72,8 @@
 		"remix-themes": "^1.5.0",
 		"tailwind-merge": "^2.4.0",
 		"tailwindcss-animate": "^1.0.7",
-		"temporal-polyfill": "^0.2.5"
+		"temporal-polyfill": "^0.2.5",
+		"tiny-invariant": "^1.3.3"
 	},
 	"devDependencies": {
 		"@remix-run/dev": "^2.10.2",
