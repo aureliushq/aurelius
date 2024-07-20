@@ -8,10 +8,8 @@ import {
 	CircleHelpIcon,
 	FileTextIcon,
 	ListIcon,
-	LogInIcon,
 	PencilIcon,
 	RefreshCcwIcon,
-	RocketIcon,
 	SettingsIcon,
 	TimerIcon,
 } from 'lucide-react'

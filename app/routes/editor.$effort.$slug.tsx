@@ -4,7 +4,7 @@ import { LinksFunction, MetaFunction } from '@remix-run/node'
 import { ClientLoaderFunctionArgs, useLoaderData } from '@remix-run/react'
 
 import invariant from 'tiny-invariant'
-import EditorLayout from '~/components/layouts/editor'
+import Editor from '~/components/common/editor'
 import AureliusProvider from '~/lib/providers/aurelius'
 import {
 	SettingsRow,
@@ -63,7 +63,7 @@ const Index = () => {
 
 	return (
 		<AureliusProvider data={providerData}>
-			<EditorLayout />
+			<Editor />
 		</AureliusProvider>
 	)
 }

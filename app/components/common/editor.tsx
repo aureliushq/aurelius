@@ -19,7 +19,7 @@ import { Placeholder } from '@tiptap/extension-placeholder'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Underline } from '@tiptap/extension-underline'
 import { Youtube } from '@tiptap/extension-youtube'
-import { Editor, useEditor } from '@tiptap/react'
+import { Editor as TiptapEditor, useEditor } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { PauseIcon, PlayIcon } from 'lucide-react'
@@ -40,7 +40,6 @@ import { MUSIC_STATIONS } from '~/lib/constants'
 import {
 	useAutoSave,
 	useKeyboardShortcuts,
-	useSettingsQuery,
 } from '~/lib/hooks'
 import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
@@ -53,7 +52,7 @@ import {
 
 const lowlight = createLowlight(common)
 
-const EditorLayout = () => {
+const Editor = () => {
 	const shortcuts = {
 		[EditorShortcuts.BLUR]: () => blurInputs(),
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
@@ -148,7 +147,7 @@ const EditorLayout = () => {
 				placeholder: 'Start writing...',
 			}),
 			Highlight.configure({ multicolor: true }),
-			// @ts-expect-error: not sure why this is throwing an error but I'm gonna replace it with individual packages anyway so it's fine
+			// @ts-expect-error: not sure why this is throwing an error, but I'm going to replace it with individual packages anyway, so it's fine
 			StarterKit.configure({}),
 			CharacterCount,
 			TextStyle,
@@ -218,7 +217,7 @@ const EditorLayout = () => {
 						{editor &&
 							settings?.toolbarMode ===
 								EditorToolbarMode.FIXED && (
-								<EditorToolbar editor={editor as Editor} />
+								<EditorToolbar editor={editor as TiptapEditor} />
 							)}
 					</div>
 					<div className='flex items-center justify-end p-4'>
@@ -331,4 +330,4 @@ const EditorLayout = () => {
 	)
 }
 
-export default EditorLayout
+export default Editor
