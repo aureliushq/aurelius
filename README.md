@@ -1,6 +1,9 @@
 # Aurelius
 
-Writing app for modern writers
+Aurelius is a privacy-focused, local-first writing application designed to nurture consistent writing habits. It offers
+a distraction-free environment with essential features like timed writing sessions, multiple project types, and a clean,
+intuitive interface. Aurelius prioritizes user control and data portability, with end-to-end encrypted syncing between
+devices. It's crafted for writers who value simplicity, privacy, and ownership of their work.
 
 ## Features
 
