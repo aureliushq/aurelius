@@ -1,4 +1,6 @@
 import {
+	Dispatch,
+	SetStateAction,
 	Suspense,
 	startTransition,
 	useContext,
@@ -37,10 +39,8 @@ import WritingSessionTimer from '~/components/home/writing-session-timer'
 import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { MUSIC_STATIONS } from '~/lib/constants'
-import {
-	useAutoSave,
-	useKeyboardShortcuts,
-} from '~/lib/hooks'
+import { useKeyboardShortcuts } from '~/lib/hooks'
+import { SetDataFunction } from '~/lib/hooks/useAutoSave'
 import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
 	EditorShortcuts,
@@ -52,7 +52,21 @@ import {
 
 const lowlight = createLowlight(common)
 
-const Editor = () => {
+type EditorProps = {
+	content: string
+	isSaving: boolean
+	setContent: SetDataFunction<string>
+	setTitle: Dispatch<SetStateAction<string>>
+	title: string
+}
+
+const Editor = ({
+	content,
+	isSaving,
+	setContent,
+	setTitle,
+	title,
+}: EditorProps) => {
 	const shortcuts = {
 		[EditorShortcuts.BLUR]: () => blurInputs(),
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
@@ -68,8 +82,7 @@ const Editor = () => {
 			setWritingSessionOpen(!writingSessionOpen),
 	}
 
-	const { content, settings, setTitle, title } =
-		useContext<AureliusProviderData>(AureliusContext)
+	const { settings } = useContext<AureliusProviderData>(AureliusContext)
 
 	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
 
@@ -78,7 +91,6 @@ const Editor = () => {
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
-	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
@@ -95,21 +107,6 @@ const Editor = () => {
 	const [writingSessionStatus, setWritingSessionStatus] =
 		useState<WritingSessionStatus>(WritingSessionStatus.NOT_STARTED)
 
-	const savePost = (content: string) => {
-		setIsSaving(true)
-		// TODO: save post to database
-		setTimeout(() => {
-			setIsSaving(false)
-		}, 3000)
-	}
-
-	const [getContent, setContent] = useAutoSave({
-		data: content,
-		onSave: savePost,
-		interval: 10000,
-		debounce: 3000,
-	})
-
 	const handlePreferencesOpen = (state: boolean) => {
 		startTransition(() => {
 			setPreferencesOpen(state)
@@ -123,7 +120,7 @@ const Editor = () => {
 	}
 
 	const editor = useEditor({
-		content: getContent(),
+		content,
 		editorProps: {
 			attributes: {
 				class: '',
@@ -217,7 +214,9 @@ const Editor = () => {
 						{editor &&
 							settings?.toolbarMode ===
 								EditorToolbarMode.FIXED && (
-								<EditorToolbar editor={editor as TiptapEditor} />
+								<EditorToolbar
+									editor={editor as TiptapEditor}
+								/>
 							)}
 					</div>
 					<div className='flex items-center justify-end p-4'>
@@ -298,8 +297,8 @@ const Editor = () => {
 					</div>
 				</section>
 				<Writer
+					content={content}
 					editor={editor}
-					getContent={getContent}
 					settings={settings}
 					setTitle={setTitle}
 					title={title}

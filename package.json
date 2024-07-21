@@ -62,6 +62,7 @@
 		"clsx": "^2.1.1",
 		"cmdk": "^1.0.0",
 		"effect": "3.5.1",
+		"github-slugger": "^2.0.0",
 		"isbot": "^5.1.12",
 		"lowlight": "^3.1.0",
 		"lucide-react": "^0.407.0",

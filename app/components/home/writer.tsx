@@ -7,22 +7,22 @@ import { EditorToolbarMode } from '~/lib/types'
 import { SettingsRow } from '~/services/evolu/client'
 
 type WriterProps = {
+	content: string
 	editor: Editor | null
-	getContent: () => string
 	settings: SettingsRow
 	setTitle: Dispatch<SetStateAction<string>>
 	title: string
 }
 
 const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
-	({ editor, getContent, settings, setTitle, title }, titleRef) => {
+	({ content, editor, settings, setTitle, title }, titleRef) => {
 		const internalRef = useRef<HTMLTextAreaElement | null>(null)
 
 		useEffect(() => {
-			if (!title && !getContent()) {
+			if (!title && !content) {
 				internalRef.current?.focus()
 			}
-		}, [title, getContent()])
+		}, [title, content])
 
 		useEffect(() => {
 			const textarea = internalRef.current

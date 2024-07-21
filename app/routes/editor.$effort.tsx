@@ -9,9 +9,7 @@ import { useAutoSave } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
 import {
 	SettingsRow,
-	WritingEffortRow,
 	evolu,
-	helpArticleBySlugQuery,
 	settingsQuery,
 	writingEffortBySlugQuery,
 } from '~/services/evolu/client'
@@ -26,51 +24,39 @@ export const links: LinksFunction = () => [
 ]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-	// TODO: only load this the first time. after loading set local storage to prevent loading again. check local storage before loading.
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery('help')
-	)
-	const { row: helpArticle } = await evolu.loadQuery(
-		helpArticleBySlugQuery(params.slug || 'getting-started')
-	)
-	invariant(helpArticle, 'Help article not found')
 	const { row: settings } = await evolu.loadQuery(settingsQuery)
+	invariant(params.effort, 'Effort cannot be empty')
+	const { row: effort } = await evolu.loadQuery(
+		writingEffortBySlugQuery(params.effort)
+	)
+	invariant(effort, 'Writing effort not found')
 
-	return { effort, writing: helpArticle, settings }
+	return { effort, settings }
 }
 
-const Index = () => {
+const NewWriting = () => {
 	const data = useLoaderData<typeof clientLoader>()
 
 	const [isSaving, setIsSaving] = useState<boolean>(false)
-	const [title, setTitle] = useState<string>(data?.writing?.title as string)
+	const [title, setTitle] = useState<string>('')
 
 	const savePost = async (content: string) => {
-		// TODO: only save if effort is not help
-		if (data?.effort?.slug === 'help') {
-			return
-		} else {
-			setIsSaving(true)
-			// TODO: save post to database
-			setTimeout(() => {
-				setIsSaving(false)
-			}, 3000)
-		}
+		setIsSaving(true)
+		// TODO: save post to database
+		setTimeout(() => {
+			setIsSaving(false)
+		}, 3000)
 	}
 
 	const [getContent, setContent] = useAutoSave({
-		data: data?.writing?.content as string,
+		data: '',
 		onSave: savePost,
 		interval: 10000,
 		debounce: 3000,
 	})
 
 	const providerData = {
-		content: data?.writing?.content as string,
-		effort: data?.effort as WritingEffortRow,
 		settings: data?.settings as SettingsRow,
-		setTitle,
-		title,
 	}
 
 	return (
@@ -86,4 +72,4 @@ const Index = () => {
 	)
 }
 
-export default Index
+export default NewWriting
