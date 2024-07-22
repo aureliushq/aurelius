@@ -17,6 +17,9 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['@evolu/common-web'],
 	},
+	server: {
+		port: 3000,
+	},
 	worker: {
 		format: 'es',
 	},
