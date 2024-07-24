@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, forwardRef, useEffect, useRef } from 'react'
+import { ChangeEvent, forwardRef, useEffect, useRef } from 'react'
 
 import { BubbleMenu, Editor, EditorContent } from '@tiptap/react'
 import EditorToolbar from '~/components/home/editor-toolbar'
@@ -10,7 +10,7 @@ type WriterProps = {
 	content: string
 	editor: Editor | null
 	settings: SettingsRow
-	setTitle: Dispatch<SetStateAction<string>>
+	setTitle: (title: string) => void
 	title: string
 }
 
@@ -32,6 +32,10 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 			}
 		}, [title])
 
+		const handleTitleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+			setTitle(e.target.value)
+		}
+
 		return (
 			<section className='flex h-full w-full flex-grow flex-col items-center justify-start z-9'>
 				<div className='flex h-full w-full flex-col items-center justify-start gap-6 px-4 pb-24 md:pb-16 lg:px-0 pt-32'>
@@ -39,7 +43,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 						<Textarea
 							autoFocus
 							className={`w-full min-h-[48px] border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex items-center resize-none overflow-y-hidden bg-transparent text-xl font-semibold leading-snug text-foreground focus:outline-none lg:text-3xl lg:leading-snug ${settings?.titleFont}`}
-							onChange={(e) => setTitle(e.target.value)}
+							onChange={handleTitleChange}
 							placeholder='Untitled'
 							ref={(element) => {
 								internalRef.current = element
