@@ -17,29 +17,17 @@ import Editor from '~/components/common/editor'
 import { useAutoSave } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { EditorData } from '~/lib/types'
+import { checkSlugUniqueness } from '~/lib/utils'
 import {
 	SettingsRow,
 	evolu,
 	settingsQuery,
-	writingByWritingEffortQuery,
 	writingEffortBySlugQuery,
 } from '~/services/evolu/client'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 
 const slugger = new GithubSlugger()
-
-const checkSlugUniqueness = async (effortId: string, slug: string) => {
-	const { row: writing } = await evolu.loadQuery(
-		writingByWritingEffortQuery({ effortId, slug })
-	)
-
-	if (!writing) {
-		return { isUnique: true, slug }
-	} else {
-		return { isUnique: false, slug: '' }
-	}
-}
 
 export const meta: MetaFunction = () => {
 	return [{ title: 'Aurelius' }, { name: 'description', content: '' }]

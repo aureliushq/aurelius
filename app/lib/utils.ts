@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { ModifierKeys } from '~/lib/types'
+import { evolu, writingByWritingEffortQuery } from '~/services/evolu/client'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -39,6 +40,18 @@ export const capitalize = ({
 	(lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
 		match.toUpperCase()
 	)
+
+export const checkSlugUniqueness = async (effortId: string, slug: string) => {
+	const { row: writing } = await evolu.loadQuery(
+		writingByWritingEffortQuery({ effortId, slug })
+	)
+
+	if (!writing) {
+		return { isUnique: true, slug }
+	} else {
+		return { isUnique: false, slug: '' }
+	}
+}
 
 export const convertMsToHumanReadable = (ms: number): string => {
 	const second: number = 1000

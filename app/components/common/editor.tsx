@@ -54,6 +54,7 @@ const lowlight = createLowlight(common)
 type EditorProps = {
 	content: string
 	isSaving: boolean
+	onReset?: () => void
 	onTitleBlur?: () => void
 	setContent: (content: string) => void
 	setTitle: (title: string) => void
@@ -65,6 +66,7 @@ type EditorProps = {
 const Editor = ({
 	content,
 	isSaving,
+	onReset,
 	onTitleBlur,
 	setContent,
 	setTitle,
@@ -168,10 +170,9 @@ const Editor = ({
 	}
 
 	const confirmResetEditor = () => {
-		setTitle('')
-		setContent('')
 		editor?.commands.clearContent(true)
 		setWordCount(0)
+		onReset?.()
 	}
 
 	const handlePreferencesOpen = (state: boolean) => {
@@ -185,6 +186,13 @@ const Editor = ({
 			setSplashOpen(state)
 		})
 	}
+
+	useEffect(() => {
+		if (content) {
+			const wordCount = editor.storage.characterCount.words()
+			setWordCount(wordCount)
+		}
+	}, [content])
 
 	useEffect(() => {
 		if (
