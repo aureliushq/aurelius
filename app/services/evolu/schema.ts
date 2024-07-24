@@ -10,7 +10,9 @@ import {
 	table,
 } from '@evolu/common'
 
-export const Content = String.pipe(S.minLength(1), S.brand('Content'))
+export const Content = String.pipe(S.minLength(0), S.brand('Content'))
+
+export const Int = S.Number.pipe(S.int(), S.brand('Int'))
 
 export const NonEmptyString100 = String.pipe(
 	S.minLength(1),
@@ -42,7 +44,7 @@ export const SettingsTable = table({
 	titleFont: NonEmptyString100,
 	toolbarMode: NonEmptyString100,
 	writingDailyGoal: NonEmptyString100,
-	writingDailyTarget: S.NullOr(PositiveInt),
+	writingDailyTarget: S.NullOr(Int),
 	youtubeLink: String1000,
 })
 export type SettingsTable = typeof SettingsTable.Type
@@ -65,9 +67,9 @@ export type HelpId = typeof HelpId.Type
 export const _HelpTable = table({
 	id: HelpId,
 	content: Content,
+	effortId: WritingEffortId,
 	slug: NonEmptyString100,
 	title: NonEmptyString1000,
-	effortId: WritingEffortId,
 })
 
 const PostId = id('Post')
@@ -76,10 +78,10 @@ export type PostId = typeof PostId.Type
 export const PostTable = table({
 	id: PostId,
 	content: Content,
+	effortId: WritingEffortId,
 	slug: NonEmptyString100,
 	title: NonEmptyString1000,
-	wordCount: PositiveInt,
-	effortId: WritingEffortId,
+	wordCount: Int,
 })
 
 export const WritingId = id('Writing')
@@ -88,10 +90,10 @@ export type WritingId = typeof WritingId.Type
 export const WritingTable = table({
 	id: WritingId,
 	content: Content,
+	effortId: WritingEffortId,
 	slug: NonEmptyString100,
 	title: NonEmptyString1000,
-	wordCount: S.NullOr(PositiveInt),
-	effortId: WritingEffortId,
+	wordCount: Int,
 })
 
 const WritingSessionId = id('WritingSession')

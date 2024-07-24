@@ -8,14 +8,17 @@ import {
 	_HelpTable,
 } from '~/services/evolu/schema'
 
-const Database = database({
+const FIELDS = {
 	_help: _HelpTable,
 	post: PostTable,
 	settings: SettingsTable,
 	writing: WritingTable,
 	writingEffort: WritingEffortTable,
 	writingSession: WritingSessionTable,
-})
-type Database = typeof Database.Type
+}
+
+const Database = database(FIELDS)
+export type Database = typeof Database.Type
+export type TableName = keyof Database
 
 export { Database }
