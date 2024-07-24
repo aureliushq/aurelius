@@ -3,6 +3,7 @@
 export type EditorData = {
 	content: string
 	title: string
+	[key: string]: any
 }
 
 export type HelpDialogProps = {
