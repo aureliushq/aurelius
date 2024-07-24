@@ -25,7 +25,6 @@ import {
 	writingByWritingEffortQuery,
 	writingEffortBySlugQuery,
 } from '~/services/evolu/client'
-import { TableName } from '~/services/evolu/database'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 
@@ -36,7 +35,11 @@ const checkSlugUniqueness = async (effortId: string, slug: string) => {
 		writingByWritingEffortQuery({ effortId, slug })
 	)
 
-	return !writing
+	if (!writing) {
+		return { isUnique: true, slug }
+	} else {
+		return { isUnique: false, slug: '' }
+	}
 }
 
 export const meta: MetaFunction = () => {
@@ -73,36 +76,33 @@ export const clientAction = async ({
 
 	const writingTitle = title.trim() !== '' ? title : 'Untitled'
 
-	let slug = slugger.slug(writingTitle)
-	let isUnique = await checkSlugUniqueness(effort.id, slug)
+	let finalSlug = ''
+	let isUnique = false
 	do {
-		if (!isUnique) {
-			slug = slugger.slug(writingTitle)
-		}
-		isUnique = await checkSlugUniqueness(effort.id, slug)
+		const generatedSlug = slugger.slug(writingTitle)
+		const { isUnique: isSlugUnique, slug } = await checkSlugUniqueness(
+			effort.id,
+			generatedSlug
+		)
+		isUnique = isSlugUnique
+		finalSlug = slug
 	} while (!isUnique)
 
 	// TODO: generalize this since I'm going to create different tables for different efforts
-	const tableName =
-		(params.effort as TableName) === 'post' ? 'post' : 'writing'
-
-	evolu.create(tableName, {
+	evolu.create('writing', {
 		content: S.decodeSync(Content)(content),
 		effortId: effort.id,
-		slug: S.decodeSync(NonEmptyString100)(slug),
+		slug: S.decodeSync(NonEmptyString100)(finalSlug),
 		title: S.decodeSync(NonEmptyString1000)(writingTitle),
 		wordCount: S.decodeSync(Int)(wordCount),
 	})
 
-	return { message: 'ok', redirectTo: `/editor/${effort.slug}/${slug}` }
+	return { message: 'ok', redirectTo: `/editor/${effort.slug}/${finalSlug}` }
 }
 
 const NewWriting = () => {
-	const actionData = useActionData<typeof clientAction>()
-
 	const fetcher = useFetcher()
-
-	const data = useLoaderData<typeof clientLoader>()
+	const { settings } = useLoaderData<typeof clientLoader>()
 
 	const navigate = useNavigate()
 
@@ -132,7 +132,7 @@ const NewWriting = () => {
 	})
 
 	const providerData = {
-		settings: data?.settings as SettingsRow,
+		settings: settings as SettingsRow,
 	}
 
 	const handleTitleChange = (title: string) => {
@@ -159,11 +159,14 @@ const NewWriting = () => {
 	useEffect(() => {
 		if (
 			fetcher.state === 'idle' &&
-			actionData &&
-			actionData.message === 'ok' &&
-			actionData.redirectTo.trim() !== ''
+			fetcher.data &&
+			// @ts-expect-error: BS error. It's there. Check how to type fetcher.data.
+			fetcher.data.message === 'ok' &&
+			// @ts-expect-error: BS error. It's there. Check how to type fetcher.data.
+			fetcher.data.redirectTo.trim() !== ''
 		) {
-			navigate(actionData.redirectTo)
+			// @ts-expect-error: BS error. It's there. Check how to type fetcher.data.
+			navigate(fetcher.data.redirectTo)
 		}
 	}, [fetcher])
 
