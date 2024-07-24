@@ -97,12 +97,12 @@ const MainMenu = ({
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-										<ListIcon className='mr-2 w-4 h-4' />
-										<span>View All Posts</span>
-									</span>
-								</DropdownMenuItem>
+								{/*<DropdownMenuItem>*/}
+								{/*	<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
+								{/*		<ListIcon className='mr-2 w-4 h-4' />*/}
+								{/*		<span>View All Posts</span>*/}
+								{/*	</span>*/}
+								{/*</DropdownMenuItem>*/}
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>
 					</DropdownMenuSub>
@@ -141,67 +141,67 @@ const MainMenu = ({
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-										<RefreshCcwIcon className='mr-2 w-4 h-4' />
-										<span>Resume Previous Session</span>
-									</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-										<ListIcon className='mr-2 w-4 h-4' />
-										<span>View All Sessions</span>
-									</span>
-								</DropdownMenuItem>
+								{/*<DropdownMenuItem>*/}
+								{/*	<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
+								{/*		<RefreshCcwIcon className='mr-2 w-4 h-4' />*/}
+								{/*		<span>Resume Previous Session</span>*/}
+								{/*	</span>*/}
+								{/*</DropdownMenuItem>*/}
+								{/*<DropdownMenuItem>*/}
+								{/*	<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
+								{/*		<ListIcon className='mr-2 w-4 h-4' />*/}
+								{/*		<span>View All Sessions</span>*/}
+								{/*	</span>*/}
+								{/*</DropdownMenuItem>*/}
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>
 					</DropdownMenuSub>
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>
-							<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-								<DownloadIcon className='mr-2 w-4 h-4' />
-								<span>Export As</span>
-							</span>
-						</DropdownMenuSubTrigger>
-						<DropdownMenuPortal>
-							<DropdownMenuSubContent>
-								<DropdownMenuItem>
-									<span className='w-full h-full flex items-center justify-between cursor-pointer'>
-										<span className='inline-flex items-center'>
-											<ImageIcon className='mr-2 w-4 h-4' />
-											<span>Image</span>
-										</span>
-										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut keys={''} />
-										</DropdownMenuShortcut>
-									</span>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-										<svg
-											xmlns='http://www.w3.org/2000/svg'
-											viewBox='0 0 24 24'
-											fill='none'
-											stroke='currentColor'
-											strokeWidth='2'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											className='mr-2 w-4 h-4'
-										>
-											<path d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'></path>
-											<polyline points='14 2 14 8 20 8'></polyline>
-											<path d='M12 18v-6'></path>
-											<path d='m9 15 3 3 3-3'></path>
-										</svg>
-										<span>Markdown</span>
-										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut keys={''} />
-										</DropdownMenuShortcut>
-									</span>
-								</DropdownMenuItem>
-							</DropdownMenuSubContent>
-						</DropdownMenuPortal>
-					</DropdownMenuSub>
+					{/*<DropdownMenuSub>*/}
+					{/*	<DropdownMenuSubTrigger>*/}
+					{/*		<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
+					{/*			<DownloadIcon className='mr-2 w-4 h-4' />*/}
+					{/*			<span>Export As</span>*/}
+					{/*		</span>*/}
+					{/*	</DropdownMenuSubTrigger>*/}
+					{/*	<DropdownMenuPortal>*/}
+					{/*		<DropdownMenuSubContent>*/}
+					{/*			<DropdownMenuItem>*/}
+					{/*				<span className='w-full h-full flex items-center justify-between cursor-pointer'>*/}
+					{/*					<span className='inline-flex items-center'>*/}
+					{/*						<ImageIcon className='mr-2 w-4 h-4' />*/}
+					{/*						<span>Image</span>*/}
+					{/*					</span>*/}
+					{/*					<DropdownMenuShortcut className='ml-16'>*/}
+					{/*						<KeyboardShortcut keys={''} />*/}
+					{/*					</DropdownMenuShortcut>*/}
+					{/*				</span>*/}
+					{/*			</DropdownMenuItem>*/}
+					{/*			<DropdownMenuItem>*/}
+					{/*				<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
+					{/*					<svg*/}
+					{/*						xmlns='http://www.w3.org/2000/svg'*/}
+					{/*						viewBox='0 0 24 24'*/}
+					{/*						fill='none'*/}
+					{/*						stroke='currentColor'*/}
+					{/*						strokeWidth='2'*/}
+					{/*						strokeLinecap='round'*/}
+					{/*						strokeLinejoin='round'*/}
+					{/*						className='mr-2 w-4 h-4'*/}
+					{/*					>*/}
+					{/*						<path d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z'></path>*/}
+					{/*						<polyline points='14 2 14 8 20 8'></polyline>*/}
+					{/*						<path d='M12 18v-6'></path>*/}
+					{/*						<path d='m9 15 3 3 3-3'></path>*/}
+					{/*					</svg>*/}
+					{/*					<span>Markdown</span>*/}
+					{/*					<DropdownMenuShortcut className='ml-16'>*/}
+					{/*						<KeyboardShortcut keys={''} />*/}
+					{/*					</DropdownMenuShortcut>*/}
+					{/*				</span>*/}
+					{/*			</DropdownMenuItem>*/}
+					{/*		</DropdownMenuSubContent>*/}
+					{/*	</DropdownMenuPortal>*/}
+					{/*</DropdownMenuSub>*/}
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						onClick={() =>
