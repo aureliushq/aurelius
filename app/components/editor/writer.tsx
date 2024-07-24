@@ -1,7 +1,7 @@
 import { ChangeEvent, forwardRef, useEffect, useRef } from 'react'
 
 import { BubbleMenu, Editor, EditorContent } from '@tiptap/react'
-import EditorToolbar from '~/components/home/editor-toolbar'
+import EditorToolbar from '~/components/editor/editor-toolbar'
 import { Textarea } from '~/components/ui/textarea'
 import { EditorToolbarMode } from '~/lib/types'
 import { SettingsRow } from '~/services/evolu/client'

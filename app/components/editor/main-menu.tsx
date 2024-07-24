@@ -22,7 +22,7 @@ import {
 	TimerIcon,
 	TwitterIcon,
 } from 'lucide-react'
-import KeyboardShortcut from '~/components/home/keyboard-shortcut'
+import KeyboardShortcut from '~/components/editor/keyboard-shortcut'
 import { Button } from '~/components/ui/button'
 import {
 	DropdownMenu,

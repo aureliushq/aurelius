@@ -13,7 +13,7 @@ import {
 	SettingsIcon,
 	TimerIcon,
 } from 'lucide-react'
-import KeyboardShortcut from '~/components/home/keyboard-shortcut'
+import KeyboardShortcut from '~/components/editor/keyboard-shortcut'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
