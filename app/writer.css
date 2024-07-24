@@ -1,74 +1,74 @@
 .editor-wrapper {
-    @apply max-w-2xl;
+	@apply max-w-2xl;
 }
 
 .editor-wrapper > div {
-    @apply flex w-full max-w-2xl items-start justify-center;
+	@apply flex w-full max-w-2xl items-start justify-center;
 }
 
 .editor-wrapper .tippy-box {
-    @apply !max-w-none;
+	@apply !max-w-none;
 }
 
 .ProseMirror {
-    @apply w-full max-w-2xl min-h-[640px] outline-none border-none text-base text-foreground font-normal leading-relaxed;
+	@apply min-h-[640px] w-full max-w-2xl border-none text-base font-normal leading-relaxed text-foreground outline-none;
 }
 
 .ProseMirror.ProseMirror-focused {
-    border: none !important;
+	border: none !important;
 }
 
 .ProseMirror,
 .ProseMirror.ProseMirror-focused {
-    /*border: none transparent !important;*/
-    outline: none !important;
-    padding: 0 !important;
+	/*border: none transparent !important;*/
+	outline: none !important;
+	padding: 0 !important;
 }
 
 .ProseMirror > p {
-    @apply w-full mt-0;
+	@apply mt-0 w-full;
 }
 
 .ProseMirror > p.is-editor-empty {
-    @apply mt-0;
+	@apply mt-0;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
-    content: attr(data-placeholder);
-    float: left;
-    color: #adb5bd;
-    pointer-events: none;
-    height: 0;
+	content: attr(data-placeholder);
+	float: left;
+	color: #adb5bd;
+	pointer-events: none;
+	height: 0;
 }
 
 .ProseMirror ul,
 .ProseMirror ol {
-    @apply max-w-3xl;
-    padding: 0 1rem;
+	@apply max-w-3xl;
+	padding: 0 1rem;
 }
 
 .ProseMirror ul {
-    @apply list-disc;
+	@apply list-disc;
 }
 
 .ProseMirror ol {
-    @apply list-decimal;
+	@apply list-decimal;
 }
 
 .ProseMirror ul[data-type='taskList'] {
-    @apply list-none;
+	@apply list-none;
 }
 
 .ProseMirror ul[data-type='taskList'] > li {
-    @apply flex;
+	@apply flex;
 }
 
 .ProseMirror ul[data-type='taskList'] > li > label {
-    @apply mr-2 flex-[0_0_auto] select-none;
+	@apply mr-2 flex-[0_0_auto] select-none;
 }
 
 .ProseMirror ul[data-type='taskList'] > li > div {
-    @apply flex-auto;
+	@apply flex-auto;
 }
 
 /*.ProseMirror h1,*/
@@ -86,72 +86,72 @@
 /*}*/
 
 .ProseMirror h2 {
-/*    @apply max-w-3xl;*/
-/*    font-size: 2.3rem;*/
-    margin: 0.75rem 0;
+	/*    @apply max-w-3xl;*/
+	/*    font-size: 2.3rem;*/
+	margin: 0.75rem 0;
 }
 
 .ProseMirror h3 {
-/*    @apply max-w-3xl;*/
-/*    font-size: 2rem;*/
-    margin: 0.83rem 0;
+	/*    @apply max-w-3xl;*/
+	/*    font-size: 2rem;*/
+	margin: 0.83rem 0;
 }
 
 .ProseMirror pre {
-    @apply max-w-3xl rounded-lg bg-[#d5d6db] dark:bg-[#1a1b26];
-    /* background: #0d0d0d; */
-    font-family: 'JetBrainsMono', monospace;
-    padding: 0.75rem 1rem;
+	@apply max-w-3xl rounded-lg bg-[#d5d6db] dark:bg-[#1a1b26];
+	/* background: #0d0d0d; */
+	font-family: 'JetBrainsMono', monospace;
+	padding: 0.75rem 1rem;
 }
 
 .ProseMirror pre code {
-    @apply max-w-3xl text-[#565a6e] dark:text-[#9aa5ce];
-    padding: 0;
-    background: none;
-    font-size: 0.8rem;
+	@apply max-w-3xl text-[#565a6e] dark:text-[#9aa5ce];
+	padding: 0;
+	background: none;
+	font-size: 0.8rem;
 }
 
 .ProseMirror p code {
-    @apply rounded-lg bg-accent px-1 py-0.5 font-normal text-accent-foreground;
-    font-family: 'JetBrainsMono', monospace;
+	@apply rounded-lg bg-accent px-1 py-0.5 font-normal text-accent-foreground;
+	font-family: 'JetBrainsMono', monospace;
 }
 
 .ProseMirror blockquote {
-    @apply max-w-3xl px-4 py-1 border-l-2 !border-primary bg-accent/30;
+	@apply max-w-3xl border-l-2 !border-primary bg-accent/30 px-4 py-1;
 }
 
 .ProseMirror a {
-    @apply max-w-3xl text-primary;
+	@apply max-w-3xl text-primary;
 }
 
 .ProseMirror figure {
-    @apply max-w-3xl;
+	@apply max-w-3xl;
 }
 
 .ProseMirror img.ProseMirror-selectednode {
-    outline: 3px solid #2cb67d;
+	outline: 3px solid #2cb67d;
 }
 
 .ProseMirror img.super-image-small {
-    max-width: 100%;
-    margin-right: auto;
-    margin-left: auto;
+	max-width: 100%;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 .ProseMirror img.super-image-medium {
-    max-width: 50vw;
-    margin: auto calc(50% - 50vw);
-    transform: translateX(calc(50vw - 50%));
+	max-width: 50vw;
+	margin: auto calc(50% - 50vw);
+	transform: translateX(calc(50vw - 50%));
 }
 
 .ProseMirror img.super-image-large {
-    padding: 0 16px;
-    width: 65vw;
-    max-width: 100vw;
-    margin: auto calc(50% - 100vw);
-    transform: translateX(calc(100vw - 50%));
+	padding: 0 16px;
+	width: 65vw;
+	max-width: 100vw;
+	margin: auto calc(50% - 100vw);
+	transform: translateX(calc(100vw - 50%));
 }
 
 .ProseMirror hr {
-    @apply my-10;
+	@apply my-10;
 }
