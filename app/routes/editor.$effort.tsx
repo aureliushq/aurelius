@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 import { ClientLoaderFunctionArgs, useLoaderData } from '@remix-run/react'
@@ -7,6 +7,7 @@ import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
+import { EditorData } from '~/lib/types'
 import {
 	SettingsRow,
 	evolu,
@@ -38,18 +39,17 @@ const NewWriting = () => {
 	const data = useLoaderData<typeof clientLoader>()
 
 	const [isSaving, setIsSaving] = useState<boolean>(false)
-	const [title, setTitle] = useState<string>('')
 
-	const savePost = async (content: string) => {
+	const savePost = useCallback(async ({ content, title }: EditorData) => {
 		setIsSaving(true)
 		// TODO: save post to database
 		setTimeout(() => {
 			setIsSaving(false)
 		}, 3000)
-	}
+	}, [])
 
-	const [getContent, setContent] = useAutoSave({
-		data: '',
+	const [editorData, setEditorData] = useAutoSave({
+		initialData: { title: '', content: '' },
 		onSave: savePost,
 		interval: 10000,
 		debounce: 3000,
@@ -59,14 +59,22 @@ const NewWriting = () => {
 		settings: data?.settings as SettingsRow,
 	}
 
+	const handleTitleChange = (title: string) => {
+		setEditorData({ title })
+	}
+
+	const handleContentChange = (content: string) => {
+		setEditorData({ content })
+	}
+
 	return (
 		<AureliusProvider data={providerData}>
 			<Editor
-				content={getContent()}
+				content={editorData.content}
 				isSaving={isSaving}
-				setContent={setContent}
-				setTitle={setTitle}
-				title={title}
+				setContent={handleContentChange}
+				setTitle={handleTitleChange}
+				title={editorData.title}
 			/>
 		</AureliusProvider>
 	)

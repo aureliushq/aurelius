@@ -1,6 +1,4 @@
 import {
-	Dispatch,
-	SetStateAction,
 	Suspense,
 	startTransition,
 	useContext,
@@ -26,21 +24,22 @@ import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { PauseIcon, PlayIcon } from 'lucide-react'
 import PreferencesDialog from '~/components/common/preferences-dialog'
-import E2EEIndicator from '~/components/home/e2ee-indicator'
-import EditorToolbar from '~/components/home/editor-toolbar'
-import HelpButton from '~/components/home/help-button'
-import HelpDialog from '~/components/home/help-dialog'
-import MainMenu from '~/components/home/main-menu'
-import ResetEditor from '~/components/home/reset-editor'
-import Saving from '~/components/home/saving'
-import SplashDialog from '~/components/home/splash-dialog'
-import Writer from '~/components/home/writer'
-import WritingSessionTimer from '~/components/home/writing-session-timer'
+import {
+	E2EEIndicator,
+	EditorToolbar,
+	HelpButton,
+	HelpDialog,
+	MainMenu,
+	ResetEditor,
+	Saving,
+	SplashDialog,
+	Writer,
+	WritingSessionTimer,
+} from '~/components/editor'
 import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { MUSIC_STATIONS } from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
-import { SetDataFunction } from '~/lib/hooks/useAutoSave'
 import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
 	EditorShortcuts,
@@ -55,8 +54,8 @@ const lowlight = createLowlight(common)
 type EditorProps = {
 	content: string
 	isSaving: boolean
-	setContent: SetDataFunction<string>
-	setTitle: Dispatch<SetStateAction<string>>
+	setContent: (content: string) => void
+	setTitle: (title: string) => void
 	title: string
 }
 
@@ -106,18 +105,6 @@ const Editor = ({
 		})
 	const [writingSessionStatus, setWritingSessionStatus] =
 		useState<WritingSessionStatus>(WritingSessionStatus.NOT_STARTED)
-
-	const handlePreferencesOpen = (state: boolean) => {
-		startTransition(() => {
-			setPreferencesOpen(state)
-		})
-	}
-
-	const handleSplashDialogOpen = (state: boolean) => {
-		startTransition(() => {
-			setSplashOpen(state)
-		})
-	}
 
 	const editor = useEditor({
 		content,
@@ -180,6 +167,18 @@ const Editor = ({
 		setContent('')
 		editor?.commands.clearContent(true)
 		setWordCount(0)
+	}
+
+	const handlePreferencesOpen = (state: boolean) => {
+		startTransition(() => {
+			setPreferencesOpen(state)
+		})
+	}
+
+	const handleSplashDialogOpen = (state: boolean) => {
+		startTransition(() => {
+			setSplashOpen(state)
+		})
 	}
 
 	useEffect(() => {
@@ -299,6 +298,7 @@ const Editor = ({
 				<Writer
 					content={content}
 					editor={editor}
+					ref={titleRef}
 					settings={settings}
 					setTitle={setTitle}
 					title={title}

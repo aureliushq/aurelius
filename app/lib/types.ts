@@ -1,3 +1,10 @@
+// TODO: organize these types into a more logical structure
+
+export type EditorData = {
+	content: string
+	title: string
+}
+
 export type HelpDialogProps = {
 	helpOpen?: boolean
 	setHelpOpen: (open: boolean) => void

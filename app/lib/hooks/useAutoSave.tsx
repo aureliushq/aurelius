@@ -1,35 +1,35 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-export type SetDataFunction<TData> = (
-	newData: TData | ((data: TData) => TData)
-) => void
+import { EditorData } from '~/lib/types'
 
-interface AutoSaveProps<TData> {
-	data: TData
-	onSave: (data: TData) => Promise<void> | void
+export type SetEditorDataFunction = (data: Partial<EditorData>) => void
+
+type AutoSaveProps = {
+	initialData: EditorData
+	onSave: (data: EditorData) => Promise<void> | void
 	interval?: number
 	debounce?: number
 }
 
-function useAutoSave<TData>({
-	data,
+function useAutoSave({
+	initialData,
 	onSave,
 	interval = 60000,
 	debounce = 1000,
-}: AutoSaveProps<TData>): [() => TData, SetDataFunction<TData>] {
-	const dataRef = useRef<TData>(data)
+}: AutoSaveProps): [EditorData, SetEditorDataFunction] {
+	const dataRef = useRef<EditorData>(initialData)
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-	const previousDataRef = useRef<TData>(data)
+	const previousDataRef = useRef<EditorData>(initialData)
 
-	const setData: SetDataFunction<TData> = useCallback((newData) => {
-		if (typeof newData === 'function') {
-			dataRef.current = (newData as (prevData: TData) => TData)(
-				dataRef.current
-			)
-		} else {
-			dataRef.current = newData
-		}
-		debouncedSave()
+	const [data, setDataState] = useState<EditorData>(initialData)
+
+	const setData: SetEditorDataFunction = useCallback((newData) => {
+		setDataState((prevData) => {
+			const updatedData = { ...prevData, ...newData }
+			dataRef.current = updatedData
+			debouncedSave()
+			return updatedData
+		})
 	}, [])
 
 	const debouncedSave = useCallback(() => {
@@ -43,7 +43,7 @@ function useAutoSave<TData>({
 				JSON.stringify(previousDataRef.current)
 			) {
 				onSave(dataRef.current)
-				previousDataRef.current = dataRef.current
+				previousDataRef.current = { ...dataRef.current }
 			}
 		}, debounce)
 	}, [onSave, debounce])
@@ -55,7 +55,7 @@ function useAutoSave<TData>({
 				JSON.stringify(previousDataRef.current)
 			) {
 				onSave(dataRef.current)
-				previousDataRef.current = dataRef.current
+				previousDataRef.current = { ...dataRef.current }
 			}
 		}, interval)
 
@@ -67,7 +67,7 @@ function useAutoSave<TData>({
 		}
 	}, [onSave, interval])
 
-	return [() => dataRef.current, setData]
+	return [data, setData]
 }
 
 export default useAutoSave
