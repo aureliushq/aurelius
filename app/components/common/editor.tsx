@@ -8,6 +8,8 @@ import {
 } from 'react'
 import ReactPlayer from 'react-player'
 
+import { useNavigate } from '@remix-run/react'
+
 import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 import { CharacterCount } from '@tiptap/extension-character-count'
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
@@ -79,6 +81,7 @@ const Editor = ({
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
 		[EditorShortcuts.MAIN_MENU]: () => setMainMenuOpen(!mainMenuOpen),
+		[EditorShortcuts.NEW_POST]: () => createNewPost(),
 		[EditorShortcuts.PREFERENCES]: () =>
 			handlePreferencesOpen(!preferencesOpen),
 		[EditorShortcuts.RESET_EDITOR]: () =>
@@ -92,6 +95,8 @@ const Editor = ({
 	const { settings } = useContext<AureliusProviderData>(AureliusContext)
 
 	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+
+	const navigate = useNavigate()
 
 	const titleRef = useRef<HTMLTextAreaElement>(null)
 
@@ -173,6 +178,11 @@ const Editor = ({
 		editor?.commands.clearContent(true)
 		setWordCount(0)
 		onReset?.()
+	}
+
+	const createNewPost = () => {
+		handleSplashDialogOpen(false)
+		navigate('/editor/post')
 	}
 
 	const handlePreferencesOpen = (state: boolean) => {

@@ -92,7 +92,7 @@ const SplashDialog = ({
 
 	return (
 		<Dialog onOpenChange={setSplashOpen} open={splashOpen}>
-			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
+			<DialogContent className='flex max-w-none w-[32rem] p-0 [&>button]:z-10'>
 				<VisuallyHidden>
 					<DialogHeader>
 						<DialogTitle>Splash Dialog</DialogTitle>
@@ -115,7 +115,7 @@ const SplashDialog = ({
 							alt='Aurelius Logo'
 						/>
 					</div>
-					<div className='grid grid-cols-2 flex-col w-full min-h-[20rem] h-auto flex-1 flex-grow py-8 pl-8 pr-4 gap-x-12 gap-y-4'>
+					<div className='grid grid-cols-1 w-full min-h-[20rem] h-auto flex-1 flex-grow py-8 pl-8 pr-4 gap-x-12 gap-y-4'>
 						<div className='col-span-1 py-2 flex flex-col'>
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
 								Getting Started
@@ -127,7 +127,19 @@ const SplashDialog = ({
 											<FileTextIcon className='mr-2 w-4 h-4' />
 										}
 										label='New Post'
-										shortcut={''}
+										onClick={() =>
+											triggerShortcut(
+												EditorShortcuts.NEW_POST
+											)
+										}
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[
+												EditorShortcuts.NEW_POST
+											].key,
+											allShortcuts[
+												EditorShortcuts.NEW_POST
+											].modifiers
+										)}
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
@@ -174,41 +186,41 @@ const SplashDialog = ({
 								</li>
 							</ul>
 						</div>
-						<div className='col-span-1 py-2 flex flex-col'>
-							<h3 className='text-sm font-semibold text-foreground mb-4'>
-								Previous Session
-							</h3>
-							<ul className='w-full text-sm flex flex-col gap-2'>
-								<li className='w-full flex items-center justify-between'>
-									<SplashDialogButton
-										icon={
-											<PencilIcon className='mr-2 w-4 h-4' />
-										}
-										label='Continue Writing'
-									/>
-								</li>
-								<li className='w-full flex items-center justify-between'>
-									<Link className='w-full' to='/dashboard'>
-										<SplashDialogButton
-											icon={
-												<RefreshCcwIcon className='mr-2 w-4 h-4' />
-											}
-											label='Resume Writing Session'
-										/>
-									</Link>
-								</li>
-								<li className='w-full flex items-center justify-between'>
-									<Link className='w-full' to='/dashboard'>
-										<SplashDialogButton
-											icon={
-												<ListIcon className='mr-2 w-4 h-4' />
-											}
-											label='See all posts'
-										/>
-									</Link>
-								</li>
-							</ul>
-						</div>
+						{/*<div className='col-span-1 py-2 flex flex-col'>*/}
+						{/*	<h3 className='text-sm font-semibold text-foreground mb-4'>*/}
+						{/*		Previous Session*/}
+						{/*	</h3>*/}
+						{/*	<ul className='w-full text-sm flex flex-col gap-2'>*/}
+						{/*		<li className='w-full flex items-center justify-between'>*/}
+						{/*			<SplashDialogButton*/}
+						{/*				icon={*/}
+						{/*					<PencilIcon className='mr-2 w-4 h-4' />*/}
+						{/*				}*/}
+						{/*				label='Continue Writing'*/}
+						{/*			/>*/}
+						{/*		</li>*/}
+						{/*		<li className='w-full flex items-center justify-between'>*/}
+						{/*			<Link className='w-full' to='/dashboard'>*/}
+						{/*				<SplashDialogButton*/}
+						{/*					icon={*/}
+						{/*						<RefreshCcwIcon className='mr-2 w-4 h-4' />*/}
+						{/*					}*/}
+						{/*					label='Resume Writing Session'*/}
+						{/*				/>*/}
+						{/*			</Link>*/}
+						{/*		</li>*/}
+						{/*		<li className='w-full flex items-center justify-between'>*/}
+						{/*			<Link className='w-full' to='/dashboard'>*/}
+						{/*				<SplashDialogButton*/}
+						{/*					icon={*/}
+						{/*						<ListIcon className='mr-2 w-4 h-4' />*/}
+						{/*					}*/}
+						{/*					label='See all posts'*/}
+						{/*				/>*/}
+						{/*			</Link>*/}
+						{/*		</li>*/}
+						{/*	</ul>*/}
+						{/*</div>*/}
 						<div className='col-span-1 py-2 flex flex-col'>
 							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
@@ -233,7 +245,7 @@ const SplashDialog = ({
 							</ul>
 						</div>
 						<div className='col-span-1' />
-						<div className='col-span-2 flex flex-col'>
+						<div className='col-span-1 flex flex-col'>
 							<p className='leading-relaxed italic text-xs text-foreground'>
 								Note: All your data will be saved locally in the
 								browser.{' '}

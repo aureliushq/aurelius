@@ -73,12 +73,27 @@ const MainMenu = ({
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent>
-								<DropdownMenuItem className='justify-between'>
+								<DropdownMenuItem
+									onClick={() =>
+										triggerShortcut(
+											EditorShortcuts.NEW_POST
+										)
+									}
+								>
 									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
 										<CirclePlusIcon className='mr-2 w-4 h-4' />
 										<span>New Post</span>
 										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut keys={''} />
+											<KeyboardShortcut
+												keys={getShortcutWithModifiers(
+													allShortcuts[
+														EditorShortcuts.NEW_POST
+													].key,
+													allShortcuts[
+														EditorShortcuts.NEW_POST
+													].modifiers
+												)}
+											/>
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>

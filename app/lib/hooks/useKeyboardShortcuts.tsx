@@ -34,6 +34,12 @@ const allShortcuts: AllShortcuts = {
 		modifiers: { ctrl: true, shift: true },
 	},
 	// TODO: this is a global shortcut
+	[EditorShortcuts.NEW_POST]: {
+		description: 'New Post',
+		key: 'n',
+		modifiers: {},
+	},
+	// TODO: this is a global shortcut
 	[EditorShortcuts.PREFERENCES]: {
 		description: 'Preferences',
 		key: 'p',
@@ -44,6 +50,7 @@ const allShortcuts: AllShortcuts = {
 		key: 'e',
 		modifiers: {},
 	},
+	// TODO: this is a global shortcut
 	[EditorShortcuts.SPLASH_DIALOG]: {
 		description: 'Show Splash Screen',
 		key: 's',
