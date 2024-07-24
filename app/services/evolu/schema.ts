@@ -70,17 +70,6 @@ export const _HelpTable = table({
 	effortId: WritingEffortId,
 	slug: NonEmptyString100,
 	title: NonEmptyString1000,
-})
-
-const PostId = id('Post')
-export type PostId = typeof PostId.Type
-
-export const PostTable = table({
-	id: PostId,
-	content: Content,
-	effortId: WritingEffortId,
-	slug: NonEmptyString100,
-	title: NonEmptyString1000,
 	wordCount: Int,
 })
 

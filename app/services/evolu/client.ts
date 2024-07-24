@@ -19,6 +19,7 @@ import {
 import { Database } from '~/services/evolu/database'
 import {
 	Content,
+	Int,
 	NonEmptyString100,
 	SqliteDateTime,
 	WritingEffortId,
@@ -26,8 +27,6 @@ import {
 } from '~/services/evolu/schema'
 
 const indexes = createIndexes((create) => [
-	create('indexPostSlug').on('post').column('slug'),
-	create('indexPostCreatedAt').on('post').column('createdAt'),
 	create('indexWritingSlug').on('writing').column('slug'),
 	create('indexWritingCreatedAt').on('writing').column('createdAt'),
 	create('indexWritingEffortSlug').on('writingEffort').column('slug'),
@@ -57,7 +56,7 @@ export const evolu = createEvolu(Database, {
 			writingDailyGoal: S.decodeSync(NonEmptyString100)(
 				WritingDailyGoalType.DURATION
 			),
-			writingDailyTarget: S.decodeSync(PositiveInt)(30),
+			writingDailyTarget: S.decodeSync(Int)(30),
 			youtubeLink: S.decodeSync(String1000)(''),
 		})
 		// create a default writing effort for posts
@@ -89,6 +88,7 @@ export const evolu = createEvolu(Database, {
 				GETTING_STARTED_GUIDE.title
 			),
 			effortId: helpWritingEffortId,
+			wordCount: S.decodeSync(Int)(0),
 		})
 	},
 })
@@ -114,15 +114,6 @@ export const helpArticleBySlugQuery = (slug: string) =>
 			logExplainQueryPlan: true,
 		}
 	)
-
-export const postQuery = evolu.createQuery(
-	(db) => db.selectFrom('post').selectAll(),
-	{
-		logQueryExecutionTime: true,
-		logExplainQueryPlan: true,
-	}
-)
-export type PostRow = ExtractRow<typeof postQuery>
 
 export const settingsQuery = evolu.createQuery(
 	(db) => db.selectFrom('settings').selectAll(),
@@ -169,13 +160,22 @@ export const writingByWritingEffortQuery = ({
 }) =>
 	evolu.createQuery(
 		(db) => {
-			const query = db
-				.selectFrom('writing')
-				.selectAll()
-				.where('effortId', '=', S.decodeSync(WritingEffortId)(effortId))
+			let query = db.selectFrom('writing').selectAll()
+
+			if (effortId) {
+				query = query.where(
+					'effortId',
+					'=',
+					S.decodeSync(WritingEffortId)(effortId)
+				)
+			}
 
 			if (slug) {
-				query.where('slug', '=', S.decodeSync(NonEmptyString100)(slug))
+				query = query.where(
+					'slug',
+					'=',
+					S.decodeSync(NonEmptyString100)(slug)
+				)
 			}
 
 			return query

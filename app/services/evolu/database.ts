@@ -1,6 +1,5 @@
 import { database } from '@evolu/common'
 import {
-	PostTable,
 	SettingsTable,
 	WritingEffortTable,
 	WritingSessionTable,
@@ -10,7 +9,6 @@ import {
 
 const FIELDS = {
 	_help: _HelpTable,
-	post: PostTable,
 	settings: SettingsTable,
 	writing: WritingTable,
 	writingEffort: WritingEffortTable,
