@@ -9,7 +9,7 @@ import { SettingsRow } from '~/services/evolu/client'
 type WriterProps = {
 	content: string
 	editor: Editor | null
-	onTitleBlur: () => void
+	onTitleBlur?: () => void
 	settings: SettingsRow
 	setTitle: (title: string) => void
 	title: string

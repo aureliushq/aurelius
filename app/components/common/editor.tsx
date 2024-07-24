@@ -54,7 +54,7 @@ const lowlight = createLowlight(common)
 type EditorProps = {
 	content: string
 	isSaving: boolean
-	onTitleBlur: () => void
+	onTitleBlur?: () => void
 	setContent: (content: string) => void
 	setTitle: (title: string) => void
 	setWordCount: (wordCount: number) => void

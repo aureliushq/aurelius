@@ -1,21 +1,29 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
-import { ClientLoaderFunctionArgs, useLoaderData } from '@remix-run/react'
+import {
+	ClientActionFunctionArgs,
+	ClientLoaderFunctionArgs,
+	useFetcher,
+	useLoaderData,
+} from '@remix-run/react'
 
+import * as S from '@effect/schema/Schema'
+import { NonEmptyString1000 } from '@evolu/common'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
+import { EditorData } from '~/lib/types'
 import {
 	SettingsRow,
-	WritingEffortRow,
 	evolu,
 	helpArticleBySlugQuery,
 	settingsQuery,
 	writingByWritingEffortQuery,
 	writingEffortBySlugQuery,
 } from '~/services/evolu/client'
+import { Content, Int } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 
 export const meta: MetaFunction = () => {
@@ -27,67 +35,128 @@ export const links: LinksFunction = () => [
 ]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
+	const { row: effort } = await evolu.loadQuery(
+		writingEffortBySlugQuery(params.effort ?? 'help')
+	)
+
+	invariant(effort, 'Writing effort not found')
+
 	const { row: settings } = await evolu.loadQuery(settingsQuery)
-	if (!params.effort || params.effort === 'help') {
-		const { row: effort } = await evolu.loadQuery(
-			writingEffortBySlugQuery('help')
-		)
-		const { row: helpArticle } = await evolu.loadQuery(
-			helpArticleBySlugQuery(params.slug || 'getting-started')
-		)
-		invariant(helpArticle, 'Help article not found')
 
-		return { effort, writing: helpArticle, settings }
+	const { row: writing } =
+		params.effort === 'help'
+			? await evolu.loadQuery(
+					helpArticleBySlugQuery(params.slug || 'getting-started')
+				)
+			: await evolu.loadQuery(
+					writingByWritingEffortQuery({
+						effortId: effort.id,
+						slug: params.slug,
+					})
+				)
+
+	invariant(writing, 'Content not found')
+
+	return { effort, writing, settings }
+}
+
+export const clientAction = async ({
+	params,
+	request,
+}: ClientActionFunctionArgs) => {
+	const { row: effort } = await evolu.loadQuery(
+		writingEffortBySlugQuery(params.effort ?? 'help')
+	)
+
+	invariant(effort, 'Writing effort not found')
+
+	const { row: writing } = await evolu.loadQuery(
+		writingByWritingEffortQuery({
+			effortId: effort.id,
+			slug: params.slug,
+		})
+	)
+
+	invariant(writing, 'Content not found')
+
+	if (params.effort === 'help') {
+		return {}
 	} else {
-		const { row: effort } = await evolu.loadQuery(
-			writingEffortBySlugQuery(params.effort)
-		)
-		invariant(effort, 'Writing effort not found')
-		const { row: writing } = await evolu.loadQuery(
-			writingByWritingEffortQuery({
-				effortId: effort.id,
-				slug: params.slug,
-			})
-		)
-		invariant(writing, 'Content not found')
+		const body: EditorData & { wordCount: number } = await request.json()
+		const { content, title, wordCount } = body
 
-		return { effort, writing, settings }
+		evolu.update('writing', {
+			id: writing.id,
+			content: S.decodeSync(Content)(content),
+			title: S.decodeSync(NonEmptyString1000)(title),
+			wordCount: S.decodeSync(Int)(wordCount),
+		})
+
+		return { message: 'ok' }
 	}
 }
 
 const Writing = () => {
-	const data = useLoaderData<typeof clientLoader>()
+	const fetcher = useFetcher()
+	const { settings, writing } = useLoaderData<typeof clientLoader>()
+
+	const wordCount = useRef<number>(writing?.wordCount ?? 0)
 
 	const [isSaving, setIsSaving] = useState<boolean>(false)
-	const [title, setTitle] = useState<string>(data?.writing?.title as string)
 
-	const savePost = async (content: string) => {
+	const onAutoSave = useCallback(({ content, title }: EditorData) => {
 		setIsSaving(true)
-		// TODO: save writing to database
+
+		fetcher.submit(
+			{ content, title, wordCount: wordCount.current },
+			{ method: 'POST', encType: 'application/json' }
+		)
+
 		setTimeout(() => {
 			setIsSaving(false)
 		}, 3000)
-	}
+	}, [])
 
-	const [getContent, setContent] = useAutoSave({
-		data: data?.writing?.content as string,
-		onSave: savePost,
+	const [editorData, setEditorData] = useAutoSave({
+		initialData: {
+			content: writing.content as string,
+			title: writing.title as string,
+		},
+		onAutoSave,
 		interval: 10000,
 		debounce: 3000,
 	})
 
 	const providerData = {
-		settings: data?.settings as SettingsRow,
+		settings: settings as SettingsRow,
 	}
+
+	const handleTitleChange = (title: string) => {
+		setEditorData({ title })
+	}
+
+	const handleContentChange = (content: string) => {
+		setEditorData({ content })
+	}
+
+	const handleWordCountChange = (count: number) => {
+		wordCount.current = count
+	}
+
+	useEffect(() => {
+		wordCount.current = writing?.wordCount ?? 0
+	}, [writing])
 
 	return (
 		<AureliusProvider data={providerData}>
 			<Editor
-				content={getContent()}
+				content={editorData.content}
 				isSaving={isSaving}
-				setContent={setContent}
-				setTitle={setTitle}
-				title={title}
+				setContent={handleContentChange}
+				setTitle={handleTitleChange}
+				setWordCount={handleWordCountChange}
+				title={editorData.title}
+				wordCount={wordCount.current}
 			/>
 		</AureliusProvider>
 	)
