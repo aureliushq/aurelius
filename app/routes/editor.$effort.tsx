@@ -1,8 +1,18 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
-import { ClientLoaderFunctionArgs, useLoaderData } from '@remix-run/react'
+import {
+	ClientActionFunctionArgs,
+	ClientLoaderFunctionArgs,
+	useActionData,
+	useFetcher,
+	useLoaderData,
+	useNavigate,
+} from '@remix-run/react'
 
+import * as S from '@effect/schema/Schema'
+import { NonEmptyString1000 } from '@evolu/common'
+import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave } from '~/lib/hooks'
@@ -12,9 +22,22 @@ import {
 	SettingsRow,
 	evolu,
 	settingsQuery,
+	writingByWritingEffortQuery,
 	writingEffortBySlugQuery,
 } from '~/services/evolu/client'
+import { TableName } from '~/services/evolu/database'
+import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
+
+const slugger = new GithubSlugger()
+
+const checkSlugUniqueness = async (effortId: string, slug: string) => {
+	const { row: writing } = await evolu.loadQuery(
+		writingByWritingEffortQuery({ effortId, slug })
+	)
+
+	return !writing
+}
 
 export const meta: MetaFunction = () => {
 	return [{ title: 'Aurelius' }, { name: 'description', content: '' }]
@@ -35,22 +58,75 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	return { effort, settings }
 }
 
+export const clientAction = async ({
+	params,
+	request,
+}: ClientActionFunctionArgs) => {
+	invariant(params.effort, 'Writing Effort cannot be empty')
+	const { row: effort } = await evolu.loadQuery(
+		writingEffortBySlugQuery(params.effort)
+	)
+	invariant(effort, 'Writing effort not found')
+
+	const body: EditorData & { wordCount: number } = await request.json()
+	const { content, title, wordCount } = body
+
+	const writingTitle = title.trim() !== '' ? title : 'Untitled'
+
+	let slug = slugger.slug(writingTitle)
+	let isUnique = await checkSlugUniqueness(effort.id, slug)
+	do {
+		if (!isUnique) {
+			slug = slugger.slug(writingTitle)
+		}
+		isUnique = await checkSlugUniqueness(effort.id, slug)
+	} while (!isUnique)
+
+	// TODO: generalize this since I'm going to create different tables for different efforts
+	const tableName =
+		(params.effort as TableName) === 'post' ? 'post' : 'writing'
+
+	evolu.create(tableName, {
+		content: S.decodeSync(Content)(content),
+		effortId: effort.id,
+		slug: S.decodeSync(NonEmptyString100)(slug),
+		title: S.decodeSync(NonEmptyString1000)(writingTitle),
+		wordCount: S.decodeSync(Int)(wordCount),
+	})
+
+	return { message: 'ok', redirectTo: `/editor/${effort.slug}/${slug}` }
+}
+
 const NewWriting = () => {
+	const actionData = useActionData<typeof clientAction>()
+
+	const fetcher = useFetcher()
+
 	const data = useLoaderData<typeof clientLoader>()
 
-	const [isSaving, setIsSaving] = useState<boolean>(false)
+	const navigate = useNavigate()
 
-	const savePost = useCallback(async ({ content, title }: EditorData) => {
+	const wordCount = useRef<number>(0)
+
+	const [isSaving, setIsSaving] = useState<boolean>(false)
+	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
+
+	const onAutoSave = useCallback(({ content, title }: EditorData) => {
 		setIsSaving(true)
-		// TODO: save post to database
+
+		fetcher.submit(
+			{ content, title, wordCount: wordCount.current },
+			{ method: 'POST', encType: 'application/json' }
+		)
+
 		setTimeout(() => {
 			setIsSaving(false)
 		}, 3000)
 	}, [])
 
-	const [editorData, setEditorData] = useAutoSave({
-		initialData: { title: '', content: '' },
-		onSave: savePost,
+	const [editorData, setEditorData, forceSave] = useAutoSave({
+		initialData: { content: '', title: '' },
+		onAutoSave,
 		interval: 10000,
 		debounce: 3000,
 	})
@@ -60,21 +136,48 @@ const NewWriting = () => {
 	}
 
 	const handleTitleChange = (title: string) => {
-		setEditorData({ title })
+		setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
+	}
+
+	const handleTitleBlur = () => {
+		if (editorData.title.trim() !== '') {
+			forceSave()
+			setIsTitleFirstEdit(false)
+		} else {
+			setEditorData({ title: editorData.title })
+		}
 	}
 
 	const handleContentChange = (content: string) => {
 		setEditorData({ content })
 	}
 
+	const handleWordCountChange = (count: number) => {
+		wordCount.current = count
+	}
+
+	useEffect(() => {
+		if (
+			fetcher.state === 'idle' &&
+			actionData &&
+			actionData.message === 'ok' &&
+			actionData.redirectTo.trim() !== ''
+		) {
+			navigate(actionData.redirectTo)
+		}
+	}, [fetcher])
+
 	return (
 		<AureliusProvider data={providerData}>
 			<Editor
 				content={editorData.content}
 				isSaving={isSaving}
+				onTitleBlur={handleTitleBlur}
 				setContent={handleContentChange}
 				setTitle={handleTitleChange}
+				setWordCount={handleWordCountChange}
 				title={editorData.title}
+				wordCount={wordCount.current}
 			/>
 		</AureliusProvider>
 	)

@@ -54,17 +54,23 @@ const lowlight = createLowlight(common)
 type EditorProps = {
 	content: string
 	isSaving: boolean
+	onTitleBlur: () => void
 	setContent: (content: string) => void
 	setTitle: (title: string) => void
+	setWordCount: (wordCount: number) => void
 	title: string
+	wordCount: number
 }
 
 const Editor = ({
 	content,
 	isSaving,
+	onTitleBlur,
 	setContent,
 	setTitle,
+	setWordCount,
 	title,
+	wordCount,
 }: EditorProps) => {
 	const shortcuts = {
 		[EditorShortcuts.BLUR]: () => blurInputs(),
@@ -94,7 +100,6 @@ const Editor = ({
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
 	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
-	const [wordCount, setWordCount] = useState<number>(0)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
 		useState<WritingSessionSettings>({
@@ -298,6 +303,7 @@ const Editor = ({
 				<Writer
 					content={content}
 					editor={editor}
+					onTitleBlur={onTitleBlur}
 					ref={titleRef}
 					settings={settings}
 					setTitle={setTitle}

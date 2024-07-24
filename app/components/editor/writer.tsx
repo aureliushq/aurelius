@@ -9,13 +9,14 @@ import { SettingsRow } from '~/services/evolu/client'
 type WriterProps = {
 	content: string
 	editor: Editor | null
+	onTitleBlur: () => void
 	settings: SettingsRow
 	setTitle: (title: string) => void
 	title: string
 }
 
 const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
-	({ content, editor, settings, setTitle, title }, titleRef) => {
+	({ content, editor, onTitleBlur, settings, setTitle, title }, titleRef) => {
 		const internalRef = useRef<HTMLTextAreaElement | null>(null)
 
 		useEffect(() => {
@@ -43,6 +44,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 						<Textarea
 							autoFocus
 							className={`w-full min-h-[48px] border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 flex items-center resize-none overflow-y-hidden bg-transparent text-xl font-semibold leading-snug text-foreground focus:outline-none lg:text-3xl lg:leading-snug ${settings?.titleFont}`}
+							onBlur={onTitleBlur}
 							onChange={handleTitleChange}
 							placeholder='Untitled'
 							ref={(element) => {
