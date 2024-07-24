@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
 							Last Updated: July 17, 2024
 						</span>
 						<span className='text-sm text-gray-500'>
-							Next Update: Never
+							Next Update: Never. This is the last update.
 						</span>
 					</div>
 				</div>
@@ -32,12 +32,14 @@ const PrivacyPolicy = () => {
 					</span>
 					<h2>End-to-end encryption</h2>
 					<span>
-						Whenever your data does need to travel, I've got you
-						covered. Aurelius uses top-notch encryption to keep your
-						information safe as it moves between your device and the
-						services. It's like sending your writing in an
-						unbreakable lockbox that only you have the key to. Even
-						if someone intercepted it, they couldn't peek inside.
+						Whenever your data does need to travel between your
+						devices, I've got you covered. Aurelius provides
+						end-to-end encrypted sync between your devices. Aurelius
+						uses top-notch encryption to keep your information safe
+						as it moves between your devices through our servers.
+						It's like sending your writing in an unbreakable lockbox
+						that only you have the key to. Even if someone
+						intercepted it, they couldn't peek inside.
 					</span>
 					<h2>No tracking or analytics</h2>
 					<span>
