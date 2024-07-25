@@ -1,7 +1,9 @@
+import DefaultLayout from '~/layouts/default'
+
 const PrivacyPolicy = () => {
 	return (
-		<div className='flex min-h-[calc(100vh-10rem)] w-full flex-col'>
-			<div className='relative prose dark:prose-invert mx-auto flex w-full max-w-2xl flex-col justify-center gap-12 px-6 py-20 sm:py-32 lg:px-8 lg:py-40'>
+		<DefaultLayout>
+			<div className='relative prose dark:prose-invert flex flex-col justify-center gap-12 px-6 lg:px-8'>
 				<div className='flex w-full flex-col items-start text-white'>
 					<h1 className='mb-4 text-center text-white'>Privacy</h1>
 					<div className='flex flex-col gap-2'>
@@ -69,7 +71,7 @@ const PrivacyPolicy = () => {
 					</span>
 				</div>
 			</div>
-		</div>
+		</DefaultLayout>
 	)
 }
 
