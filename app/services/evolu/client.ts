@@ -68,7 +68,7 @@ export const evolu = createEvolu(Database, {
 				'thursday',
 				'friday',
 			]),
-			name: S.decodeSync(NonEmptyString100)('Post'),
+			name: S.decodeSync(NonEmptyString100)('Posts'),
 			slug: S.decodeSync(NonEmptyString100)('post'),
 			targetWordCount: S.decodeSync(PositiveInt)(300),
 			time: S.decodeSync(SqliteDateTime)(

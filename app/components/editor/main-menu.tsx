@@ -41,7 +41,7 @@ import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 
 type MainMenuProps = {
-	focusMode: boolean
+	focusMode?: boolean
 	mainMenuOpen: boolean
 	setMainMenuOpen: Dispatch<SetStateAction<boolean>>
 	triggerShortcut: (shortcutName: string) => void
