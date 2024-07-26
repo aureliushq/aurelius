@@ -3,7 +3,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { Form } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { PositiveInt, String1000, parseMnemonic } from '@evolu/common'
+import { String1000, parseMnemonic } from '@evolu/common'
 import { useEvolu } from '@evolu/react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Effect, Exit } from 'effect'
@@ -74,7 +74,7 @@ import {
 import { copyToClipboard } from '~/lib/utils'
 import { SettingsRow } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
-import { NonEmptyString100 } from '~/services/evolu/schema'
+import { Int, NonEmptyString100 } from '~/services/evolu/schema'
 
 // TODO: Autosave settings on change
 
@@ -307,7 +307,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 		update('settings', {
 			id: settings.id,
 			writingDailyGoal: S.decodeSync(NonEmptyString100)(writingDailyGoal),
-			writingDailyTarget: S.decodeSync(PositiveInt)(writingDailyTarget),
+			writingDailyTarget: S.decodeSync(Int)(writingDailyTarget),
 		})
 		toast({
 			description: <SavedToastContent />,
