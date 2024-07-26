@@ -66,16 +66,16 @@ const EffortHome = () => {
 			<div className='border border-border rounded-lg'>
 				<Table>
 					<TableHeader>
-						<TableRow className='grid grid-cols-6'>
-							<TableHead className='col-span-3 p-4'>
+						<TableRow className='grid grid-cols-8'>
+							<TableHead className='col-span-4 p-4'>
 								Title
 							</TableHead>
 							{effort.slug !== 'help' && (
 								<>
-									<TableHead className='p-4 col-span-2'>
+									<TableHead className='p-4 col-span-2 text-center'>
 										Created On
 									</TableHead>
-									<TableHead className='p-4 pl-0 text-right'>
+									<TableHead className='p-4 col-span-2 text-right'>
 										Word Count
 									</TableHead>
 								</>
@@ -86,19 +86,19 @@ const EffortHome = () => {
 						{writings.map((writing) => (
 							<TableRow key={writing.id}>
 								<Link
-									className='grid grid-cols-6'
+									className='h-16 grid grid-cols-8'
 									to={
 										effort.slug === 'help'
 											? `/${effort.slug}/${writing.slug}`
 											: `/editor/${effort.slug}/${writing.slug}`
 									}
 								>
-									<TableCell className='col-span-3 font-medium'>
+									<TableCell className='col-span-4 font-medium flex items-center'>
 										{writing.title}
 									</TableCell>
 									{effort.slug !== 'help' && (
 										<>
-											<TableCell className='col-span-2'>
+											<TableCell className='col-span-2 flex items-center justify-center'>
 												{formatDistanceToNow(
 													new Date(writing.createdAt),
 													{
@@ -106,7 +106,7 @@ const EffortHome = () => {
 													}
 												)}
 											</TableCell>
-											<TableCell className='text-right'>
+											<TableCell className='col-span-2 text-right flex items-center justify-end'>
 												{writing.wordCount} words
 											</TableCell>
 										</>
