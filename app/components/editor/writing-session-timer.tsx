@@ -289,10 +289,10 @@ const WritingSessionTimer = ({
 							>
 								<div className='grid grid-cols-3 items-center gap-4 h-10'>
 									<Label
-										className='col-span-2 flex items-center'
+										className='col-span-2 flex items-center leading-snug'
 										htmlFor='session-duration'
 									>
-										How long do you want to write?
+										Writing Time (in minutes)
 									</Label>
 									<Input
 										className='col-span-1'

@@ -89,7 +89,7 @@ export const clientAction = async ({
 
 const NewWriting = () => {
 	const fetcher = useFetcher()
-	const { settings } = useLoaderData<typeof clientLoader>()
+	const { effort, settings } = useLoaderData<typeof clientLoader>()
 
 	const navigate = useNavigate()
 
@@ -143,6 +143,10 @@ const NewWriting = () => {
 		wordCount.current = count
 	}
 
+	const onReset = () => {
+		navigate(`/editor/${effort.slug as string}`)
+	}
+
 	useEffect(() => {
 		if (
 			fetcher.state === 'idle' &&
@@ -162,6 +166,7 @@ const NewWriting = () => {
 			<Editor
 				content={editorData.content}
 				isSaving={isSaving}
+				onReset={onReset}
 				onTitleBlur={handleTitleBlur}
 				setContent={handleContentChange}
 				setTitle={handleTitleChange}

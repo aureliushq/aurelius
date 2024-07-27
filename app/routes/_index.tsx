@@ -57,8 +57,6 @@ export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
 		await request.json()
 	const { content, effort: effortSlug, title, wordCount } = body
 
-	console.log(effortSlug)
-
 	if (effortSlug === 'help') {
 		return {}
 	}
@@ -135,6 +133,7 @@ const Index = () => {
 	})
 
 	const providerData = {
+		effort: 'post',
 		settings: data?.settings as SettingsRow,
 	}
 
@@ -165,7 +164,7 @@ const Index = () => {
 
 	const onReset = () => {
 		effortSlug.current = 'post'
-		setEditorData({ content: '', title: '' }, { ignoreAutoSave: true })
+		navigate(`/editor/${effortSlug.current}`)
 	}
 
 	useEffect(() => {

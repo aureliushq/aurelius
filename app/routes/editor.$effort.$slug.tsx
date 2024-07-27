@@ -6,6 +6,7 @@ import {
 	ClientLoaderFunctionArgs,
 	useFetcher,
 	useLoaderData,
+	useNavigate,
 } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
@@ -98,7 +99,8 @@ export const clientAction = async ({
 
 const Writing = () => {
 	const fetcher = useFetcher()
-	const { settings, writing } = useLoaderData<typeof clientLoader>()
+	const { effort, settings, writing } = useLoaderData<typeof clientLoader>()
+	const navigate = useNavigate()
 
 	const wordCount = useRef<number>(writing?.wordCount ?? 0)
 
@@ -143,6 +145,10 @@ const Writing = () => {
 		wordCount.current = count
 	}
 
+	const onReset = () => {
+		navigate(`/editor/${effort.slug as string}`)
+	}
+
 	useEffect(() => {
 		wordCount.current = writing?.wordCount ?? 0
 	}, [writing])
@@ -152,6 +158,7 @@ const Writing = () => {
 			<Editor
 				content={editorData.content}
 				isSaving={isSaving}
+				onReset={onReset}
 				setContent={handleContentChange}
 				setTitle={handleTitleChange}
 				setWordCount={handleWordCountChange}
