@@ -126,7 +126,7 @@ const Writing = () => {
 		},
 		onAutoSave,
 		interval: 10000,
-		debounce: 3000,
+		debounce: 1000,
 	})
 
 	const providerData = {

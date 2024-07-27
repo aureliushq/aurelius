@@ -18,12 +18,12 @@ type AutoSaveProps = {
 	debounce?: number
 }
 
-function useAutoSave({
+const useAutoSave = ({
 	initialData,
 	onAutoSave,
 	interval = 60000,
 	debounce = 1000,
-}: AutoSaveProps): [EditorData, SetEditorDataFunction, () => void] {
+}: AutoSaveProps): [EditorData, SetEditorDataFunction, () => void] => {
 	const dataRef = useRef<EditorData>(initialData)
 	const ignoreAutoSaveFieldsRef = useRef<Set<string>>(new Set())
 	const previousDataRef = useRef<EditorData>(initialData)

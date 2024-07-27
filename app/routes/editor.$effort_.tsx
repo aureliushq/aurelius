@@ -115,7 +115,7 @@ const NewWriting = () => {
 		initialData: { content: '', title: '' },
 		onAutoSave,
 		interval: 10000,
-		debounce: 3000,
+		debounce: 1000,
 	})
 
 	const providerData = {
