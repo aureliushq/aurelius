@@ -175,8 +175,6 @@ const Editor = ({
 	}
 
 	const confirmResetEditor = () => {
-		editor?.commands.clearContent(true)
-		setWordCount(0)
 		onReset?.()
 	}
 
