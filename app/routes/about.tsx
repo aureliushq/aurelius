@@ -52,9 +52,9 @@ const About = () => {
 					<div className='flex w-full flex-col items-start gap-4 leading-loose text-white'>
 						<span>
 							Aurelius wouldn't be possible without the work of
-							many talented individuals and the open-source
-							projects. I'm grateful for the following projects
-							that have allowed me to build Aurelius:
+							many talented individuals and open-source projects.
+							I'm grateful for the following projects that have
+							allowed me to build Aurelius:
 						</span>
 						<ul>
 							<li>
@@ -66,8 +66,8 @@ const About = () => {
 								>
 									Remix
 								</a>{' '}
-								- The delightful React meta-framework that
-								powers Aurelius
+								- Delightful React meta-framework that powers
+								Aurelius
 							</li>
 							<li>
 								<a
@@ -78,9 +78,8 @@ const About = () => {
 								>
 									Evolu
 								</a>{' '}
-								- The platform that powers Aurelius'
-								local-first, sync, and end-to-end encryption
-								features
+								- Library that powers Aurelius' local-first,
+								sync, and end-to-end encryption features
 							</li>
 							<li>
 								<a
@@ -91,8 +90,20 @@ const About = () => {
 								>
 									Shadcn UI
 								</a>{' '}
-								- The beautiful UI components that make Aurelius
+								- Beautiful UI components that make Aurelius
 								beautiful
+							</li>
+							<li>
+								<a
+									href='https://popsy.co/'
+									target='_blank'
+									rel='noreferrer'
+									className='text-primary underline'
+								>
+									Popsy
+								</a>{' '}
+								- Source of the beautiful illustrations that I
+								use throughout the app
 							</li>
 						</ul>
 					</div>
