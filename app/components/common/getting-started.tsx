@@ -56,6 +56,37 @@ const GettingStarted = () => {
 				</a>
 				.
 			</p>
+			<p>You can start editing this text to see how the editor works.</p>
+			<p>
+				<em>
+					Important: Changes you make here are not saved. To save your
+					work, create a new post (<code>n</code>
+					).
+				</em>
+			</p>
+			<hr />
+			<h3>Saving your data</h3>
+			<p>
+				Aurelius automatically saves your work as you write. By default
+				they're saved to the "Posts" effort. To switch between different
+				writing efforts, you can use the efforts switcher in the main
+				menu or simply press <code>alt-w</code>. This seamless saving
+				and organization helps you focus on your writing without
+				worrying about losing your progress.
+			</p>
+			<p>
+				<em>
+					Important: All your data is stored locally in your browser.
+					To use Aurelius across multiple devices, you'll need to sync
+					your data. For syncing, go to Preferences (press{' '}
+				</em>
+				<code>p</code>
+				<em>
+					), select 'Sync', then 'View Code', and follow the provided
+					instructions. This ensures your writing is accessible
+					wherever you need it.
+				</em>
+			</p>
 			<hr />
 			<h3>Writing Efforts</h3>
 			<p>
@@ -101,29 +132,6 @@ const GettingStarted = () => {
 					</p>
 				</li>
 			</ul>
-			<hr />
-			<h3>Saving your data</h3>
-			<p>
-				Aurelius automatically saves your work as you write. By default
-				they're saved to the "Posts" effort. To switch between different
-				writing efforts, you can use the efforts switcher in the main
-				menu or simply press <code>alt-w</code>. This seamless saving
-				and organization helps you focus on your writing without
-				worrying about losing your progress.
-			</p>
-			<p>
-				<em>
-					Important: All your data is stored locally in your browser.
-					To use Aurelius across multiple devices, you'll need to sync
-					your data. For syncing, go to Preferences (press{' '}
-				</em>
-				<code>p</code>
-				<em>
-					), select 'Sync', then 'View Code', and follow the provided
-					instructions. This ensures your writing is accessible
-					wherever you need it.
-				</em>
-			</p>
 			<hr />
 			<h3>Focus Mode</h3>
 			<p>
