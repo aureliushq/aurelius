@@ -11,6 +11,7 @@ import {
 import { EvoluProvider } from '@evolu/react'
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
 import { Toaster } from '~/components/ui/toaster'
+import { TooltipProvider } from '~/components/ui/tooltip'
 import stylesheet from '~/globals.css?url'
 import { evolu } from '~/services/evolu/client'
 import { themeSessionResolver } from '~/services/theme.server'
@@ -65,7 +66,9 @@ export default function AppWithProviders() {
 	return (
 		<ThemeProvider specifiedTheme={data?.theme} themeAction='/action/theme'>
 			<EvoluProvider value={evolu}>
-				<App />
+				<TooltipProvider>
+					<App />
+				</TooltipProvider>
 			</EvoluProvider>
 		</ThemeProvider>
 	)

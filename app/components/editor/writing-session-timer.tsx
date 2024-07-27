@@ -37,7 +37,6 @@ import { Switch } from '~/components/ui/switch'
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
@@ -52,16 +51,14 @@ import { WordCount } from '~/services/evolu/schema'
 
 const HelpTooltip = ({ children }: { children: string | ReactNode }) => {
 	return (
-		<TooltipProvider>
-			<Tooltip>
-				<TooltipTrigger>
-					<CircleHelpIcon className='w-4 h-4 ml-2' />
-				</TooltipTrigger>
-				<TooltipContent>
-					<p className='text-sm text-center'>{children}</p>
-				</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
+		<Tooltip>
+			<TooltipTrigger>
+				<CircleHelpIcon className='w-4 h-4 ml-2' />
+			</TooltipTrigger>
+			<TooltipContent>
+				<p className='text-sm text-center'>{children}</p>
+			</TooltipContent>
+		</Tooltip>
 	)
 }
 
@@ -339,20 +336,18 @@ const WritingSessionTimer = ({
 									</Label>
 									<div className='col-span-1 flex items-center justify-end'>
 										{!enableMusicPlayer && (
-											<TooltipProvider>
-												<Tooltip>
-													<TooltipTrigger>
-														<TriangleAlertIcon className='w-4 h-4 mr-4 text-yellow-500' />
-													</TooltipTrigger>
-													<TooltipContent>
-														<p className='text-sm text-center'>
-															Enable music player
-															in Preferences to
-															use this feature.
-														</p>
-													</TooltipContent>
-												</Tooltip>
-											</TooltipProvider>
+											<Tooltip>
+												<TooltipTrigger asChild>
+													<TriangleAlertIcon className='w-4 h-4 mr-4 text-yellow-500' />
+												</TooltipTrigger>
+												<TooltipContent>
+													<p className='text-sm text-center'>
+														Enable music player in
+														Preferences to use this
+														feature.
+													</p>
+												</TooltipContent>
+											</Tooltip>
 										)}
 										<Switch
 											className='w-9 h-5 [&>span]:w-4 [&>span]:h-4 [&>span]:data-[state=checked]:translate-x-4'

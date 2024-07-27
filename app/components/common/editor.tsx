@@ -144,7 +144,7 @@ const Editor = ({
 			}),
 			Highlight.configure({ multicolor: true }),
 			// @ts-expect-error: not sure why this is throwing an error, but I'm going to replace it with individual packages anyway, so it's fine
-			StarterKit.configure({}),
+			StarterKit,
 			CharacterCount,
 			TextStyle,
 			FontFamily,

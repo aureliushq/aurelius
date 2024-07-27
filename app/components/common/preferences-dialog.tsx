@@ -25,6 +25,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '~/components/ui/alert-dialog'
+import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent } from '~/components/ui/card'
 import {
@@ -53,7 +54,6 @@ import { Textarea } from '~/components/ui/textarea'
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
@@ -501,24 +501,22 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 					</small>
 				</Label>
 				<div className='flex items-center'>
-					<TooltipProvider>
-						<Tooltip>
-							<TooltipTrigger>
-								<TriangleAlertIcon className='w-4 h-4 mr-4 text-yellow-500' />
-							</TooltipTrigger>
-							<TooltipContent>
-								<p className='text-sm text-center'>
-									Important: This feature uses YouTube for
-									music playback. Please be aware that
-									enabling it will allow YouTube to track your
-									activity on this site.
-									<br /> If you prefer to avoid tracking, you
-									can open the music channel link in a
-									separate tab and play it there instead.
-								</p>
-							</TooltipContent>
-						</Tooltip>
-					</TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<TriangleAlertIcon className='w-4 h-4 mr-4 text-yellow-500' />
+						</TooltipTrigger>
+						<TooltipContent>
+							<p className='text-sm text-center'>
+								Important: This feature uses YouTube for music
+								playback. Please be aware that enabling it will
+								allow YouTube to track your activity on this
+								site.
+								<br /> If you prefer to avoid tracking, you can
+								open the music channel link in a separate tab
+								and play it there instead.
+							</p>
+						</TooltipContent>
+					</Tooltip>
 					<Switch
 						defaultChecked={!!settings.enableMusicPlayer}
 						name='enable-music-player'
@@ -761,47 +759,22 @@ const Advanced = () => {
 
 	return (
 		<div className='flex flex-col gap-8'>
-			<section className='flex flex-col gap-4'>
-				<div className='flex items-center justify-between h-10'>
-					<Label className='flex flex-col gap-2'>
-						Export your data
-						<small className='text-xs font-light'>
-							Download all of your data in a single JSON file.
-						</small>
-					</Label>
-					<AlertDialog>
-						<AlertDialogTrigger asChild>
-							<Button size='sm' variant='secondary'>
-								Export
-							</Button>
-						</AlertDialogTrigger>
-						<AlertDialogContent>
-							<AlertDialogHeader>
-								<AlertDialogTitle>
-									Are you sure?
-								</AlertDialogTitle>
-								<AlertDialogDescription>
-									This will delete your data from this
-									browser/device. If you want to recover your
-									data later, make sure you have synced your
-									data with another device.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction asChild>
-									<Button
-										className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
-										onClick={confirmDelete}
-									>
-										Yes, I&apos;m sure
-									</Button>
-								</AlertDialogAction>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</AlertDialog>
-				</div>
-			</section>
+			{/*<section className='flex flex-col gap-4'>*/}
+			{/*	<div className='flex items-center justify-between h-10'>*/}
+			{/*		<Label className='flex flex-col gap-2'>*/}
+			{/*			Export your data*/}
+			{/*			<small className='text-xs font-light'>*/}
+			{/*				Download all of your data in a single JSON file.*/}
+			{/*			</small>*/}
+			{/*		</Label>*/}
+			{/*		<div className='flex items-center gap-4'>*/}
+			{/*			<Badge className='text-xs'>Coming Soon</Badge>*/}
+			{/*			<Button disabled={true} size='sm' variant='secondary'>*/}
+			{/*				Export*/}
+			{/*			</Button>*/}
+			{/*		</div>*/}
+			{/*	</div>*/}
+			{/*</section>*/}
 			<section className='flex flex-col gap-4'>
 				<h3 className='font-semibold text-muted-foreground mt-4'>
 					Danger Zone
