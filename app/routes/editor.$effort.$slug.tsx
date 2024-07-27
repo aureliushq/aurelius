@@ -119,7 +119,7 @@ const Writing = () => {
 		}, 3000)
 	}, [])
 
-	const [editorData, setEditorData] = useAutoSave({
+	const [editorData, setEditorData, forceSave] = useAutoSave({
 		initialData: {
 			content: writing.content as string,
 			title: writing.title as string,
@@ -146,6 +146,7 @@ const Writing = () => {
 	}
 
 	const onReset = () => {
+		forceSave()
 		navigate(`/editor/${effort.slug as string}`)
 	}
 

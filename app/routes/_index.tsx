@@ -164,6 +164,7 @@ const Index = () => {
 
 	const onReset = () => {
 		effortSlug.current = 'post'
+		forceSave()
 		navigate(`/editor/${effortSlug.current}`)
 	}
 

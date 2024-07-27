@@ -144,6 +144,7 @@ const NewWriting = () => {
 	}
 
 	const onReset = () => {
+		forceSave()
 		navigate(`/editor/${effort.slug as string}`)
 	}
 
