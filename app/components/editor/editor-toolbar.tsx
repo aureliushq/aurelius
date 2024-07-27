@@ -137,7 +137,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 					value={activeMarks}
 				>
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<ToggleGroupItem
 								className='h-9 w-9 rounded-tl-md rounded-bl-md rounded-tr-none rounded-br-none'
 								data-state={
@@ -155,7 +155,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 						</TooltipContent>
 					</Tooltip>
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<ToggleGroupItem
 								className='h-9 w-9 rounded-none'
 								data-state={
@@ -173,7 +173,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 						</TooltipContent>
 					</Tooltip>
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<ToggleGroupItem
 								className='h-9 w-9 rounded-none'
 								data-state={
@@ -216,7 +216,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 					value={activeMarks}
 				>
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<ToggleGroupItem
 								className='h-9 w-9 rounded-none'
 								data-state={
@@ -234,7 +234,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 						</TooltipContent>
 					</Tooltip>
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<ToggleGroupItem
 								className='h-9 w-9 rounded-none'
 								data-state={
@@ -260,7 +260,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 					value={activeNodes}
 				>
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<ToggleGroupItem
 								className='h-9 w-9 rounded-none'
 								data-state={
@@ -278,7 +278,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 						</TooltipContent>
 					</Tooltip>
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<ToggleGroupItem
 								className='h-9 w-9 rounded-none'
 								data-state={
