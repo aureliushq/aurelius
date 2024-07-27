@@ -11,6 +11,7 @@ import {
 
 import * as S from '@effect/schema/Schema'
 import { NonEmptyString1000 } from '@evolu/common'
+import { useQuery } from '@evolu/react'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
@@ -38,14 +39,13 @@ export const links: LinksFunction = () => [
 ]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-	const { row: settings } = await evolu.loadQuery(settingsQuery)
 	invariant(params.effort, 'Effort cannot be empty')
 	const { row: effort } = await evolu.loadQuery(
 		writingEffortBySlugQuery(params.effort)
 	)
 	invariant(effort, 'Writing effort not found')
 
-	return { effort, settings }
+	return { effort }
 }
 
 export const clientAction = async ({
@@ -89,9 +89,10 @@ export const clientAction = async ({
 
 const NewWriting = () => {
 	const fetcher = useFetcher()
-	const { effort, settings } = useLoaderData<typeof clientLoader>()
-
+	const { effort } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
+
+	const { row: settings } = useQuery(settingsQuery)
 
 	const wordCount = useRef<number>(0)
 

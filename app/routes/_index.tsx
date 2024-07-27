@@ -11,6 +11,7 @@ import {
 
 import * as S from '@effect/schema/Schema'
 import { NonEmptyString1000 } from '@evolu/common'
+import { useQuery } from '@evolu/react'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
@@ -47,9 +48,8 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 		helpArticleBySlugQuery(params.slug || 'getting-started')
 	)
 	invariant(helpArticle, 'Help article not found')
-	const { row: settings } = await evolu.loadQuery(settingsQuery)
 
-	return { effort, writing: helpArticle, settings }
+	return { effort, writing: helpArticle }
 }
 
 export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
@@ -95,11 +95,13 @@ export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
 
 const Index = () => {
 	const fetcher = useFetcher()
-	const data = useLoaderData<typeof clientLoader>()
+	const { effort, writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
-	const wordCount = useRef<number>(data?.writing?.wordCount ?? 0)
-	const effortSlug = useRef<string>(data?.effort?.slug as string)
+	const { row: settings } = useQuery(settingsQuery)
+
+	const wordCount = useRef<number>(writing?.wordCount ?? 0)
+	const effortSlug = useRef<string>(effort?.slug as string)
 
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
@@ -124,8 +126,8 @@ const Index = () => {
 
 	const [editorData, setEditorData, forceSave] = useAutoSave({
 		initialData: {
-			content: data?.writing.content as string,
-			title: data?.writing.title as string,
+			content: writing.content as string,
+			title: writing.title as string,
 		},
 		onAutoSave,
 		interval: 10000,
@@ -134,7 +136,7 @@ const Index = () => {
 
 	const providerData = {
 		effort: 'post',
-		settings: data?.settings as SettingsRow,
+		settings: settings as SettingsRow,
 	}
 
 	const handleTitleBlur = () => {
@@ -183,8 +185,8 @@ const Index = () => {
 	}, [fetcher])
 
 	useEffect(() => {
-		wordCount.current = data?.writing?.wordCount ?? 0
-	}, [data?.writing])
+		wordCount.current = writing?.wordCount ?? 0
+	}, [writing])
 
 	return (
 		<AureliusProvider data={providerData}>

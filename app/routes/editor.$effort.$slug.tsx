@@ -11,6 +11,7 @@ import {
 
 import * as S from '@effect/schema/Schema'
 import { NonEmptyString1000 } from '@evolu/common'
+import { useQuery } from '@evolu/react'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave } from '~/lib/hooks'
@@ -42,8 +43,6 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 	invariant(effort, 'Writing effort not found')
 
-	const { row: settings } = await evolu.loadQuery(settingsQuery)
-
 	const { row: writing } =
 		params.effort === 'help'
 			? await evolu.loadQuery(
@@ -58,7 +57,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 	invariant(writing, 'Content not found')
 
-	return { effort, writing, settings }
+	return { effort, writing }
 }
 
 export const clientAction = async ({
@@ -99,8 +98,10 @@ export const clientAction = async ({
 
 const Writing = () => {
 	const fetcher = useFetcher()
-	const { effort, settings, writing } = useLoaderData<typeof clientLoader>()
+	const { effort, writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
+
+	const { row: settings } = useQuery(settingsQuery)
 
 	const wordCount = useRef<number>(writing?.wordCount ?? 0)
 
