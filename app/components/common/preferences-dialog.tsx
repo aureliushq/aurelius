@@ -358,6 +358,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 						<Input
 							className='max-w-48'
 							defaultValue={`${settings.writingDailyTarget}`}
+							min={1}
 							name='daily-goal-duration'
 							type='number'
 						/>
@@ -373,6 +374,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 						<Input
 							className='max-w-48'
 							defaultValue={`${settings.writingDailyTarget}`}
+							min={1}
 							name='daily-goal-word-count'
 							type='number'
 						/>

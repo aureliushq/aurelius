@@ -299,6 +299,7 @@ const WritingSessionTimer = ({
 										defaultValue={
 											writingSessionSettings.targetDuration
 										}
+										min={1}
 										name='session-duration'
 										type='number'
 									/>
