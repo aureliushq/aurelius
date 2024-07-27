@@ -1,5 +1,7 @@
 import { ReactNode, useState } from 'react'
 
+import { useNavigate } from '@remix-run/react'
+
 import {
 	E2EEIndicator,
 	HelpButton,
@@ -14,12 +16,19 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 	const shortcuts = {
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
 		[EditorShortcuts.MAIN_MENU]: () => setMainMenuOpen(!mainMenuOpen),
+		[EditorShortcuts.NEW_POST]: () => createNewPost(),
 	}
 
 	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
 
+	const navigate = useNavigate()
+
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
+
+	const createNewPost = () => {
+		navigate('/editor/post')
+	}
 
 	return (
 		<>
