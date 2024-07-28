@@ -14,9 +14,9 @@ import { NonEmptyString1000 } from '@evolu/common'
 import { useQuery } from '@evolu/react'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
-import { useAutoSave } from '~/lib/hooks'
+import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
-import { EditorData } from '~/lib/types'
+import { EditorData, EditorShortcuts } from '~/lib/types'
 import {
 	SettingsRow,
 	evolu,
@@ -97,14 +97,19 @@ export const clientAction = async ({
 }
 
 const Writing = () => {
+	const shortcuts = {
+		[EditorShortcuts.FORCE_SAVE]: () => handleForceSave(),
+	}
+
 	const fetcher = useFetcher()
 	const { effort, writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
+	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+
 	const { row: settings } = useQuery(settingsQuery)
 
 	const wordCount = useRef<number>(writing?.wordCount ?? 0)
-
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 
 	const onAutoSave = useCallback(({ content, title }: EditorData) => {
@@ -134,12 +139,16 @@ const Writing = () => {
 		settings: settings as SettingsRow,
 	}
 
-	const handleTitleChange = (title: string) => {
-		setEditorData({ title })
-	}
-
 	const handleContentChange = (content: string) => {
 		setEditorData({ content })
+	}
+
+	const handleForceSave = () => {
+		forceSave()
+	}
+
+	const handleTitleChange = (title: string) => {
+		setEditorData({ title })
 	}
 
 	const handleWordCountChange = (count: number) => {

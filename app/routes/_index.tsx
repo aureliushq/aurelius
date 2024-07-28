@@ -15,9 +15,9 @@ import { useQuery } from '@evolu/react'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
-import { useAutoSave } from '~/lib/hooks'
+import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
-import { EditorData } from '~/lib/types'
+import { EditorData, EditorShortcuts } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import {
 	SettingsRow,
@@ -94,15 +94,20 @@ export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
 }
 
 const Index = () => {
+	const shortcuts = {
+		[EditorShortcuts.FORCE_SAVE]: () => handleForceSave(),
+	}
+
 	const fetcher = useFetcher()
 	const { effort, writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
+
+	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
 
 	const { row: settings } = useQuery(settingsQuery)
 
 	const wordCount = useRef<number>(writing?.wordCount ?? 0)
 	const effortSlug = useRef<string>(effort?.slug as string)
-
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
 
@@ -121,7 +126,7 @@ const Index = () => {
 
 		setTimeout(() => {
 			setIsSaving(false)
-		}, 3000)
+		}, 2000)
 	}, [])
 
 	const [editorData, setEditorData, forceSave] = useAutoSave({
@@ -139,6 +144,14 @@ const Index = () => {
 		settings: settings as SettingsRow,
 	}
 
+	const handleContentChange = (content: string) => {
+		setEditorData({ content })
+	}
+
+	const handleForceSave = () => {
+		forceSave()
+	}
+
 	const handleTitleBlur = () => {
 		if (editorData.title.trim() !== '') {
 			forceSave()
@@ -154,10 +167,6 @@ const Index = () => {
 		} else {
 			setEditorData({ title })
 		}
-	}
-
-	const handleContentChange = (content: string) => {
-		setEditorData({ content })
 	}
 
 	const handleWordCountChange = (count: number) => {

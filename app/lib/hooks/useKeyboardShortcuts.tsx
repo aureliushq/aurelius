@@ -15,12 +15,19 @@ const allShortcuts: AllShortcuts = {
 		description: 'Blur',
 		key: 'Escape',
 		modifiers: {},
-		runInInput: true,
+		runInInputs: true,
 	},
 	[EditorShortcuts.FOCUS_MODE]: {
 		description: 'Focus Mode',
 		key: 'f',
 		modifiers: {},
+	},
+	[EditorShortcuts.FORCE_SAVE]: {
+		description: 'Save',
+		key: 's',
+		modifiers: { ctrl: true },
+		runInInputs: true,
+		preventDefault: true,
 	},
 	[EditorShortcuts.HELP]: {
 		description: 'Help',
@@ -100,7 +107,8 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 					global,
 					key: shortcutKey,
 					modifiers: shortcutModifiers,
-					runInInput,
+					preventDefault,
+					runInInputs,
 				} = shortcutConfig
 
 				if (
@@ -109,9 +117,12 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 						([mod, active]) =>
 							modifiers[mod as keyof ModifierKeys] === active
 					) &&
-					(runInInput || !isInputField)
+					(runInInputs || !isInputField)
 				) {
-					event.preventDefault()
+					if (preventDefault) {
+						event.preventDefault()
+					}
+
 					if (global && globalShortcutActions[shortcutName]) {
 						globalShortcutActions[shortcutName]()
 					} else if (shortcuts[shortcutName]) {

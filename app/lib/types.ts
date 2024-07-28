@@ -75,6 +75,7 @@ export enum WritingSessionStatus {
 export enum EditorShortcuts {
 	BLUR = 'blur',
 	FOCUS_MODE = 'focusMode',
+	FORCE_SAVE = 'forceSave',
 	HELP = 'help',
 	MAIN_MENU = 'mainMenu',
 	NEW_POST = 'newPost',
@@ -116,7 +117,8 @@ export type ShortcutConfig = {
 	global?: boolean
 	key: string
 	modifiers: ModifierKeys
-	runInInput?: boolean
+	preventDefault?: boolean
+	runInInputs?: boolean
 }
 
 export type ShortcutAction = () => void

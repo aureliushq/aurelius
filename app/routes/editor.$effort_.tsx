@@ -15,9 +15,9 @@ import { useQuery } from '@evolu/react'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
-import { useAutoSave } from '~/lib/hooks'
+import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
-import { EditorData } from '~/lib/types'
+import { EditorData, EditorShortcuts } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import {
 	SettingsRow,
@@ -88,14 +88,19 @@ export const clientAction = async ({
 }
 
 const NewWriting = () => {
+	const shortcuts = {
+		[EditorShortcuts.FORCE_SAVE]: () => handleForceSave(),
+	}
+
 	const fetcher = useFetcher()
 	const { effort } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
+	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+
 	const { row: settings } = useQuery(settingsQuery)
 
 	const wordCount = useRef<number>(0)
-
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
 
@@ -123,6 +128,14 @@ const NewWriting = () => {
 		settings: settings as SettingsRow,
 	}
 
+	const handleContentChange = (content: string) => {
+		setEditorData({ content })
+	}
+
+	const handleForceSave = () => {
+		forceSave()
+	}
+
 	const handleTitleChange = (title: string) => {
 		setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
 	}
@@ -134,10 +147,6 @@ const NewWriting = () => {
 		} else {
 			setEditorData({ title: editorData.title })
 		}
-	}
-
-	const handleContentChange = (content: string) => {
-		setEditorData({ content })
 	}
 
 	const handleWordCountChange = (count: number) => {
