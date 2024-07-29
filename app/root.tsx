@@ -10,6 +10,7 @@ import {
 	ScrollRestoration,
 	useLoaderData,
 	useRouteError,
+	useRouteLoaderData,
 } from '@remix-run/react'
 
 import { EvoluProvider } from '@evolu/react'
@@ -39,7 +40,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 const App = ({ children, title }: { children: ReactNode; title?: string }) => {
-	const data = useLoaderData<typeof loader>()
+	const data = useRouteLoaderData<typeof loader>('root')
 	const [theme] = useTheme()
 
 	return (
@@ -66,7 +67,7 @@ const App = ({ children, title }: { children: ReactNode; title?: string }) => {
 }
 
 export const ErrorBoundary = () => {
-	const data = useLoaderData<typeof loader>()
+	const data = useRouteLoaderData<typeof loader>('root')
 	const error = useRouteError()
 
 	return (
