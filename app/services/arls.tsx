@@ -65,9 +65,9 @@ class TableQueryBuilder<T extends Table> implements QueryBuilderMethods<T> {
 	}
 }
 
-class Arls {
+export class Arls {
 	books: TableQueryBuilder<BooksTable>
-	help: TableQueryBuilder<HelpTable>
+	_help: TableQueryBuilder<HelpTable>
 	posts: TableQueryBuilder<PostsTable>
 	settings: TableQueryBuilder<SettingsTable>
 	writingEfforts: TableQueryBuilder<WritingEffortsTable>
@@ -75,7 +75,7 @@ class Arls {
 	constructor() {
 		// TODO: validate that the table exists and table name matches the table type
 		this.books = new TableQueryBuilder('books')
-		this.help = new TableQueryBuilder('_help')
+		this._help = new TableQueryBuilder('_help')
 		this.posts = new TableQueryBuilder('posts')
 		this.settings = new TableQueryBuilder('settings', { subscribe: true })
 		this.writingEfforts = new TableQueryBuilder('writingEfforts')

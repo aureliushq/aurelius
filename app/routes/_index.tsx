@@ -25,7 +25,7 @@ export const links: LinksFunction = () => [
 
 export const clientLoader = async () => {
 	// TODO: only load this the first time. after loading set local storage to prevent loading again. check local storage before loading.
-	const helpArticle = await arls.help.findUnique({
+	const helpArticle = await arls._help.findUnique({
 		slug: S.decodeSync(NonEmptyString100)('getting-started'),
 	})
 	invariant(helpArticle, 'Help article not found')
