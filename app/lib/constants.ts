@@ -1,3 +1,4 @@
+import { SqliteQueryOptions } from '@evolu/common'
 import { content } from '~/components/common/getting-started'
 import {
 	EditorSansSerifFonts,
@@ -95,4 +96,9 @@ export const FORMATTING_SHORTCUTS: ShortcutConfig[] = [
 export const GETTING_STARTED_GUIDE = {
 	title: 'Getting started with Aurelius',
 	content: content,
+}
+
+export const ARLS_OPTIONS: SqliteQueryOptions = {
+	logExplainQueryPlan: true,
+	logQueryExecutionTime: true,
 }

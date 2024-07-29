@@ -1,6 +1,5 @@
 import { SqliteQueryOptions } from '@evolu/common'
-import * as process from 'node:process'
-import { HESTIA_OPTIONS } from '~/lib/constants'
+import { ARLS_OPTIONS } from '~/lib/constants'
 import { evolu } from '~/services/evolu/client'
 import { Id, Table, TableName } from '~/services/evolu/database'
 import {
@@ -26,7 +25,7 @@ type QueryBuilderOptions = {
 class TableQueryBuilder<T extends Table> implements QueryBuilderMethods<T> {
 	constructor(
 		private tableName: TableName,
-		private options: QueryBuilderOptions = HESTIA_OPTIONS
+		private options: QueryBuilderOptions = ARLS_OPTIONS
 	) {}
 
 	create(data: Partial<T>): T {
