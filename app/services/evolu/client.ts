@@ -19,17 +19,25 @@ import {
 import { Database } from '~/services/evolu/database'
 import {
 	Content,
+	EffortType,
 	Int,
 	NonEmptyString100,
 	SqliteDateTime,
 	WritingEffortId,
-	WritingId,
+	WritingEffortType,
 } from '~/services/evolu/schema'
 
 const indexes = createIndexes((create) => [
-	create('indexWritingSlug').on('writing').column('slug'),
-	create('indexWritingCreatedAt').on('writing').column('createdAt'),
-	create('indexWritingEffortSlug').on('writingEffort').column('slug'),
+	create('indexBooksCreatedAt').on('books').column('createdAt'),
+	create('indexChapterBookId').on('chapters').column('bookId'),
+	create('indexChapterSlug').on('chapters').column('slug'),
+	create('indexEssayCreatedAt').on('essays').column('createdAt'),
+	create('indexEssaysSlug').on('essays').column('slug'),
+	create('indexJournalsCreatedAt').on('journals').column('createdAt'),
+	create('indexJournalsSlug').on('journals').column('slug'),
+	create('indexPostsCreatedAt').on('posts').column('createdAt'),
+	create('indexPostsSlug').on('posts').column('slug'),
+	create('indexWritingEffortSlug').on('writingEfforts').column('slug'),
 ])
 
 export const evolu = createEvolu(Database, {
@@ -60,7 +68,7 @@ export const evolu = createEvolu(Database, {
 			youtubeLink: S.decodeSync(String1000)(''),
 		})
 		// create a default writing effort for posts
-		evolu.create('writingEffort', {
+		evolu.create('writingEfforts', {
 			days: S.decodeSync(S.NonEmptyArray(NonEmptyString100))([
 				'monday',
 				'tuesday',
@@ -68,27 +76,22 @@ export const evolu = createEvolu(Database, {
 				'thursday',
 				'friday',
 			]),
+			description: S.decodeSync(String1000)(''),
 			name: S.decodeSync(NonEmptyString100)('Posts'),
-			slug: S.decodeSync(NonEmptyString100)('post'),
+			slug: S.decodeSync(NonEmptyString100)('posts'),
 			targetWordCount: S.decodeSync(PositiveInt)(300),
 			time: S.decodeSync(SqliteDateTime)(
 				Temporal.PlainTime.from('12:30:00').toString()
 			),
+			type: S.decodeSync(EffortType)(WritingEffortType.POSTS),
 		})
-		// create a default writing effort for help content
-		const { id: helpWritingEffortId } = evolu.create('writingEffort', {
-			name: S.decodeSync(NonEmptyString100)('Help'),
-			slug: S.decodeSync(NonEmptyString100)('help'),
-		})
-		// create a getting started guide under help
+		// create a getting started guide under _help
 		evolu.create('_help', {
 			content: S.decodeSync(Content)(GETTING_STARTED_GUIDE.content),
 			slug: S.decodeSync(NonEmptyString100)('getting-started'),
 			title: S.decodeSync(NonEmptyString1000)(
 				GETTING_STARTED_GUIDE.title
 			),
-			effortId: helpWritingEffortId,
-			wordCount: S.decodeSync(Int)(0),
 		})
 	},
 })
@@ -125,7 +128,7 @@ export const settingsQuery = evolu.createQuery(
 export type SettingsRow = ExtractRow<typeof settingsQuery>
 
 export const writingAllQuery = evolu.createQuery(
-	(db) => db.selectFrom('writing').selectAll(),
+	(db) => db.selectFrom('posts').selectAll(),
 	{
 		logQueryExecutionTime: true,
 		logExplainQueryPlan: true,
@@ -133,9 +136,9 @@ export const writingAllQuery = evolu.createQuery(
 )
 export type WritingRow = ExtractRow<typeof writingAllQuery>
 
-export const writingByIdQuery = (id: WritingId) =>
+export const writingByIdQuery = (id: any) =>
 	evolu.createQuery(
-		(db) => db.selectFrom('writing').selectAll().where('id', '=', id),
+		(db) => db.selectFrom('posts').selectAll().where('id', '=', id),
 		{
 			logQueryExecutionTime: true,
 			logExplainQueryPlan: true,
@@ -144,7 +147,7 @@ export const writingByIdQuery = (id: WritingId) =>
 
 export const writingBySlugQuery = (slug: NonEmptyString100) =>
 	evolu.createQuery(
-		(db) => db.selectFrom('writing').selectAll().where('slug', '=', slug),
+		(db) => db.selectFrom('posts').selectAll().where('slug', '=', slug),
 		{
 			logQueryExecutionTime: true,
 			logExplainQueryPlan: true,
@@ -160,7 +163,7 @@ export const writingByWritingEffortQuery = ({
 }) =>
 	evolu.createQuery(
 		(db) => {
-			let query = db.selectFrom('writing').selectAll()
+			let query = db.selectFrom('posts').selectAll()
 
 			if (effortId) {
 				query = query.where(
@@ -187,7 +190,7 @@ export const writingByWritingEffortQuery = ({
 	)
 
 export const writingEffortAllQuery = evolu.createQuery(
-	(db) => db.selectFrom('writingEffort').selectAll(),
+	(db) => db.selectFrom('writingEfforts').selectAll(),
 	{
 		logQueryExecutionTime: true,
 		logExplainQueryPlan: true,
@@ -197,7 +200,8 @@ export type WritingEffortRow = ExtractRow<typeof writingEffortAllQuery>
 
 export const writingEffortByIdQuery = (id: WritingEffortId) =>
 	evolu.createQuery(
-		(db) => db.selectFrom('writingEffort').selectAll().where('id', '=', id),
+		(db) =>
+			db.selectFrom('writingEfforts').selectAll().where('id', '=', id),
 		{
 			logQueryExecutionTime: true,
 			logExplainQueryPlan: true,
@@ -208,7 +212,7 @@ export const writingEffortBySlugQuery = (slug: string) =>
 	evolu.createQuery(
 		(db) =>
 			db
-				.selectFrom('writingEffort')
+				.selectFrom('writingEfforts')
 				.selectAll()
 				.where('slug', '=', S.decodeSync(NonEmptyString100)(slug)),
 		{
@@ -218,7 +222,7 @@ export const writingEffortBySlugQuery = (slug: string) =>
 	)
 
 export const writingSessionAllQuery = evolu.createQuery(
-	(db) => db.selectFrom('writingSession').selectAll(),
+	(db) => db.selectFrom('writingSessions').selectAll(),
 	{
 		logQueryExecutionTime: true,
 		logExplainQueryPlan: true,
