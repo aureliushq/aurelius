@@ -1,35 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
-import {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
-	useFetcher,
-	useLoaderData,
-	useNavigate,
-} from '@remix-run/react'
+import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { NonEmptyString1000 } from '@evolu/common'
 import { useQuery } from '@evolu/react'
-import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { EditorData, EditorShortcuts } from '~/lib/types'
-import { checkSlugUniqueness } from '~/lib/utils'
-import {
-	SettingsRow,
-	evolu,
-	helpArticleBySlugQuery,
-	settingsQuery,
-	writingEffortBySlugQuery,
-} from '~/services/evolu/client'
-import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
+import { arls } from '~/services/arls'
+import { SettingsRow, settingsQuery } from '~/services/evolu/client'
+import { NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
-
-const slugger = new GithubSlugger()
 
 export const meta: MetaFunction = () => {
 	return [{ title: 'Aurelius' }, { name: 'description', content: '' }]
@@ -39,58 +23,17 @@ export const links: LinksFunction = () => [
 	{ rel: 'stylesheet', href: writerStylesheet },
 ]
 
-export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
+export const clientLoader = async () => {
 	// TODO: only load this the first time. after loading set local storage to prevent loading again. check local storage before loading.
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery('help')
-	)
-	const { row: helpArticle } = await evolu.loadQuery(
-		helpArticleBySlugQuery(params.slug || 'getting-started')
-	)
+	const helpArticle = await arls.help.findUnique({
+		slug: S.decodeSync(NonEmptyString100)('getting-started'),
+	})
 	invariant(helpArticle, 'Help article not found')
 
-	return { effort, writing: helpArticle }
-}
+	// TODO: once subscribe is implemented in arls use it here
+	// const [settings] = await arls.settings.findMany()
 
-export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
-	const body: EditorData & { effort: string; wordCount: number } =
-		await request.json()
-	const { content, effort: effortSlug, title, wordCount } = body
-
-	if (effortSlug === 'help') {
-		return {}
-	}
-
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery('post')
-	)
-	invariant(effort, 'Writing effort not found')
-
-	// TODO: Abstract this to a function
-	const writingTitle = title.trim() !== '' ? title : 'Untitled'
-
-	let finalSlug = ''
-	let isUnique = false
-	do {
-		const generatedSlug = slugger.slug(writingTitle)
-		const { isUnique: isSlugUnique, slug } = await checkSlugUniqueness(
-			effort.id,
-			generatedSlug
-		)
-		isUnique = isSlugUnique
-		finalSlug = slug
-	} while (!isUnique)
-
-	// TODO: generalize this since I'm going to create different tables for different efforts
-	evolu.create('writing', {
-		content: S.decodeSync(Content)(content),
-		effortId: effort.id,
-		slug: S.decodeSync(NonEmptyString100)(finalSlug),
-		title: S.decodeSync(NonEmptyString1000)(writingTitle),
-		wordCount: S.decodeSync(Int)(wordCount),
-	})
-
-	return { message: 'ok', redirectTo: `/editor/${effort.slug}/${finalSlug}` }
+	return { writing: { ...helpArticle, wordCount: 0 } }
 }
 
 const Index = () => {
@@ -99,30 +42,36 @@ const Index = () => {
 	}
 
 	const fetcher = useFetcher()
-	const { effort, writing } = useLoaderData<typeof clientLoader>()
+	const { writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
-	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+	useKeyboardShortcuts(shortcuts)
 
 	const { row: settings } = useQuery(settingsQuery)
 
 	const wordCount = useRef<number>(writing?.wordCount ?? 0)
-	const effortSlug = useRef<string>(effort?.slug as string)
+	const effortSlug = useRef<string | null>(null)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
 
 	const onAutoSave = useCallback(({ content, title }: EditorData) => {
 		setIsSaving(true)
 
-		fetcher.submit(
-			{
-				content,
-				effort: effortSlug.current,
-				title,
-				wordCount: wordCount.current,
-			},
-			{ method: 'POST', encType: 'application/json' }
-		)
+		// don't do anything here since we're not saving the changes in the editor
+		// only way to create new content is to go to create page and save it there
+		// which happens when resetting the editor
+		// code is shown but commented for reference - to show how to save editor content
+		// if (effortSlug.current) {
+		// 	fetcher.submit(
+		// 		{
+		// 			content,
+		// 			effort: effortSlug.current,
+		// 			title,
+		// 			wordCount: wordCount.current,
+		// 		},
+		// 		{ method: 'POST', encType: 'application/json' }
+		// 	)
+		// }
 
 		setTimeout(() => {
 			setIsSaving(false)
@@ -140,7 +89,7 @@ const Index = () => {
 	})
 
 	const providerData = {
-		effort: 'post',
+		effort: 'posts',
 		settings: settings as SettingsRow,
 	}
 
@@ -153,11 +102,13 @@ const Index = () => {
 	}
 
 	const handleTitleBlur = () => {
-		if (editorData.title.trim() !== '') {
-			forceSave()
-			setIsTitleFirstEdit(false)
-		} else {
-			setEditorData({ title: editorData.title })
+		if (effortSlug.current) {
+			if (editorData.title.trim() !== '') {
+				forceSave()
+				setIsTitleFirstEdit(false)
+			} else {
+				setEditorData({ title: editorData.title })
+			}
 		}
 	}
 
@@ -174,8 +125,7 @@ const Index = () => {
 	}
 
 	const onReset = () => {
-		effortSlug.current = 'post'
-		forceSave()
+		effortSlug.current = 'posts'
 		navigate(`/editor/${effortSlug.current}`)
 	}
 
