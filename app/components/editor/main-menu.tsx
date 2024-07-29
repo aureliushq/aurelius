@@ -97,12 +97,14 @@ const MainMenu = ({
 										</DropdownMenuShortcut>
 									</span>
 								</DropdownMenuItem>
-								{/*<DropdownMenuItem>*/}
-								{/*	<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
-								{/*		<ListIcon className='mr-2 w-4 h-4' />*/}
-								{/*		<span>View All Posts</span>*/}
-								{/*	</span>*/}
-								{/*</DropdownMenuItem>*/}
+								<DropdownMenuItem>
+									<Link to='/posts'>
+										<span className='w-full h-full flex items-center justify-start cursor-pointer'>
+											<ListIcon className='mr-2 w-4 h-4' />
+											<span>View All Posts</span>
+										</span>
+									</Link>
+								</DropdownMenuItem>
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>
 					</DropdownMenuSub>
