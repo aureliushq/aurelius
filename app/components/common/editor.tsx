@@ -180,7 +180,7 @@ const Editor = ({
 
 	const createNewPost = () => {
 		handleSplashDialogOpen(false)
-		navigate('/editor/post')
+		navigate('/editor/posts')
 	}
 
 	const handlePreferencesOpen = (state: boolean) => {
