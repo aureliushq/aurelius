@@ -10,22 +10,22 @@ import {
 } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { NonEmptyString1000 } from '@evolu/common'
+import { ExtractRow, NonEmptyString1000, Query } from '@evolu/common'
 import { useQuery } from '@evolu/react'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { EditorData, EditorShortcuts } from '~/lib/types'
+import { Arls, TableQueryBuilder, arls } from '~/services/arls'
+import { SettingsRow, settingsQuery } from '~/services/evolu/client'
+import { EffortsTable } from '~/services/evolu/database'
 import {
-	SettingsRow,
-	evolu,
-	helpArticleBySlugQuery,
-	settingsQuery,
-	writingByWritingEffortQuery,
-	writingEffortBySlugQuery,
-} from '~/services/evolu/client'
-import { Content, Int } from '~/services/evolu/schema'
+	Content,
+	Int,
+	NonEmptyString100,
+	WritingEffortId,
+} from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 
 export const meta: MetaFunction = () => {
@@ -37,24 +37,26 @@ export const links: LinksFunction = () => [
 ]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery(params.effort ?? 'help')
-	)
-
+	invariant(params.effort, 'Effort cannot be empty')
+	invariant(params.slug, 'Content slug cannot be empty')
+	const effort = await arls.writingEfforts.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(params.effort),
+	})
 	invariant(effort, 'Writing effort not found')
 
-	const { row: writing } =
-		params.effort === 'help'
-			? await evolu.loadQuery(
-					helpArticleBySlugQuery(params.slug || 'getting-started')
-				)
-			: await evolu.loadQuery(
-					writingByWritingEffortQuery({
-						effortId: effort.id,
-						slug: params.slug,
-					})
-				)
+	if (params.effort === '_help') {
+		const helpArticle = await arls._help.findUnique({
+			slug: S.decodeSync(NonEmptyString100)(params.slug),
+		})
+		invariant(helpArticle, 'Content not found')
+		return { effort, writing: { ...helpArticle, wordCount: 0 } }
+	}
 
+	const table = arls[effort.type as keyof Arls]
+	const writing = (await table.findUnique({
+		effortId: S.decodeSync(WritingEffortId)(effort.id),
+		slug: S.decodeSync(NonEmptyString100)(params.slug),
+	})) as ExtractRow<Query<EffortsTable>>
 	invariant(writing, 'Content not found')
 
 	return { effort, writing }
@@ -64,33 +66,36 @@ export const clientAction = async ({
 	params,
 	request,
 }: ClientActionFunctionArgs) => {
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery(params.effort ?? 'help')
-	)
-
+	invariant(params.effort, 'Effort cannot be empty')
+	invariant(params.slug, 'Content slug cannot be empty')
+	const effort = await arls.writingEfforts.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(params.effort),
+	})
 	invariant(effort, 'Writing effort not found')
 
-	const { row: writing } = await evolu.loadQuery(
-		writingByWritingEffortQuery({
-			effortId: effort.id,
-			slug: params.slug,
-		})
-	)
-
+	const writing = await arls[effort.type as keyof Arls].findUnique({
+		effortId: S.decodeSync(WritingEffortId)(effort.id),
+		slug: S.decodeSync(NonEmptyString100)(params.slug),
+	})
 	invariant(writing, 'Content not found')
 
-	if (params.effort === 'help') {
+	if (params.effort === '_help') {
 		return {}
 	} else {
 		const body: EditorData & { wordCount: number } = await request.json()
 		const { content, title, wordCount } = body
 
-		evolu.update('writing', {
-			id: writing.id,
+		const data = {
 			content: S.decodeSync(Content)(content),
 			title: S.decodeSync(NonEmptyString1000)(title),
 			wordCount: S.decodeSync(Int)(wordCount),
-		})
+		} as ExtractRow<Query<EffortsTable>>
+
+		const table = arls[
+			effort.type as keyof Arls
+		] as TableQueryBuilder<EffortsTable>
+
+		table.update(writing.id, data)
 
 		return { message: 'ok' }
 	}
@@ -105,7 +110,7 @@ const Writing = () => {
 	const { effort, writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
-	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+	useKeyboardShortcuts(shortcuts)
 
 	const { row: settings } = useQuery(settingsQuery)
 

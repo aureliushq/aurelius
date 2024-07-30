@@ -19,12 +19,8 @@ import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { EditorData, EditorShortcuts } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
-import {
-	SettingsRow,
-	evolu,
-	settingsQuery,
-	writingEffortBySlugQuery,
-} from '~/services/evolu/client'
+import { Arls, arls } from '~/services/arls'
+import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 
@@ -40,9 +36,9 @@ export const links: LinksFunction = () => [
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Effort cannot be empty')
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery(params.effort)
-	)
+	const effort = await arls.writingEfforts.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(params.effort),
+	})
 	invariant(effort, 'Writing effort not found')
 
 	return { effort }
@@ -53,30 +49,30 @@ export const clientAction = async ({
 	request,
 }: ClientActionFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery(params.effort)
-	)
+	const effort = await arls.writingEfforts.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(params.effort),
+	})
 	invariant(effort, 'Writing effort not found')
 
 	const body: EditorData & { wordCount: number } = await request.json()
 	const { content, title, wordCount } = body
 
 	const writingTitle = title.trim() !== '' ? title : 'Untitled'
-
 	let finalSlug = ''
 	let isUnique = false
 	do {
 		const generatedSlug = slugger.slug(writingTitle)
-		const { isUnique: isSlugUnique, slug } = await checkSlugUniqueness(
-			effort.id,
-			generatedSlug
-		)
+		const { isUnique: isSlugUnique, slug } = await checkSlugUniqueness({
+			effortId: effort.id,
+			effortType: effort.type,
+			slug: generatedSlug,
+		})
 		isUnique = isSlugUnique
 		finalSlug = slug
 	} while (!isUnique)
 
-	// TODO: generalize this since I'm going to create different tables for different efforts
-	evolu.create('writing', {
+	const table = arls[effort.type as keyof Arls]
+	table.create({
 		content: S.decodeSync(Content)(content),
 		effortId: effort.id,
 		slug: S.decodeSync(NonEmptyString100)(finalSlug),
@@ -96,7 +92,7 @@ const NewWriting = () => {
 	const { effort } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
-	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+	useKeyboardShortcuts(shortcuts)
 
 	const { row: settings } = useQuery(settingsQuery)
 

@@ -75,7 +75,7 @@ const Index = () => {
 
 		setTimeout(() => {
 			setIsSaving(false)
-		}, 2000)
+		}, 3000)
 	}, [])
 
 	const [editorData, setEditorData, forceSave] = useAutoSave({

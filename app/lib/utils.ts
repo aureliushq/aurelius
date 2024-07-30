@@ -1,7 +1,9 @@
+import * as S from '@effect/schema/Schema'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { ModifierKeys } from '~/lib/types'
-import { evolu, writingByWritingEffortQuery } from '~/services/evolu/client'
+import { Arls, arls } from '~/services/arls'
+import { NonEmptyString100, WritingEffortId } from '~/services/evolu/schema'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -41,10 +43,20 @@ export const capitalize = ({
 		match.toUpperCase()
 	)
 
-export const checkSlugUniqueness = async (effortId: string, slug: string) => {
-	const { row: writing } = await evolu.loadQuery(
-		writingByWritingEffortQuery({ effortId, slug })
-	)
+export const checkSlugUniqueness = async ({
+	effortId,
+	effortType,
+	slug,
+}: {
+	effortId: string
+	effortType: string
+	slug: string
+}) => {
+	const table = arls[effortType as keyof Arls]
+	const writing = await table.findUnique({
+		effortId: S.decodeSync(WritingEffortId)(effortId),
+		slug: S.decodeSync(NonEmptyString100)(slug),
+	})
 
 	if (!writing) {
 		return { isUnique: true, slug }
