@@ -14,7 +14,7 @@ import {
 type QueryBuilderMethods<T extends Table> = {
 	create(data: Partial<T>): ExtractRow<Query<T>>
 	delete(where: Partial<T>): Promise<void>
-	findMany(): Promise<ReadonlyArray<T>>
+	findMany(where: Partial<T>): Promise<ReadonlyArray<T>>
 	findUnique(where: Partial<T>): Promise<T | undefined>
 	update(id: Id, data: Omit<T, 'id'>): ExtractRow<Query<T>>
 }
@@ -40,12 +40,16 @@ export class TableQueryBuilder<T extends Table>
 		return
 	}
 
-	async findMany(): Promise<ReadonlyArray<T>> {
+	async findMany(where: Partial<T> = {}): Promise<ReadonlyArray<T>> {
 		// TODO: implement subscribe
-		const findManyQuery = evolu.createQuery(
-			(db) => db.selectFrom(this.tableName).selectAll(),
-			this.options
-		)
+		const findManyQuery = evolu.createQuery((db) => {
+			let query = db.selectFrom(this.tableName).selectAll()
+			Object.entries(where).forEach(([key, value]) => {
+				query = query.where(key as any, '=', value)
+			})
+
+			return query
+		}, this.options)
 		const { rows } = await evolu.loadQuery(findManyQuery)
 		return rows as ReadonlyArray<T>
 	}
