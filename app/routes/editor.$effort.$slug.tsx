@@ -44,12 +44,12 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	})
 	invariant(effort, 'Writing effort not found')
 
-	if (params.effort === '_help') {
+	if (params.effort === 'help') {
 		const helpArticle = await arls._help.findUnique({
 			slug: S.decodeSync(NonEmptyString100)(params.slug),
 		})
 		invariant(helpArticle, 'Content not found')
-		return { effort, writing: { ...helpArticle, wordCount: 0 } }
+		return { effort, writing: helpArticle }
 	}
 
 	const table = arls[effort.type as keyof Arls]
@@ -79,7 +79,7 @@ export const clientAction = async ({
 	})
 	invariant(writing, 'Content not found')
 
-	if (params.effort === '_help') {
+	if (params.effort === 'help') {
 		return {}
 	} else {
 		const body: EditorData & { wordCount: number } = await request.json()

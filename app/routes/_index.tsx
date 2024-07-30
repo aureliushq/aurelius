@@ -33,7 +33,7 @@ export const clientLoader = async () => {
 	// TODO: once subscribe is implemented in arls use it here
 	// const [settings] = await arls.settings.findMany()
 
-	return { writing: { ...helpArticle, wordCount: 0 } }
+	return { writing: helpArticle }
 }
 
 const Index = () => {

@@ -1,5 +1,6 @@
 import { ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
 
+import * as S from '@effect/schema/Schema'
 import { formatDistanceToNow } from 'date-fns'
 import invariant from 'tiny-invariant'
 import { Button } from '~/components/ui/button'
@@ -15,31 +16,29 @@ import {
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
-import {
-	evolu,
-	helpArticleAllQuery,
-	writingByWritingEffortQuery,
-	writingEffortBySlugQuery,
-} from '~/services/evolu/client'
+import { Arls, TableQueryBuilder, arls } from '~/services/arls'
+import { EffortsTable } from '~/services/evolu/database'
+import { NonEmptyString100 } from '~/services/evolu/schema'
 
 import KeyboardShortcut from '../components/editor/keyboard-shortcut'
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
 
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery(params.effort)
-	)
+	const effort = await arls.writingEfforts.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(params.effort),
+	})
 	invariant(effort, 'Writing effort not found')
 
 	if (params.effort === 'help') {
-		const { rows: writings } = await evolu.loadQuery(helpArticleAllQuery)
+		const writings = await arls._help.findMany()
 		return { effort, writings }
 	}
 
-	const { rows: writings } = await evolu.loadQuery(
-		writingByWritingEffortQuery({ effortId: effort.id })
-	)
+	const table = arls[
+		effort.type as keyof Arls
+	] as TableQueryBuilder<EffortsTable>
+	const writings = await table.findMany({ effortId: effort.id })
 	return { effort, writings }
 }
 

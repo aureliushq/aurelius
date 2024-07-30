@@ -4,22 +4,18 @@ import {
 	useLoaderData,
 } from '@remix-run/react'
 
+import * as S from '@effect/schema/Schema'
 import invariant from 'tiny-invariant'
-import { Button } from '~/components/ui/button'
 import EffortLayout from '~/layouts/effort'
-import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { EditorShortcuts } from '~/lib/types'
-import { getShortcutWithModifiers } from '~/lib/utils'
-import { evolu, writingEffortBySlugQuery } from '~/services/evolu/client'
-
-import KeyboardShortcut from '../components/editor/keyboard-shortcut'
+import { arls } from '~/services/arls'
+import { NonEmptyString100 } from '~/services/evolu/schema'
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
 
-	const { row: effort } = await evolu.loadQuery(
-		writingEffortBySlugQuery(params.effort)
-	)
+	const effort = await arls.writingEfforts.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(params.effort),
+	})
 	invariant(effort, 'Writing effort not found')
 
 	return { effort }
