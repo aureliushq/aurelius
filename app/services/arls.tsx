@@ -1,4 +1,4 @@
-import { SqliteQueryOptions } from '@evolu/common'
+import { ExtractRow, Query, SqliteQueryOptions } from '@evolu/common'
 import { ARLS_OPTIONS } from '~/lib/constants'
 import { evolu } from '~/services/evolu/client'
 import { Id, Table, TableName } from '~/services/evolu/database'
@@ -8,28 +8,31 @@ import {
 	PostsTable,
 	SettingsTable,
 	WritingEffortsTable,
+	WritingSessionsTable,
 } from '~/services/evolu/schema'
 
 type QueryBuilderMethods<T extends Table> = {
-	create(data: Partial<T>): T
+	create(data: Partial<T>): ExtractRow<Query<T>>
 	delete(where: Partial<T>): Promise<void>
 	findMany(): Promise<ReadonlyArray<T>>
 	findUnique(where: Partial<T>): Promise<T | undefined>
-	update(id: Id, data: Omit<T, 'id'>): Promise<T>
+	update(id: Id, data: Omit<T, 'id'>): ExtractRow<Query<T>>
 }
 
 type QueryBuilderOptions = {
 	readonly subscribe?: boolean
 } & SqliteQueryOptions
 
-class TableQueryBuilder<T extends Table> implements QueryBuilderMethods<T> {
+export class TableQueryBuilder<T extends Table>
+	implements QueryBuilderMethods<T>
+{
 	constructor(
 		private tableName: TableName,
 		private options: QueryBuilderOptions = ARLS_OPTIONS
 	) {}
 
-	create(data: Partial<T>): T {
-		return evolu.create(this.tableName, data) as T
+	create(data: Partial<T>): ExtractRow<Query<T>> {
+		return evolu.create(this.tableName, data) as ExtractRow<Query<T>>
 	}
 
 	async delete(where: Partial<T>): Promise<void> {
@@ -60,8 +63,10 @@ class TableQueryBuilder<T extends Table> implements QueryBuilderMethods<T> {
 		return row as Readonly<T>
 	}
 
-	async update(id: Id, data: Omit<T, 'id'>): Promise<T> {
-		return evolu.update(this.tableName, { id, ...data }) as T
+	update(id: Id, data: Omit<T, 'id'>): ExtractRow<Query<T>> {
+		return evolu.update(this.tableName, { id, ...data }) as ExtractRow<
+			Query<T>
+		>
 	}
 }
 
@@ -71,6 +76,7 @@ export class Arls {
 	posts: TableQueryBuilder<PostsTable>
 	settings: TableQueryBuilder<SettingsTable>
 	writingEfforts: TableQueryBuilder<WritingEffortsTable>
+	writingSessions: TableQueryBuilder<WritingSessionsTable>
 
 	constructor() {
 		// TODO: validate that the table exists and table name matches the table type
@@ -79,6 +85,7 @@ export class Arls {
 		this.posts = new TableQueryBuilder('posts')
 		this.settings = new TableQueryBuilder('settings', { subscribe: true })
 		this.writingEfforts = new TableQueryBuilder('writingEfforts')
+		this.writingSessions = new TableQueryBuilder('writingSessions')
 	}
 }
 

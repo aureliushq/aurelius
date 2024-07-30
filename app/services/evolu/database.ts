@@ -54,6 +54,10 @@ export type Table =
 	| WritingEffortsTable
 	| WritingSessionsTable
 	| HelpTable
+// while books is also an effort I'm not including it here because books don't have content directly associated with them
+// instead they have chapters which have content
+// while chapters have content they are not considered efforts directly
+export type EffortsTable = EssaysTable | JournalsTable | PostsTable
 export type Id =
 	| BookId
 	| ChapterId
