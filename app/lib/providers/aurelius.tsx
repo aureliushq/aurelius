@@ -1,8 +1,6 @@
-import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
+import { ReactNode, createContext } from 'react'
 
-import { SettingsRow, WritingEffortRow } from '~/services/evolu/client'
-
-const setTitle: Dispatch<SetStateAction<string>> = () => {}
+import { SettingsRow } from '~/services/evolu/client'
 
 export type AureliusProviderData = {
 	settings: SettingsRow
