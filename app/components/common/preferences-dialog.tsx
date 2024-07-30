@@ -25,7 +25,6 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '~/components/ui/alert-dialog'
-import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent } from '~/components/ui/card'
 import {
@@ -72,6 +71,7 @@ import {
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
+import { arls } from '~/services/arls'
 import { SettingsRow } from '~/services/evolu/client'
 import { Database } from '~/services/evolu/database'
 import { Int, NonEmptyString100 } from '~/services/evolu/schema'
@@ -89,7 +89,6 @@ const SavedToastContent = () => (
 
 const Editor = ({ settings }: { settings: SettingsRow }) => {
 	const { toast } = useToast()
-	const { update } = useEvolu<Database>()
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -98,8 +97,8 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 		const showSplashDialog = formData.get('show-splash-dialog') === 'on'
 		const toolbarMode = formData.get('editor-toolbar-mode') as string
 
-		update('settings', {
-			id: settings.id,
+		arls.settings.update(settings.id, {
+			// @ts-ignore
 			showSplashDialog,
 			toolbarMode: S.decodeSync(NonEmptyString100)(toolbarMode),
 		})
@@ -162,7 +161,6 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 const Appearance = ({ settings }: { settings: SettingsRow }) => {
 	const [theme, setTheme, { definedBy }] = useTheme()
 	const { toast } = useToast()
-	const { update } = useEvolu<Database>()
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -171,8 +169,7 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 		const bodyFont = formData.get('body-font') as string
 		const titleFont = formData.get('title-font') as string
 
-		update('settings', {
-			id: settings.id,
+		arls.settings.update(settings.id, {
 			bodyFont: S.decodeSync(NonEmptyString100)(bodyFont),
 			titleFont: S.decodeSync(NonEmptyString100)(titleFont),
 		})
@@ -287,7 +284,6 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 }
 
 const Writing = ({ settings }: { settings: SettingsRow }) => {
-	const { update } = useEvolu<Database>()
 	const [dailyGoalType, setDailyGoalType] = useState(DAILY_GOAL_TYPE[0].value)
 	const { toast } = useToast()
 
@@ -304,8 +300,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 				? parseInt(formData.get('daily-goal-duration') as string, 10)
 				: parseInt(formData.get('daily-goal-word-count') as string, 10)
 
-		update('settings', {
-			id: settings.id,
+		arls.settings.update(settings.id, {
 			writingDailyGoal: S.decodeSync(NonEmptyString100)(writingDailyGoal),
 			writingDailyTarget: S.decodeSync(Int)(writingDailyTarget),
 		})
@@ -391,7 +386,6 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 }
 
 const Export = ({ settings }: { settings: SettingsRow }) => {
-	const { update } = useEvolu<Database>()
 	const { toast } = useToast()
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -403,9 +397,9 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 			? formData.get('export-watermark') === 'on'
 			: true
 
-		update('settings', {
-			id: settings.id,
+		arls.settings.update(settings.id, {
 			exportImageFooter: S.decodeSync(String1000)(exportImageFooter),
+			// @ts-ignore
 			exportImageWatermark,
 		})
 		toast({
@@ -469,7 +463,6 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 }
 
 const Music = ({ settings }: { settings: SettingsRow }) => {
-	const { update } = useEvolu<Database>()
 	const [selectedChannel, setSelectedChannel] = useState(
 		settings.musicChannel as string
 	)
@@ -482,8 +475,8 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 		const enableMusicPlayer = formData.get('enable-music-player') === 'on'
 		const musicChannel = formData.get('music-channel') as string
 		const youtubeLink = formData.get('youtube-link') as string
-		update('settings', {
-			id: settings.id,
+		arls.settings.update(settings.id, {
+			// @ts-ignore
 			enableMusicPlayer,
 			musicChannel: S.decodeSync(NonEmptyString100)(musicChannel),
 			youtubeLink: S.decodeSync(String1000)(youtubeLink),

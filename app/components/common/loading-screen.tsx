@@ -1,6 +1,4 @@
-import { Theme } from 'remix-themes'
-
-const LoadingScreen = ({ theme }: { theme: Theme | null }) => {
+const LoadingScreen = () => {
 	return (
 		<div className='w-screen h-screen flex justify-center items-center'>
 			{/*{theme && theme === 'dark' ? (*/}
@@ -14,7 +12,7 @@ const LoadingScreen = ({ theme }: { theme: Theme | null }) => {
 			{/*		src='/images/logo_animated.gif'*/}
 			{/*	/>*/}
 			{/*)}*/}
-			<span>Loading...</span>
+			<span className='text-black'>Loading...</span>
 		</div>
 	)
 }

@@ -16,7 +16,7 @@ type QueryBuilderMethods<T extends Table> = {
 	delete(where: Partial<T>): Promise<void>
 	findMany(where: Partial<T>): Promise<ReadonlyArray<T>>
 	findUnique(where: Partial<T>): Promise<T | undefined>
-	update(id: Id, data: Omit<T, 'id'>): ExtractRow<Query<T>>
+	update(id: Id, data: Partial<T>): ExtractRow<Query<T>>
 }
 
 type QueryBuilderOptions = {
@@ -67,7 +67,7 @@ export class TableQueryBuilder<T extends Table>
 		return row as Readonly<T>
 	}
 
-	update(id: Id, data: Omit<T, 'id'>): ExtractRow<Query<T>> {
+	update(id: Id, data: Partial<T>): ExtractRow<Query<T>> {
 		return evolu.update(this.tableName, { id, ...data }) as ExtractRow<
 			Query<T>
 		>

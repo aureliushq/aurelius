@@ -2,14 +2,10 @@ import { FormEvent, ReactNode } from 'react'
 
 import { Form, Link } from '@remix-run/react'
 
-import { useEvolu } from '@evolu/react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {
 	CircleHelpIcon,
 	FileTextIcon,
-	ListIcon,
-	PencilIcon,
-	RefreshCcwIcon,
 	SettingsIcon,
 	TimerIcon,
 } from 'lucide-react'
@@ -27,8 +23,8 @@ import {
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
+import { arls } from '~/services/arls'
 import { SettingsRow } from '~/services/evolu/client'
-import { Database } from '~/services/evolu/database'
 
 const SplashDialogButton = ({
 	badge,
@@ -76,14 +72,12 @@ const SplashDialog = ({
 	splashOpen,
 	triggerShortcut,
 }: SplashDialogProps) => {
-	const { update } = useEvolu<Database>()
-
 	const handleChange = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 		const showSplashDialog = formData.get('dont-show-again') !== 'on'
-		update('settings', {
-			id: settings.id,
+		arls.settings.update(settings.id, {
+			// @ts-ignore
 			showSplashDialog,
 		})
 	}
