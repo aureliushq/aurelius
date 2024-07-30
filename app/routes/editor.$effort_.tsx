@@ -11,16 +11,13 @@ import {
 
 import * as S from '@effect/schema/Schema'
 import { NonEmptyString1000 } from '@evolu/common'
-import { useQuery } from '@evolu/react'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import AureliusProvider from '~/lib/providers/aurelius'
 import { EditorData, EditorShortcuts } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import { Arls, arls } from '~/services/arls'
-import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 
@@ -94,8 +91,6 @@ const NewWriting = () => {
 
 	useKeyboardShortcuts(shortcuts)
 
-	const { row: settings } = useQuery(settingsQuery)
-
 	const wordCount = useRef<number>(0)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
@@ -119,10 +114,6 @@ const NewWriting = () => {
 		interval: 10000,
 		debounce: 1000,
 	})
-
-	const providerData = {
-		settings: settings as SettingsRow,
-	}
 
 	const handleContentChange = (content: string) => {
 		setEditorData({ content })
@@ -169,19 +160,17 @@ const NewWriting = () => {
 	}, [fetcher])
 
 	return (
-		<AureliusProvider data={providerData}>
-			<Editor
-				content={editorData.content}
-				isSaving={isSaving}
-				onReset={onReset}
-				onTitleBlur={handleTitleBlur}
-				setContent={handleContentChange}
-				setTitle={handleTitleChange}
-				setWordCount={handleWordCountChange}
-				title={editorData.title}
-				wordCount={wordCount.current}
-			/>
-		</AureliusProvider>
+		<Editor
+			content={editorData.content}
+			isSaving={isSaving}
+			onReset={onReset}
+			onTitleBlur={handleTitleBlur}
+			setContent={handleContentChange}
+			setTitle={handleTitleChange}
+			setWordCount={handleWordCountChange}
+			title={editorData.title}
+			wordCount={wordCount.current}
+		/>
 	)
 }
 

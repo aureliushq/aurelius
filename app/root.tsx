@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 
 import { LinksFunction, LoaderFunction } from '@remix-run/node'
 import {
@@ -13,13 +13,15 @@ import {
 	useRouteLoaderData,
 } from '@remix-run/react'
 
-import { EvoluProvider } from '@evolu/react'
+import { EvoluProvider, useQuery } from '@evolu/react'
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
+import LoadingScreen from '~/components/common/loading-screen'
 import { Button } from '~/components/ui/button'
 import { Toaster } from '~/components/ui/toaster'
 import { TooltipProvider } from '~/components/ui/tooltip'
 import stylesheet from '~/globals.css?url'
-import { evolu } from '~/services/evolu/client'
+import AureliusProvider from '~/lib/providers/aurelius'
+import { evolu, settingsQuery } from '~/services/evolu/client'
 import { themeSessionResolver } from '~/services/theme.server'
 
 export const links: LinksFunction = () => [
@@ -42,6 +44,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 const App = ({ children, title }: { children: ReactNode; title?: string }) => {
 	const data = useRouteLoaderData<typeof loader>('root')
 	const [theme] = useTheme()
+	const { rows: settings } = useQuery(settingsQuery)
 
 	return (
 		<html className={theme ?? 'dark'} lang='en'>
@@ -57,7 +60,11 @@ const App = ({ children, title }: { children: ReactNode; title?: string }) => {
 				<Links />
 			</head>
 			<body className='w-screen h-screen !p-0'>
-				{children}
+				<Suspense fallback={<LoadingScreen />}>
+					<AureliusProvider data={{ settings: settings[0] }}>
+						{children}
+					</AureliusProvider>
+				</Suspense>
 				<Toaster />
 				<ScrollRestoration />
 				<Scripts />

@@ -11,14 +11,11 @@ import {
 
 import * as S from '@effect/schema/Schema'
 import { ExtractRow, NonEmptyString1000, Query } from '@evolu/common'
-import { useQuery } from '@evolu/react'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import AureliusProvider from '~/lib/providers/aurelius'
 import { EditorData, EditorShortcuts } from '~/lib/types'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
-import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { EffortsTable } from '~/services/evolu/database'
 import {
 	Content,
@@ -112,8 +109,6 @@ const Writing = () => {
 
 	useKeyboardShortcuts(shortcuts)
 
-	const { row: settings } = useQuery(settingsQuery)
-
 	const wordCount = useRef<number>(writing?.wordCount ?? 0)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 
@@ -139,10 +134,6 @@ const Writing = () => {
 		interval: 10000,
 		debounce: 1000,
 	})
-
-	const providerData = {
-		settings: settings as SettingsRow,
-	}
 
 	const handleContentChange = (content: string) => {
 		setEditorData({ content })
@@ -170,18 +161,16 @@ const Writing = () => {
 	}, [writing])
 
 	return (
-		<AureliusProvider data={providerData}>
-			<Editor
-				content={editorData.content}
-				isSaving={isSaving}
-				onReset={onReset}
-				setContent={handleContentChange}
-				setTitle={handleTitleChange}
-				setWordCount={handleWordCountChange}
-				title={editorData.title}
-				wordCount={wordCount.current}
-			/>
-		</AureliusProvider>
+		<Editor
+			content={editorData.content}
+			isSaving={isSaving}
+			onReset={onReset}
+			setContent={handleContentChange}
+			setTitle={handleTitleChange}
+			setWordCount={handleWordCountChange}
+			title={editorData.title}
+			wordCount={wordCount.current}
+		/>
 	)
 }
 

@@ -4,14 +4,11 @@ import { LinksFunction, MetaFunction } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { useQuery } from '@evolu/react'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import AureliusProvider from '~/lib/providers/aurelius'
 import { EditorData, EditorShortcuts } from '~/lib/types'
 import { arls } from '~/services/arls'
-import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 import { NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 
@@ -30,9 +27,6 @@ export const clientLoader = async () => {
 	})
 	invariant(helpArticle, 'Help article not found')
 
-	// TODO: once subscribe is implemented in arls use it here
-	// const [settings] = await arls.settings.findMany()
-
 	return { writing: helpArticle }
 }
 
@@ -46,8 +40,6 @@ const Index = () => {
 	const navigate = useNavigate()
 
 	useKeyboardShortcuts(shortcuts)
-
-	const { row: settings } = useQuery(settingsQuery)
 
 	const wordCount = useRef<number>(writing?.wordCount ?? 0)
 	const effortSlug = useRef<string | null>(null)
@@ -87,11 +79,6 @@ const Index = () => {
 		interval: 10000,
 		debounce: 1000,
 	})
-
-	const providerData = {
-		effort: 'posts',
-		settings: settings as SettingsRow,
-	}
 
 	const handleContentChange = (content: string) => {
 		setEditorData({ content })
@@ -148,19 +135,17 @@ const Index = () => {
 	}, [writing])
 
 	return (
-		<AureliusProvider data={providerData}>
-			<Editor
-				content={editorData.content}
-				isSaving={isSaving}
-				onReset={onReset}
-				onTitleBlur={handleTitleBlur}
-				setContent={handleContentChange}
-				setTitle={handleTitleChange}
-				setWordCount={handleWordCountChange}
-				title={editorData.title}
-				wordCount={wordCount.current}
-			/>
-		</AureliusProvider>
+		<Editor
+			content={editorData.content}
+			isSaving={isSaving}
+			onReset={onReset}
+			onTitleBlur={handleTitleBlur}
+			setContent={handleContentChange}
+			setTitle={handleTitleChange}
+			setWordCount={handleWordCountChange}
+			title={editorData.title}
+			wordCount={wordCount.current}
+		/>
 	)
 }
 
