@@ -40,13 +40,13 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
-import { useWritingSessionQuery } from '~/lib/hooks'
 import {
 	WritingSessionDialogProps,
 	WritingSessionSettings,
 	WritingSessionStatus,
 } from '~/lib/types'
 import { formatTime } from '~/lib/utils'
+import { arls } from '~/services/arls'
 import { WordCount } from '~/services/evolu/schema'
 
 const HelpTooltip = ({ children }: { children: string | ReactNode }) => {
@@ -111,7 +111,6 @@ const WritingSessionTimer = ({
 	const [startingWordCount, setStartingWordCount] = useState(wordCount)
 	const sessionTimer = useTimer()
 	const { toast } = useToast()
-	const writingSessionQuery = useWritingSessionQuery()
 
 	const pauseWritingSession = () => {
 		sessionTimer.pause()
@@ -170,10 +169,10 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.music && !isMusicPlaying) {
 			setIsMusicPlaying(false)
 		}
-		writingSessionQuery.create('writingSession', {
+		arls.writingSessions.create({
 			duration: S.decodeSync(PositiveInt)(duration),
-			startingWordCount: S.decodeSync(WordCount)(startingWordCount),
 			endingWordCount: S.decodeSync(WordCount)(wordCount),
+			startingWordCount: S.decodeSync(WordCount)(startingWordCount),
 		})
 	}
 
