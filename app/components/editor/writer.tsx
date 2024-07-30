@@ -22,8 +22,12 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 		useEffect(() => {
 			if (!title && !content) {
 				internalRef.current?.focus()
+			} else if (!content) {
+				editor?.commands.focus('end')
+			} else {
+				internalRef.current?.focus()
 			}
-		}, [title, content])
+		}, [])
 
 		useEffect(() => {
 			const textarea = internalRef.current
