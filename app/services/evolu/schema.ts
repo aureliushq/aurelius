@@ -74,6 +74,7 @@ export const _Help = table({
 	content: Content,
 	slug: NonEmptyString100,
 	title: NonEmptyString1000,
+	wordCount: Int,
 })
 export type HelpTable = typeof _Help.Type
 
