@@ -73,42 +73,52 @@ const App = ({ children, title }: { children: ReactNode; title?: string }) => {
 	)
 }
 
+const Error = () => {
+	const error = useRouteError()
+	const [theme] = useTheme()
+
+	return (
+		<div className='flex w-full h-full items-center justify-center'>
+			<div className='flex flex-col items-center gap-4'>
+				<img
+					className={`w-64 h-64 ${theme === 'dark' ? 'invert' : ''}`}
+					src='/images/crashed-error.svg'
+				/>
+				<h1 className='text-4xl font-bold'>Oh no!</h1>
+				{
+					// @ts-expect-error: it's fine
+					error?.message ? (
+						<p className='text-lg text-gray-500'>
+							{
+								// @ts-expect-error: it's fine
+								error?.message
+							}
+						</p>
+					) : (
+						<p className='text-lg text-gray-500'>
+							Something unexpected happened! Please try again
+							later.
+						</p>
+					)
+				}
+				<Link to='/'>
+					<Button>Back to Home</Button>
+				</Link>
+			</div>
+		</div>
+	)
+}
+
 export const ErrorBoundary = () => {
 	const data = useRouteLoaderData<typeof loader>('root')
-	const error = useRouteError()
 
 	return (
 		<ThemeProvider specifiedTheme={data?.theme} themeAction='/action/theme'>
-			<App title='Oh no!'>
-				<div className='flex w-full h-full items-center justify-center'>
-					<div className='flex flex-col items-center gap-4'>
-						<img
-							className='w-96 h-96 invert'
-							src='/images/crashed-error.svg'
-						/>
-						<h1 className='text-4xl font-bold'>Oh no!</h1>
-						{
-							// @ts-expect-error: it's fine
-							error?.message ? (
-								<p className='text-lg text-gray-500'>
-									{
-										// @ts-expect-error: it's fine
-										error?.message
-									}
-								</p>
-							) : (
-								<p className='text-lg text-gray-500'>
-									Something unexpected happened! Please try
-									again later.
-								</p>
-							)
-						}
-						<Link to='/'>
-							<Button>Back to Home</Button>
-						</Link>
-					</div>
-				</div>
-			</App>
+			<EvoluProvider value={evolu}>
+				<App title='Oh no!'>
+					<Error />
+				</App>
+			</EvoluProvider>
 		</ThemeProvider>
 	)
 }

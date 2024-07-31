@@ -27,7 +27,7 @@ const EffortLayout = ({ children }: { children: ReactNode }) => {
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 
 	const createNewPost = () => {
-		navigate('/editor/post')
+		navigate('/editor/posts')
 	}
 
 	return (

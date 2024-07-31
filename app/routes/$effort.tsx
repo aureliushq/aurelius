@@ -27,7 +27,7 @@ const EffortRoot = () => {
 	return (
 		<EffortLayout>
 			<div className='prose dark:prose-invert max-w-none flex w-full flex items-center justify-between text-white'>
-				<h1 className='mb-4 text-center text-white'>{effort.name}</h1>
+				<h1 className='mb-4 text-center'>{effort.name}</h1>
 			</div>
 			<Outlet />
 		</EffortLayout>

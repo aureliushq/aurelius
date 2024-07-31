@@ -2,6 +2,7 @@ import { ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
 import { formatDistanceToNow } from 'date-fns'
+import { useTheme } from 'remix-themes'
 import invariant from 'tiny-invariant'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
@@ -13,6 +14,11 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '~/components/ui/tooltip'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
@@ -44,6 +50,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 const EffortHome = () => {
 	const { effort, writings } = useLoaderData<typeof clientLoader>()
+	const [theme] = useTheme()
 
 	return (
 		<>
@@ -66,53 +73,78 @@ const EffortHome = () => {
 				<Table>
 					<TableHeader>
 						<TableRow className='grid grid-cols-8'>
-							<TableHead className='col-span-4 p-4'>
+							<TableHead className='col-span-5 p-4'>
 								Title
 							</TableHead>
 							{effort.slug !== 'help' && (
 								<>
-									<TableHead className='p-4 col-span-2 text-center'>
+									<TableHead className='p-4 col-span-3 text-right'>
 										Created On
 									</TableHead>
-									<TableHead className='p-4 col-span-2 text-right'>
-										Word Count
-									</TableHead>
+									{/*<TableHead className='p-4 col-span-2 text-right'>*/}
+									{/*	Word Count*/}
+									{/*</TableHead>*/}
 								</>
 							)}
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{writings.map((writing) => (
-							<TableRow key={writing.id}>
-								<Link
-									className='h-16 grid grid-cols-8'
-									to={
-										effort.slug === 'help'
-											? `/${effort.slug}/${writing.slug}`
-											: `/editor/${effort.slug}/${writing.slug}`
-									}
-								>
-									<TableCell className='col-span-4 font-medium flex items-center'>
-										{writing.title}
-									</TableCell>
-									{effort.slug !== 'help' && (
-										<>
-											<TableCell className='col-span-2 flex items-center justify-center'>
-												{formatDistanceToNow(
-													new Date(writing.createdAt),
-													{
-														addSuffix: true,
-													}
-												)}
+						{writings.length > 0 ? (
+							<>
+								{writings.map((writing) => (
+									<TableRow key={writing.id}>
+										<Link
+											className='h-16 grid grid-cols-8'
+											to={
+												effort.slug === 'help'
+													? `/${effort.slug}/${writing.slug}`
+													: `/editor/${effort.slug}/${writing.slug}`
+											}
+										>
+											<TableCell className='col-span-5 font-medium flex items-center'>
+												<Tooltip>
+													<TooltipTrigger className='w-full text-left truncate'>
+														{writing.title}
+													</TooltipTrigger>
+													<TooltipContent>
+														{writing.title}
+													</TooltipContent>
+												</Tooltip>
 											</TableCell>
-											<TableCell className='col-span-2 text-right flex items-center justify-end'>
-												{writing.wordCount} words
-											</TableCell>
-										</>
-									)}
-								</Link>
+											{effort.slug !== 'help' && (
+												<>
+													<TableCell className='col-span-3 flex items-center justify-end'>
+														{formatDistanceToNow(
+															new Date(
+																writing.createdAt
+															),
+															{
+																addSuffix: true,
+															}
+														)}
+													</TableCell>
+													{/*<TableCell className='col-span-2 text-right flex items-center justify-end'>*/}
+													{/*	{writing.wordCount}{' '}*/}
+													{/*	words*/}
+													{/*</TableCell>*/}
+												</>
+											)}
+										</Link>
+									</TableRow>
+								))}
+							</>
+						) : (
+							<TableRow>
+								<TableCell className='col-span-8 p-16 flex items-center justify-center flex-col gap-4'>
+									<img
+										className={`w-64 h-64 ${theme === 'dark' ? 'invert' : ''}`}
+										src='/images/no-data.svg'
+									/>
+									Nothing here yet! Waiting for you to bring
+									your ideas to life.
+								</TableCell>
 							</TableRow>
-						))}
+						)}
 					</TableBody>
 				</Table>
 			</div>
