@@ -14,11 +14,6 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table'
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from '~/components/ui/tooltip'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
@@ -102,14 +97,12 @@ const EffortHome = () => {
 											}
 										>
 											<TableCell className='col-span-5 font-medium flex items-center'>
-												<Tooltip>
-													<TooltipTrigger className='w-full text-left truncate'>
-														{writing.title}
-													</TooltipTrigger>
-													<TooltipContent>
-														{writing.title}
-													</TooltipContent>
-												</Tooltip>
+												<span
+													className='w-full text-left truncate'
+													title={writing.title}
+												>
+													{writing.title}
+												</span>
 											</TableCell>
 											{effort.slug !== 'help' && (
 												<>
