@@ -77,6 +77,24 @@ const Error = () => {
 	const error = useRouteError()
 	const [theme] = useTheme()
 
+	let title
+	let message
+	// @ts-expect-error: it's fine
+	switch (error?.status) {
+		case 404:
+			title = '404 Not Found'
+			message =
+				'We have no idea what you are looking for. Please check the URL.'
+			break
+		case 500:
+			title = 'Server Error'
+			message = 'We broke something on our end. Please try again later.'
+			break
+		default:
+			title = 'Oops!'
+			message = 'Something unexpected happened. Please try again later.'
+	}
+
 	return (
 		<div className='flex w-full h-full items-center justify-center'>
 			<div className='flex flex-col items-center gap-4'>
@@ -84,23 +102,8 @@ const Error = () => {
 					className={`w-64 h-64 ${theme === 'dark' ? 'invert' : ''}`}
 					src='/images/crashed-error.svg'
 				/>
-				<h1 className='text-4xl font-bold'>Oh no!</h1>
-				{
-					// @ts-expect-error: it's fine
-					error?.message ? (
-						<p className='text-lg text-gray-500'>
-							{
-								// @ts-expect-error: it's fine
-								error?.message
-							}
-						</p>
-					) : (
-						<p className='text-lg text-gray-500'>
-							Something unexpected happened! Please try again
-							later.
-						</p>
-					)
-				}
+				<h1 className='text-4xl font-bold'>{title}</h1>
+				<p className='text-lg text-gray-500'>{message}</p>
 				<Link to='/'>
 					<Button>Back to Home</Button>
 				</Link>
