@@ -1,9 +1,13 @@
 import { ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
+import { ExtractRow, Query } from '@evolu/common'
+import { ColumnDef } from '@tanstack/react-table'
 import { formatDistanceToNow } from 'date-fns'
+import { EyeIcon, PencilIcon } from 'lucide-react'
 import { useTheme } from 'remix-themes'
 import invariant from 'tiny-invariant'
+import { DataTable } from '~/components/common/data-table'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import {
@@ -14,12 +18,17 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '~/components/ui/tooltip'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
 import { EffortsTable } from '~/services/evolu/database'
-import { NonEmptyString100 } from '~/services/evolu/schema'
+import { NonEmptyString100, PostsTable } from '~/services/evolu/schema'
 
 import KeyboardShortcut from '../components/editor/keyboard-shortcut'
 
@@ -39,9 +48,31 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	const table = arls[
 		effort.type as keyof Arls
 	] as TableQueryBuilder<EffortsTable>
+	// TODO: implement select
 	const writings = await table.findMany({ effortId: effort.id })
 	return { effort, writings }
 }
+
+interface Writing {
+	createdAt: string
+	slug: string
+	title: string
+}
+
+const columns: ColumnDef<Writing>[] = [
+	{
+		accessorKey: 'title',
+		header: 'Title',
+	},
+	{
+		accessorKey: 'createdAt',
+		header: 'Created On',
+	},
+	{
+		accessorKey: 'actions',
+		header: '',
+	},
+]
 
 const EffortHome = () => {
 	const { effort, writings } = useLoaderData<typeof clientLoader>()
@@ -67,18 +98,16 @@ const EffortHome = () => {
 			<div className='border border-border rounded-lg'>
 				<Table>
 					<TableHeader>
-						<TableRow className='grid grid-cols-8'>
-							<TableHead className='col-span-5 p-4'>
+						<TableRow className='grid grid-cols-8 gap-4'>
+							<TableHead className='col-span-4 p-4'>
 								Title
 							</TableHead>
 							{effort.slug !== 'help' && (
 								<>
-									<TableHead className='p-4 col-span-3 text-right'>
+									<TableHead className='py-4 col-span-3 text-center'>
 										Created On
 									</TableHead>
-									{/*<TableHead className='p-4 col-span-2 text-right'>*/}
-									{/*	Word Count*/}
-									{/*</TableHead>*/}
+									<TableHead className='p-4 col-span-1 text-right'></TableHead>
 								</>
 							)}
 						</TableRow>
@@ -89,14 +118,14 @@ const EffortHome = () => {
 								{writings.map((writing) => (
 									<TableRow key={writing.id}>
 										<Link
-											className='h-16 grid grid-cols-8'
+											className='h-20 grid grid-cols-8'
 											to={
 												effort.slug === 'help'
 													? `/${effort.slug}/${writing.slug}`
 													: `/editor/${effort.slug}/${writing.slug}`
 											}
 										>
-											<TableCell className='col-span-5 font-medium flex items-center'>
+											<TableCell className='col-span-4 font-medium flex items-center'>
 												<span
 													className='w-full text-left truncate'
 													title={writing.title}
@@ -106,7 +135,7 @@ const EffortHome = () => {
 											</TableCell>
 											{effort.slug !== 'help' && (
 												<>
-													<TableCell className='col-span-3 flex items-center justify-end'>
+													<TableCell className='py-4 px-0 col-span-3 flex items-center justify-center'>
 														{formatDistanceToNow(
 															new Date(
 																writing.createdAt
@@ -116,10 +145,48 @@ const EffortHome = () => {
 															}
 														)}
 													</TableCell>
-													{/*<TableCell className='col-span-2 text-right flex items-center justify-end'>*/}
-													{/*	{writing.wordCount}{' '}*/}
-													{/*	words*/}
-													{/*</TableCell>*/}
+													<TableCell className='col-span-1 text-right flex items-center justify-end gap-2'>
+														<Link
+															to={`/${effort.slug}/${writing.slug}`}
+														>
+															<Tooltip>
+																<TooltipTrigger
+																	asChild
+																>
+																	<Button
+																		className='w-9 h-9'
+																		size='icon'
+																		variant='ghost'
+																	>
+																		<EyeIcon className='w-4 h-4' />
+																	</Button>
+																</TooltipTrigger>
+																<TooltipContent>
+																	View Post
+																</TooltipContent>
+															</Tooltip>
+														</Link>
+														<Link
+															to={`/editor/${effort.slug}/${writing.slug}`}
+														>
+															<Tooltip>
+																<TooltipTrigger
+																	asChild
+																>
+																	<Button
+																		className='w-9 h-9'
+																		size='icon'
+																		variant='ghost'
+																	>
+																		<PencilIcon className='w-4 h-4' />
+																	</Button>
+																</TooltipTrigger>
+																<TooltipContent>
+																	Edit Post
+																</TooltipContent>
+															</Tooltip>
+														</Link>
+													</TableCell>
 												</>
 											)}
 										</Link>
@@ -140,6 +207,7 @@ const EffortHome = () => {
 						)}
 					</TableBody>
 				</Table>
+				{/*<DataTable columns={columns} data={writings} />*/}
 			</div>
 		</>
 	)
