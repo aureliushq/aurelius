@@ -12,7 +12,7 @@ const LoadingScreen = () => {
 			{/*		src='/images/logo_animated.gif'*/}
 			{/*	/>*/}
 			{/*)}*/}
-			<span className='text-black'>Loading...</span>
+			<h1 className='text-black'>Loading...</h1>
 		</div>
 	)
 }

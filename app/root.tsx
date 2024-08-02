@@ -60,11 +60,9 @@ const App = ({ children, title }: { children: ReactNode; title?: string }) => {
 				<Links />
 			</head>
 			<body className='w-screen h-screen !p-0'>
-				<Suspense fallback={<LoadingScreen />}>
-					<AureliusProvider data={{ settings: settings[0] }}>
-						{children}
-					</AureliusProvider>
-				</Suspense>
+				<AureliusProvider data={{ settings: settings[0] }}>
+					{children}
+				</AureliusProvider>
 				<Toaster />
 				<ScrollRestoration />
 				<Scripts />
@@ -132,11 +130,13 @@ const AppWithProviders = () => {
 	return (
 		<ThemeProvider specifiedTheme={data?.theme} themeAction='/action/theme'>
 			<EvoluProvider value={evolu}>
-				<TooltipProvider>
-					<App>
-						<Outlet />
-					</App>
-				</TooltipProvider>
+				<Suspense fallback={<LoadingScreen />}>
+					<TooltipProvider>
+						<App>
+							<Outlet />
+						</App>
+					</TooltipProvider>
+				</Suspense>
 			</EvoluProvider>
 		</ThemeProvider>
 	)
