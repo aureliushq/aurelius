@@ -40,6 +40,7 @@
 		"@remix-run/node": "^2.10.2",
 		"@remix-run/react": "^2.10.2",
 		"@remix-run/serve": "^2.10.2",
+		"@tanstack/react-table": "^8.19.3",
 		"@tiptap/core": "2.4.0",
 		"@tiptap/extension-bubble-menu": "2.4.0",
 		"@tiptap/extension-character-count": "^2.4.0",

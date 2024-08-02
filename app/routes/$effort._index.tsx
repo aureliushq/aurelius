@@ -1,36 +1,26 @@
 import { ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { ExtractRow, Query } from '@evolu/common'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDistanceToNow } from 'date-fns'
-import { EyeIcon, PencilIcon } from 'lucide-react'
-import { useTheme } from 'remix-themes'
+import {
+	ChevronDown,
+	ChevronUp,
+	EyeIcon,
+	PencilIcon,
+	TrashIcon,
+} from 'lucide-react'
 import invariant from 'tiny-invariant'
 import { DataTable } from '~/components/common/data-table'
 import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '~/components/ui/table'
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
-import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { EditorShortcuts } from '~/lib/types'
-import { getShortcutWithModifiers } from '~/lib/utils'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
 import { EffortsTable } from '~/services/evolu/database'
-import { NonEmptyString100, PostsTable } from '~/services/evolu/schema'
-
-import KeyboardShortcut from '../components/editor/keyboard-shortcut'
+import { NonEmptyString100 } from '~/services/evolu/schema'
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
@@ -54,7 +44,8 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 }
 
 interface Writing {
-	createdAt: string
+	createdAt: Date
+	effort: string
 	slug: string
 	title: string
 }
@@ -62,155 +53,108 @@ interface Writing {
 const columns: ColumnDef<Writing>[] = [
 	{
 		accessorKey: 'title',
+		cell: ({ row }) => (
+			<div
+				className='w-[360px] text-left truncate'
+				title={row.original.title}
+			>
+				{row.original.title}
+			</div>
+		),
 		header: 'Title',
 	},
 	{
 		accessorKey: 'createdAt',
-		header: 'Created On',
+		cell: ({ row }) => (
+			<span className='px-4 text-center'>
+				{formatDistanceToNow(new Date(row.original.createdAt), {
+					addSuffix: true,
+				})}
+			</span>
+		),
+		header: ({ column }) => (
+			<Button
+				className='gap-2'
+				onClick={() =>
+					column.toggleSorting(column.getIsSorted() === 'asc')
+				}
+				variant='ghost'
+			>
+				Created On
+				{column.getIsSorted() === 'asc' ? (
+					<ChevronUp className='w-4 h-4' />
+				) : (
+					<ChevronDown className='w-4 h-4' />
+				)}
+			</Button>
+		),
+		sortingFn: 'datetime',
 	},
 	{
 		accessorKey: 'actions',
+		cell: ({ row }) => (
+			<div className='flex items-center justify-end gap-2'>
+				<Link to={`/${row.original.effort}/${row.original.slug}`}>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								className='w-9 h-9'
+								size='icon'
+								variant='ghost'
+							>
+								<EyeIcon className='w-4 h-4' />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>View Post</TooltipContent>
+					</Tooltip>
+				</Link>
+				<Link
+					to={`/editor/${row.original.effort}/${row.original.slug}`}
+				>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								className='w-9 h-9'
+								size='icon'
+								variant='ghost'
+							>
+								<PencilIcon className='w-4 h-4' />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>Edit Post</TooltipContent>
+					</Tooltip>
+				</Link>
+				<Link to={`/${row.original.effort}/${row.original.slug}`}>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								className='w-9 h-9'
+								size='icon'
+								variant='ghost'
+							>
+								<TrashIcon className='w-4 h-4' />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>View Post</TooltipContent>
+					</Tooltip>
+				</Link>
+			</div>
+		),
 		header: '',
 	},
 ]
 
 const EffortHome = () => {
 	const { effort, writings } = useLoaderData<typeof clientLoader>()
-	const [theme] = useTheme()
 
-	return (
-		<>
-			<div className='flex w-full grid grid-cols-3 gap-4 text-white mb-4'>
-				<Input placeholder={`Search ${effort.name}`} />
-				<div />
-				<div className='flex items-center justify-end'>
-					<Button className='gap-2' size='sm'>
-						New Post
-						<KeyboardShortcut
-							keys={getShortcutWithModifiers(
-								allShortcuts[EditorShortcuts.NEW_POST].key,
-								allShortcuts[EditorShortcuts.NEW_POST].modifiers
-							)}
-						/>
-					</Button>
-				</div>
-			</div>
-			<div className='border border-border rounded-lg'>
-				<Table>
-					<TableHeader>
-						<TableRow className='grid grid-cols-8 gap-4'>
-							<TableHead className='col-span-4 p-4'>
-								Title
-							</TableHead>
-							{effort.slug !== 'help' && (
-								<>
-									<TableHead className='py-4 col-span-3 text-center'>
-										Created On
-									</TableHead>
-									<TableHead className='p-4 col-span-1 text-right'></TableHead>
-								</>
-							)}
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{writings.length > 0 ? (
-							<>
-								{writings.map((writing) => (
-									<TableRow key={writing.id}>
-										<Link
-											className='h-20 grid grid-cols-8'
-											to={
-												effort.slug === 'help'
-													? `/${effort.slug}/${writing.slug}`
-													: `/editor/${effort.slug}/${writing.slug}`
-											}
-										>
-											<TableCell className='col-span-4 font-medium flex items-center'>
-												<span
-													className='w-full text-left truncate'
-													title={writing.title}
-												>
-													{writing.title}
-												</span>
-											</TableCell>
-											{effort.slug !== 'help' && (
-												<>
-													<TableCell className='py-4 px-0 col-span-3 flex items-center justify-center'>
-														{formatDistanceToNow(
-															new Date(
-																writing.createdAt
-															),
-															{
-																addSuffix: true,
-															}
-														)}
-													</TableCell>
-													<TableCell className='col-span-1 text-right flex items-center justify-end gap-2'>
-														<Link
-															to={`/${effort.slug}/${writing.slug}`}
-														>
-															<Tooltip>
-																<TooltipTrigger
-																	asChild
-																>
-																	<Button
-																		className='w-9 h-9'
-																		size='icon'
-																		variant='ghost'
-																	>
-																		<EyeIcon className='w-4 h-4' />
-																	</Button>
-																</TooltipTrigger>
-																<TooltipContent>
-																	View Post
-																</TooltipContent>
-															</Tooltip>
-														</Link>
-														<Link
-															to={`/editor/${effort.slug}/${writing.slug}`}
-														>
-															<Tooltip>
-																<TooltipTrigger
-																	asChild
-																>
-																	<Button
-																		className='w-9 h-9'
-																		size='icon'
-																		variant='ghost'
-																	>
-																		<PencilIcon className='w-4 h-4' />
-																	</Button>
-																</TooltipTrigger>
-																<TooltipContent>
-																	Edit Post
-																</TooltipContent>
-															</Tooltip>
-														</Link>
-													</TableCell>
-												</>
-											)}
-										</Link>
-									</TableRow>
-								))}
-							</>
-						) : (
-							<TableRow>
-								<TableCell className='col-span-8 p-16 flex items-center justify-center flex-col gap-4'>
-									<img
-										className={`w-64 h-64 ${theme === 'dark' ? 'invert' : ''}`}
-										src='/images/no-data.svg'
-									/>
-									Nothing here yet! Waiting for you to bring
-									your ideas to life.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-				{/*<DataTable columns={columns} data={writings} />*/}
-			</div>
-		</>
-	)
+	const data = writings.map((writing) => ({
+		createdAt: new Date(writing.createdAt),
+		effort: effort.slug,
+		slug: writing.slug,
+		title: writing.title,
+	}))
+
+	return <DataTable columns={columns} data={data} effort={effort} />
 }
 
 export default EffortHome
