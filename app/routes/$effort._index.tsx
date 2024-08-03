@@ -3,13 +3,7 @@ import { ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
 import * as S from '@effect/schema/Schema'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDistanceToNow } from 'date-fns'
-import {
-	ChevronDown,
-	ChevronUp,
-	EyeIcon,
-	PencilIcon,
-	TrashIcon,
-} from 'lucide-react'
+import { ChevronDown, ChevronUp, EyeIcon, PencilIcon } from 'lucide-react'
 import invariant from 'tiny-invariant'
 import { DataTable } from '~/components/common/data-table'
 import { Button } from '~/components/ui/button'
@@ -73,12 +67,11 @@ const columns: ColumnDef<Writing>[] = [
 			</span>
 		),
 		header: ({ column }) => (
-			<Button
-				className='gap-2'
+			<span
+				className='inline-flex items-center cursor-pointer px-4 gap-2'
 				onClick={() =>
 					column.toggleSorting(column.getIsSorted() === 'asc')
 				}
-				variant='ghost'
 			>
 				Created On
 				{column.getIsSorted() === 'asc' ? (
@@ -86,7 +79,7 @@ const columns: ColumnDef<Writing>[] = [
 				) : (
 					<ChevronDown className='w-4 h-4' />
 				)}
-			</Button>
+			</span>
 		),
 		sortingFn: 'datetime',
 	},
@@ -122,20 +115,6 @@ const columns: ColumnDef<Writing>[] = [
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>Edit Post</TooltipContent>
-					</Tooltip>
-				</Link>
-				<Link to={`/${row.original.effort}/${row.original.slug}`}>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								className='w-9 h-9'
-								size='icon'
-								variant='ghost'
-							>
-								<TrashIcon className='w-4 h-4' />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>View Post</TooltipContent>
 					</Tooltip>
 				</Link>
 			</div>
