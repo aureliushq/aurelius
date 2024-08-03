@@ -41,18 +41,21 @@
 	height: 0;
 }
 
+.viewer ul,
+.viewer li,
 .ProseMirror ul,
 .ProseMirror ol {
-	@apply max-w-3xl;
-	padding: 0 1rem;
+	@apply !max-w-3xl !py-0 !px-4;
 }
 
+.viewer ul,
 .ProseMirror ul {
-	@apply list-disc;
+	@apply !list-disc;
 }
 
+.viewer ol,
 .ProseMirror ol {
-	@apply list-decimal;
+	@apply !list-decimal;
 }
 
 .ProseMirror ul[data-type='taskList'] {
@@ -85,65 +88,74 @@
 /*    margin: 0.67em 0;*/
 /*}*/
 
+.viewer h2,
 .ProseMirror h2 {
+	@apply !py-3 !px-0;
 	/*    @apply max-w-3xl;*/
 	/*    font-size: 2.3rem;*/
-	margin: 0.75rem 0;
+	/*margin: 0.75rem 0;*/
 }
 
+.viewer h3,
 .ProseMirror h3 {
 	/*    @apply max-w-3xl;*/
 	/*    font-size: 2rem;*/
 	margin: 0.83rem 0;
 }
 
+.viewer pre,
 .ProseMirror pre {
-	@apply max-w-3xl rounded-lg bg-[#d5d6db] dark:bg-[#1a1b26];
+	@apply !max-w-3xl !rounded-lg !bg-[#d5d6db] dark:!bg-[#1a1b26] !py-3 !py-4;
 	/* background: #0d0d0d; */
-	font-family: 'JetBrainsMono', monospace;
-	padding: 0.75rem 1rem;
+	font-family: 'JetBrainsMono', monospace !important;
+	/*padding: 0.75rem 1rem;*/
 }
 
+.viewer pre code,
 .ProseMirror pre code {
-	@apply max-w-3xl text-[#565a6e] dark:text-[#9aa5ce];
-	padding: 0;
-	background: none;
-	font-size: 0.8rem;
+	@apply !max-w-3xl !text-[#565a6e] dark:!text-[#9aa5ce] !p-0 !bg-none !text-[0.8rem];
 }
 
+.viewer p code,
 .ProseMirror p code {
-	@apply rounded-lg bg-accent px-1 py-0.5 font-normal text-accent-foreground;
-	font-family: 'JetBrainsMono', monospace;
+	@apply !rounded-lg !bg-accent !px-1 !py-0.5 !font-normal !text-accent-foreground;
+	font-family: 'JetBrainsMono', monospace !important;
 }
 
+.viewer blockquote,
 .ProseMirror blockquote {
-	@apply max-w-3xl border-l-2 !border-primary bg-accent/30 px-4 py-1;
+	@apply !max-w-3xl !border-l-2 !border-primary !bg-accent/30 !px-4 !py-1;
 }
 
+.viewer a,
 .ProseMirror a {
-	@apply max-w-3xl text-primary;
+	@apply !max-w-3xl !text-primary;
 }
 
+.viewer figure,
 .ProseMirror figure {
-	@apply max-w-3xl;
+	@apply !max-w-3xl;
 }
 
 .ProseMirror img.ProseMirror-selectednode {
-	outline: 3px solid #2cb67d;
+	outline: 3px solid #2cb67d !important;
 }
 
+.viewer img.super-image-small,
 .ProseMirror img.super-image-small {
 	max-width: 100%;
 	margin-right: auto;
 	margin-left: auto;
 }
 
+.viewer img.super-image-medium,
 .ProseMirror img.super-image-medium {
 	max-width: 50vw;
 	margin: auto calc(50% - 50vw);
 	transform: translateX(calc(50vw - 50%));
 }
 
+.viewer img.super-image-large,
 .ProseMirror img.super-image-large {
 	padding: 0 16px;
 	width: 65vw;
@@ -152,6 +164,7 @@
 	transform: translateX(calc(100vw - 50%));
 }
 
+.viewer hr,
 .ProseMirror hr {
-	@apply my-10;
+	@apply !my-10;
 }
