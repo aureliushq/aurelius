@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 
+import { LinksFunction } from '@remix-run/node'
 import {
 	ClientLoaderFunctionArgs,
 	Link,
@@ -15,32 +16,38 @@ import { AureliusContext } from '~/lib/providers/aurelius'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
 import { EffortsTable } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
+import writerStylesheet from '~/writer.css?url'
+
+export const links: LinksFunction = () => [
+	{ rel: 'stylesheet', href: writerStylesheet },
+]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
 	invariant(params.slug, 'Writing URL cannot be empty')
 
-	const effort = await arls.writingEfforts.findUnique({
-		slug: S.decodeSync(NonEmptyString100)(params.effort),
-	})
-	invariant(effort, 'Writing effort not found')
-
 	if (params.effort === 'help') {
 		const writing = await arls._help.findUnique({
 			slug: S.decodeSync(NonEmptyString100)(params.slug),
 		})
-		return { writing }
-	}
 
-	const table = arls[
-		effort.type as keyof Arls
-	] as TableQueryBuilder<EffortsTable>
-	// TODO: implement select
-	const writing = await table.findUnique({
-		effortId: effort.id,
-		slug: S.decodeSync(NonEmptyString100)(params.slug),
-	})
-	return { effort, writing }
+		return { writing }
+	} else {
+		const effort = await arls.writingEfforts.findUnique({
+			slug: S.decodeSync(NonEmptyString100)(params.effort),
+		})
+		invariant(effort, 'Writing effort not found')
+
+		const table = arls[
+			effort.type as keyof Arls
+		] as TableQueryBuilder<EffortsTable>
+		const writing = await table.findUnique({
+			effortId: effort.id,
+			slug: S.decodeSync(NonEmptyString100)(params.slug),
+		})
+
+		return { effort, writing }
+	}
 }
 
 const ViewWriting = () => {
@@ -54,16 +61,18 @@ const ViewWriting = () => {
 				<Meta />
 				<Links />
 			</head>
-			<div className='flex justify-start mb-4 max-w-2xl mx-auto'>
-				<Link
-					to={`/${effort?.slug}`}
-					className='inline-flex items-center justify-center text-sm font-medium'
-				>
-					<ArrowLeftIcon className='mr-2 h-4 w-4' />
-					See all
-				</Link>
-			</div>
-			<article className='prose dark:prose-invert max-w-2xl mx-auto'>
+			{effort && (
+				<div className='flex justify-start mb-4 max-w-2xl mx-auto'>
+					<Link
+						to={`/${effort?.slug}`}
+						className='inline-flex items-center justify-center text-sm font-medium'
+					>
+						<ArrowLeftIcon className='mr-2 h-4 w-4' />
+						See all
+					</Link>
+				</div>
+			)}
+			<article className='viewer prose dark:prose-invert max-w-2xl mx-auto'>
 				<h1
 					className={`font-extrabold leading-tight ${settings?.titleFont}`}
 				>
