@@ -90,7 +90,10 @@ const Error = () => {
 			break
 		default:
 			title = 'Oops!'
-			message = 'Something unexpected happened. Please try again later.'
+			message =
+				// @ts-expect-error: it's fine
+				error?.message ??
+				'Something unexpected happened. Please try again later.'
 	}
 
 	return (
