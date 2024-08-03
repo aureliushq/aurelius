@@ -133,7 +133,14 @@ const EffortHome = () => {
 		title: writing.title,
 	}))
 
-	return <DataTable columns={columns} data={data} effort={effort} />
+	return (
+		<>
+			<div className='prose dark:prose-invert max-w-none flex w-full flex items-center justify-between text-white'>
+				<h1 className='mb-4 text-center'>{effort.name}</h1>
+			</div>
+			<DataTable columns={columns} data={data} effort={effort} />
+		</>
+	)
 }
 
 export default EffortHome
