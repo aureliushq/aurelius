@@ -1,6 +1,6 @@
 import { ReactNode, Suspense } from 'react'
 
-import { LinksFunction, LoaderFunction } from '@remix-run/node'
+import { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
 import {
 	Link,
 	Links,
@@ -32,6 +32,110 @@ export const links: LinksFunction = () => [
 		crossOrigin: 'anonymous',
 	},
 	{ rel: 'stylesheet', href: stylesheet },
+	{ rel: 'manifest', href: '/site.webmanifest' },
+	{
+		rel: 'apple-touch-icon',
+		sizes: '180x180',
+		href: '/apple-touch-icon.png',
+	},
+	{
+		rel: 'icon',
+		type: 'image/png',
+		sizes: '32x32',
+		href: '/favicon-32x32.png',
+	},
+	{
+		rel: 'icon',
+		type: 'image/png',
+		sizes: '16x16',
+		href: '/favicon-16x16.png',
+	},
+	{ rel: 'mask-icon', color: '#5bbad5', href: '/safari-pinned-tab.svg' },
+]
+
+export const meta: MetaFunction = () => [
+	{
+		charSet: 'utf-8',
+	},
+	{
+		name: 'msapplication-TileColor',
+		content: '#2b5797',
+	},
+	{
+		property: 'og:site',
+		content: 'https://aurelius.ink',
+	},
+	{
+		property: 'og:url',
+		content: 'https://aurelius.ink',
+	},
+	{
+		property: 'og:title',
+		content: 'Aurelius - Privacy-Focused Writing App',
+	},
+	{
+		property: 'og:description',
+		content:
+			'A privacy-focused writing app that helps you build consistent writing habits. Enjoy a clutter-free writing space, set timed sessions, and organize multiple projects - all while keeping your work private.',
+	},
+	{
+		property: 'og:type',
+		content: 'website',
+	},
+	{
+		property: 'og:image',
+		content: '/images/aurelius_open_graph.png',
+	},
+	{
+		name: 'theme-color',
+		content: '#ffffff',
+	},
+	{
+		title: 'Aurelius - Privacy-Focused Writing App',
+	},
+	{
+		name: 'description',
+		content:
+			'A privacy-focused writing app that helps you build consistent writing habits. Enjoy a clutter-free writing space, set timed sessions, and organize multiple projects - all while keeping your work private.',
+	},
+	{
+		name: 'keywords',
+		content:
+			"writing app, distraction-free writing, writing habits, private writing, timed writing sessions, writer's tool, creative writing, journaling",
+	},
+	{
+		name: 'twitter:card',
+		content: 'summary_large_image',
+	},
+	{
+		name: 'twitter:site',
+		content: '@aurelius_ink',
+	},
+	{
+		name: 'twitter:url',
+		content: 'https://aurelius.ink/',
+	},
+	{
+		name: 'twitter:creator',
+		content: '@aurelius_ink',
+	},
+	{
+		name: 'twitter:title',
+		content: 'Aurelius - Privacy-Focused Writing App',
+	},
+	{
+		name: 'twitter:description',
+		content:
+			'A privacy-focused writing app that helps you build consistent writing habits. Enjoy a clutter-free writing space, set timed sessions, and organize multiple projects - all while keeping your work private.',
+	},
+	{
+		name: 'twitter:image',
+		content: 'https://aurelius.ink/images/og.png',
+	},
+	{
+		name: 'viewport',
+		content: 'width=device-width,initial-scale=1',
+	},
 ]
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -41,7 +145,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 	}
 }
 
-const App = ({ children, title }: { children: ReactNode; title?: string }) => {
+const App = ({ children }: { children: ReactNode }) => {
 	const data = useRouteLoaderData<typeof loader>('root')
 	const [theme] = useTheme()
 	const { rows: settings } = useQuery(settingsQuery)
@@ -49,12 +153,6 @@ const App = ({ children, title }: { children: ReactNode; title?: string }) => {
 	return (
 		<html className={theme ?? 'dark'} lang='en'>
 			<head>
-				{title ? <title>{title}</title> : <title>Aurelius</title>}
-				<meta charSet='utf-8' />
-				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1'
-				/>
 				<Meta />
 				<PreventFlashOnWrongTheme ssrTheme={Boolean(data?.theme)} />
 				<Links />
@@ -119,7 +217,7 @@ export const ErrorBoundary = () => {
 	return (
 		<ThemeProvider specifiedTheme={data?.theme} themeAction='/action/theme'>
 			<EvoluProvider value={evolu}>
-				<App title='Oh no!'>
+				<App>
 					<Error />
 				</App>
 			</EvoluProvider>
