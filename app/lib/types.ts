@@ -3,6 +3,7 @@
 export type EditorData = {
 	content: string
 	title: string
+	wordCount?: number
 	[key: string]: any
 }
 

@@ -99,77 +99,42 @@ export const clientAction = async ({
 }
 
 const Writing = () => {
-	const shortcuts = {
-		[EditorShortcuts.FORCE_SAVE]: () => handleForceSave(),
-	}
-
 	const fetcher = useFetcher()
 	const { effort, writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
-	useKeyboardShortcuts(shortcuts)
-
-	const wordCount = useRef<number>(writing?.wordCount ?? 0)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 
-	const onAutoSave = useCallback(({ content, title }: EditorData) => {
-		setIsSaving(true)
+	const onAutoSave = useCallback(
+		({ content, title, wordCount }: EditorData) => {
+			setIsSaving(true)
 
-		fetcher.submit(
-			{ content, title, wordCount: wordCount.current },
-			{ method: 'POST', encType: 'application/json' }
-		)
+			fetcher.submit(
+				{ content, title, wordCount: wordCount ?? 0 },
+				{ method: 'POST', encType: 'application/json' }
+			)
 
-		setTimeout(() => {
-			setIsSaving(false)
-		}, 3000)
-	}, [])
-
-	const [editorData, setEditorData, forceSave] = useAutoSave({
-		initialData: {
-			content: writing.content as string,
-			title: writing.title as string,
+			setTimeout(() => {
+				setIsSaving(false)
+			}, 3000)
 		},
-		onAutoSave,
-		interval: 10000,
-		debounce: 1000,
-	})
-
-	const handleContentChange = (content: string) => {
-		setEditorData({ content })
-	}
-
-	const handleForceSave = () => {
-		forceSave()
-	}
-
-	const handleTitleChange = (title: string) => {
-		setEditorData({ title })
-	}
-
-	const handleWordCountChange = (count: number) => {
-		wordCount.current = count
-	}
+		[]
+	)
 
 	const onReset = () => {
-		forceSave()
 		navigate(`/editor/${effort.slug as string}`)
 	}
 
-	useEffect(() => {
-		wordCount.current = writing?.wordCount ?? 0
-	}, [writing])
-
 	return (
 		<Editor
-			content={editorData.content}
+			data={{
+				content: writing.content as string,
+				title: writing.title as string,
+				wordCount: writing?.wordCount ?? 0,
+			}}
 			isSaving={isSaving}
+			onAutoSave={onAutoSave}
 			onReset={onReset}
-			setContent={handleContentChange}
-			setTitle={handleTitleChange}
-			setWordCount={handleWordCountChange}
-			title={editorData.title}
-			wordCount={wordCount.current}
 		/>
 	)
 }

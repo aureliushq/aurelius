@@ -41,9 +41,10 @@ import {
 import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { MUSIC_STATIONS } from '~/lib/constants'
-import { useKeyboardShortcuts } from '~/lib/hooks'
+import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
+	EditorData,
 	EditorShortcuts,
 	EditorToolbarMode,
 	MusicChannels,
@@ -54,31 +55,24 @@ import {
 const lowlight = createLowlight(common)
 
 type EditorProps = {
-	content: string
+	data: EditorData
 	isSaving: boolean
+	onAutoSave: (data: EditorData) => void
 	onReset?: () => void
-	onTitleBlur?: () => void
-	setContent: (content: string) => void
-	setTitle: (title: string) => void
-	setWordCount: (wordCount: number) => void
-	title: string
-	wordCount: number
+	saveOnTitleBlur?: boolean
 }
 
 const Editor = ({
-	content,
+	data,
 	isSaving,
+	onAutoSave,
 	onReset,
-	onTitleBlur,
-	setContent,
-	setTitle,
-	setWordCount,
-	title,
-	wordCount,
+	saveOnTitleBlur = true,
 }: EditorProps) => {
 	const shortcuts = {
 		[EditorShortcuts.BLUR]: () => blurInputs(),
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
+		[EditorShortcuts.FORCE_SAVE]: () => forceSave(),
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
 		[EditorShortcuts.MAIN_MENU]: () => setMainMenuOpen(!mainMenuOpen),
 		[EditorShortcuts.NEW_POST]: () => createNewPost(),
@@ -92,6 +86,16 @@ const Editor = ({
 			setWritingSessionOpen(!writingSessionOpen),
 	}
 
+	const [editorData, setEditorData, forceSave] = useAutoSave({
+		initialData: {
+			content: data.content,
+			title: data.title,
+		},
+		onAutoSave,
+		interval: 10000,
+		debounce: 1000,
+	})
+
 	const { settings } = useContext<AureliusProviderData>(AureliusContext)
 
 	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
@@ -99,10 +103,12 @@ const Editor = ({
 	const navigate = useNavigate()
 
 	const titleRef = useRef<HTMLTextAreaElement>(null)
+	const wordCount = useRef<number>(data?.wordCount ?? 0)
 
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
@@ -119,7 +125,7 @@ const Editor = ({
 		useState<WritingSessionStatus>(WritingSessionStatus.NOT_STARTED)
 
 	const editor = useEditor({
-		content,
+		content: editorData.content,
 		editorProps: {
 			attributes: {
 				class: '',
@@ -156,14 +162,14 @@ const Editor = ({
 		onCreate({ editor }) {
 			let html = editor.isEmpty ? '' : editor.getHTML()
 			const wordCount = editor.storage.characterCount.words()
-			setContent(html)
-			setWordCount(wordCount)
+			handleContentChange(html)
+			handleWordCountChange(wordCount)
 		},
 		onUpdate({ editor }) {
 			let html = editor.isEmpty ? '' : editor.getHTML()
 			const wordCount = editor.storage.characterCount.words()
-			setContent(html)
-			setWordCount(wordCount)
+			handleContentChange(html)
+			handleWordCountChange(wordCount)
 		},
 	})
 
@@ -175,12 +181,17 @@ const Editor = ({
 	}
 
 	const confirmResetEditor = () => {
+		forceSave()
 		onReset?.()
 	}
 
 	const createNewPost = () => {
 		handleSplashDialogOpen(false)
 		navigate('/editor/posts')
+	}
+
+	const handleContentChange = (content: string) => {
+		setEditorData({ content })
 	}
 
 	const handlePreferencesOpen = (state: boolean) => {
@@ -195,12 +206,35 @@ const Editor = ({
 		})
 	}
 
-	useEffect(() => {
-		if (content) {
-			const wordCount = editor.storage.characterCount.words()
-			setWordCount(wordCount)
+	const handleTitleBlur = () => {
+		if (saveOnTitleBlur) {
+			if (editorData.title.trim() !== '') {
+				forceSave()
+				setIsTitleFirstEdit(false)
+			} else {
+				setEditorData({ title: editorData.title })
+			}
 		}
-	}, [content])
+	}
+
+	const handleTitleChange = (title: string) => {
+		if (editorData.title.trim() === '') {
+			setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
+		} else {
+			setEditorData({ title })
+		}
+	}
+
+	const handleWordCountChange = (count: number) => {
+		wordCount.current = count
+	}
+
+	useEffect(() => {
+		if (data.content) {
+			const wordCount = editor.storage.characterCount.words()
+			handleWordCountChange(wordCount)
+		}
+	}, [data.content])
 
 	useEffect(() => {
 		if (
@@ -216,6 +250,10 @@ const Editor = ({
 			setIsMusicPlaying(writingSessionSettings.music)
 		}
 	}, [writingSessionSettings])
+
+	useEffect(() => {
+		wordCount.current = data?.wordCount ?? 0
+	}, [data])
 
 	return (
 		<>
@@ -251,7 +289,7 @@ const Editor = ({
 								setWritingSessionSettings
 							}
 							setWritingSessionStatus={setWritingSessionStatus}
-							wordCount={wordCount}
+							wordCount={wordCount.current}
 							writingSessionOpen={writingSessionOpen}
 							writingSessionSettings={writingSessionSettings}
 						/>
@@ -311,19 +349,19 @@ const Editor = ({
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
-						<span className='text-sm text-muted-foreground'>{`${wordCount} words`}</span>
+						<span className='text-sm text-muted-foreground'>{`${wordCount.current} words`}</span>
 						<E2EEIndicator />
 						<HelpButton triggerShortcut={triggerShortcut} />
 					</div>
 				</section>
 				<Writer
-					content={content}
+					content={editorData.content}
 					editor={editor}
-					onTitleBlur={onTitleBlur}
+					onTitleBlur={handleTitleBlur}
 					ref={titleRef}
 					settings={settings}
-					setTitle={setTitle}
-					title={title}
+					setTitle={handleTitleChange}
+					title={editorData.title}
 				/>
 			</ScrollArea>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />

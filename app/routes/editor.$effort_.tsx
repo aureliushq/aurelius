@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
@@ -14,8 +14,7 @@ import { NonEmptyString1000 } from '@evolu/common'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
-import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import { EditorData, EditorShortcuts } from '~/lib/types'
+import { EditorData } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import { Arls, arls } from '~/services/arls'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
@@ -81,67 +80,29 @@ export const clientAction = async ({
 }
 
 const NewWriting = () => {
-	const shortcuts = {
-		[EditorShortcuts.FORCE_SAVE]: () => handleForceSave(),
-	}
-
 	const fetcher = useFetcher()
 	const { effort } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
-	useKeyboardShortcuts(shortcuts)
-
-	const wordCount = useRef<number>(0)
 	const [isSaving, setIsSaving] = useState<boolean>(false)
-	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
 
-	const onAutoSave = useCallback(({ content, title }: EditorData) => {
-		setIsSaving(true)
+	const onAutoSave = useCallback(
+		({ content, title, wordCount }: EditorData) => {
+			setIsSaving(true)
 
-		fetcher.submit(
-			{ content, title, wordCount: wordCount.current },
-			{ method: 'POST', encType: 'application/json' }
-		)
+			fetcher.submit(
+				{ content, title, wordCount: wordCount ?? 0 },
+				{ method: 'POST', encType: 'application/json' }
+			)
 
-		setTimeout(() => {
-			setIsSaving(false)
-		}, 3000)
-	}, [])
-
-	const [editorData, setEditorData, forceSave] = useAutoSave({
-		initialData: { content: '', title: '' },
-		onAutoSave,
-		interval: 10000,
-		debounce: 1000,
-	})
-
-	const handleContentChange = (content: string) => {
-		setEditorData({ content })
-	}
-
-	const handleForceSave = () => {
-		forceSave()
-	}
-
-	const handleTitleChange = (title: string) => {
-		setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
-	}
-
-	const handleTitleBlur = () => {
-		if (editorData.title.trim() !== '') {
-			forceSave()
-			setIsTitleFirstEdit(false)
-		} else {
-			setEditorData({ title: editorData.title })
-		}
-	}
-
-	const handleWordCountChange = (count: number) => {
-		wordCount.current = count
-	}
+			setTimeout(() => {
+				setIsSaving(false)
+			}, 3000)
+		},
+		[]
+	)
 
 	const onReset = () => {
-		forceSave()
 		navigate(`/editor/${effort.slug as string}`)
 	}
 
@@ -161,15 +122,10 @@ const NewWriting = () => {
 
 	return (
 		<Editor
-			content={editorData.content}
+			data={{ content: '', title: '', wordCount: 0 }}
 			isSaving={isSaving}
+			onAutoSave={onAutoSave}
 			onReset={onReset}
-			onTitleBlur={handleTitleBlur}
-			setContent={handleContentChange}
-			setTitle={handleTitleChange}
-			setWordCount={handleWordCountChange}
-			title={editorData.title}
-			wordCount={wordCount.current}
 		/>
 	)
 }
