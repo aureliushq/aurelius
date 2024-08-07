@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
 
-import { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
 	ClientActionFunctionArgs,
 	ClientLoaderFunctionArgs,
@@ -22,15 +21,6 @@ import {
 	NonEmptyString100,
 	WritingEffortId,
 } from '~/services/evolu/schema'
-import writerStylesheet from '~/writer.css?url'
-
-export const meta: MetaFunction = () => {
-	return [{ title: 'Aurelius' }, { name: 'description', content: '' }]
-}
-
-export const links: LinksFunction = () => [
-	{ rel: 'stylesheet', href: writerStylesheet },
-]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Effort cannot be empty')

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { LinksFunction, MetaFunction } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
@@ -8,15 +7,6 @@ import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { arls } from '~/services/arls'
 import { NonEmptyString100 } from '~/services/evolu/schema'
-import writerStylesheet from '~/writer.css?url'
-
-export const meta: MetaFunction = () => {
-	return [{ title: 'Aurelius' }, { name: 'description', content: '' }]
-}
-
-export const links: LinksFunction = () => [
-	{ rel: 'stylesheet', href: writerStylesheet },
-]
 
 export const clientLoader = async () => {
 	// TODO: only load this the first time. after loading set local storage to prevent loading again. check local storage before loading.

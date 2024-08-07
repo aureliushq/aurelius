@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
 	ClientActionFunctionArgs,
 	ClientLoaderFunctionArgs,
@@ -18,17 +17,8 @@ import { EditorData } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import { Arls, arls } from '~/services/arls'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
-import writerStylesheet from '~/writer.css?url'
 
 const slugger = new GithubSlugger()
-
-export const meta: MetaFunction = () => {
-	return [{ title: 'Aurelius' }, { name: 'description', content: '' }]
-}
-
-export const links: LinksFunction = () => [
-	{ rel: 'stylesheet', href: writerStylesheet },
-]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Effort cannot be empty')
