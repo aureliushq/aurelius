@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react'
 
+import { LinksFunction } from '@remix-run/node'
 import {
 	Link,
 	Links,
@@ -14,9 +15,16 @@ import { EvoluProvider } from '@evolu/react'
 import { Button } from '~/components/ui/button'
 import { Toaster } from '~/components/ui/toaster'
 import { TooltipProvider } from '~/components/ui/tooltip'
+import stylesheet from '~/globals.css?url'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { ThemeProvider, useTheme } from '~/lib/providers/theme'
 import { evolu } from '~/services/evolu/client'
+import writerStylesheet from '~/writer.css?url'
+
+export const links: LinksFunction = () => [
+	{ rel: 'stylesheet', href: stylesheet },
+	{ rel: 'stylesheet', href: writerStylesheet },
+]
 
 const App = ({ children }: { children: ReactNode }) => {
 	const { theme } = useTheme()
@@ -44,7 +52,6 @@ const App = ({ children }: { children: ReactNode }) => {
 					href='https://fonts.bunny.net/css?family=inter:100,200,300,400,500,600,700,800,900|lato:400,700|libre-baskerville:400,700|merriweather:400,700|noto-serif:400,700|open-sans:400,700|pt-serif:400,700|roboto:400,700'
 					crossOrigin='anonymous'
 				/>
-				<link rel='stylesheet' href='/app/globals.css' />
 				<link rel='manifest' href='/site.webmanifest' />
 				<link
 					rel='apple-touch-icon'
@@ -68,7 +75,6 @@ const App = ({ children }: { children: ReactNode }) => {
 					color='#5bbad5'
 					href='/safari-pinned-tab.svg'
 				/>
-				<link rel='stylesheet' href='/app/writer.css' />
 				<Meta />
 				<Links />
 			</head>
@@ -76,11 +82,6 @@ const App = ({ children }: { children: ReactNode }) => {
 				{children}
 				<Toaster />
 				<ScrollRestoration />
-				{/*<script*/}
-				{/*	data-hash*/}
-				{/*	defer*/}
-				{/*	src='https://medama.i4o.dev/script.js?url'*/}
-				{/*/>*/}
 				<Scripts />
 			</body>
 		</html>
