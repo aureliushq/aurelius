@@ -10,7 +10,6 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table'
-import { useTheme } from 'remix-themes'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import {
@@ -22,6 +21,7 @@ import {
 	TableRow,
 } from '~/components/ui/table'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
+import { useTheme } from '~/lib/providers/theme'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { WritingEffortsTable } from '~/services/evolu/schema'
@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
 			sorting,
 		},
 	})
-	const [theme] = useTheme()
+	const { theme } = useTheme()
 
 	return (
 		<>

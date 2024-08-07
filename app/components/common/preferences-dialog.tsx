@@ -13,7 +13,6 @@ import {
 	ExternalLinkIcon,
 	TriangleAlertIcon,
 } from 'lucide-react'
-import { Theme, useTheme } from 'remix-themes'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -64,6 +63,7 @@ import {
 	SITE_THEMES,
 	TOOLBAR_MODES,
 } from '~/lib/constants'
+import { Theme, useTheme } from '~/lib/providers/theme'
 import {
 	MusicChannels,
 	PreferencesDialogProps,
@@ -159,7 +159,7 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 }
 
 const Appearance = ({ settings }: { settings: SettingsRow }) => {
-	const [theme, setTheme, { definedBy }] = useTheme()
+	const { theme, setTheme } = useTheme()
 	const { toast } = useToast()
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -179,11 +179,7 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 	}
 
 	const handleThemeChange = (theme: string) => {
-		if (theme === SiteTheme.SYSTEM) {
-			setTheme(null)
-		} else {
-			setTheme(theme as Theme)
-		}
+		setTheme(theme as Theme)
 	}
 
 	return (
@@ -199,11 +195,7 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 					<Select
 						onValueChange={handleThemeChange}
 						name='theme'
-						value={
-							definedBy === 'SYSTEM'
-								? SiteTheme.SYSTEM
-								: theme ?? SiteTheme.DARK
-						}
+						value={theme ?? SiteTheme.DARK}
 					>
 						<SelectTrigger className='w-[180px]'>
 							<SelectValue placeholder='Fonts' />
