@@ -156,13 +156,11 @@ const App = ({ children }: { children: ReactNode }) => {
 				<Meta />
 				<PreventFlashOnWrongTheme ssrTheme={Boolean(data?.theme)} />
 				<Links />
-				{process.env.NODE_ENV === 'production' ? (
-					<script
-						defer
-						src='https://medama.i4o.dev/script.js'
-						data-hash
-					/>
-				) : null}
+				<script
+					defer
+					src='https://medama.i4o.dev/script.js'
+					data-hash
+				/>
 			</head>
 			<body className='w-screen h-screen !p-0'>
 				<AureliusProvider data={{ settings: settings[0] }}>
