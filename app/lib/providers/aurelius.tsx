@@ -1,6 +1,8 @@
-import { ReactNode, createContext } from 'react'
+import { ReactNode, Suspense, createContext } from 'react'
 
-import { SettingsRow } from '~/services/evolu/client'
+import { useQuery } from '@evolu/react'
+import LoadingScreen from '~/components/common/loading-screen'
+import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 
 export type AureliusProviderData = {
 	settings: SettingsRow
@@ -13,14 +15,21 @@ export const AureliusContext = createContext<AureliusProviderData>({
 
 type AureliusProviderProps = {
 	children: ReactNode
-	data: AureliusProviderData
 }
 
-const AureliusProvider = ({ children, data }: AureliusProviderProps) => {
+const AureliusProvider = ({ children }: AureliusProviderProps) => {
+	const { rows: settings } = useQuery(settingsQuery)
+
+	const data: AureliusProviderData = {
+		settings: settings[0],
+	}
+
 	return (
-		<AureliusContext.Provider value={data}>
-			{children}
-		</AureliusContext.Provider>
+		<Suspense fallback={<LoadingScreen />}>
+			<AureliusContext.Provider value={data}>
+				{children}
+			</AureliusContext.Provider>
+		</Suspense>
 	)
 }
 
