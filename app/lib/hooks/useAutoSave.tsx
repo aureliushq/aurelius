@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'react'
 
 import { EditorData } from '~/lib/types'
 
@@ -26,43 +32,12 @@ const useAutoSave = ({
 }: AutoSaveProps): [EditorData, SetEditorDataFunction, () => void] => {
 	const dataRef = useRef<EditorData>(initialData)
 	const ignoreAutoSaveFieldsRef = useRef<Set<string>>(new Set())
+	const isInitialMountRef = useRef(true)
+	const onAutoSaveRef = useRef(onAutoSave)
 	const previousDataRef = useRef<EditorData>(initialData)
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-	const onAutoSaveRef = useRef(onAutoSave)
 
 	const [data, setDataState] = useState<EditorData>(initialData)
-
-	const setData: SetEditorDataFunction = useCallback(
-		(newData, options = {}) => {
-			const { ignoreAutoSave = false } = options
-
-			setDataState((prevData) => {
-				const updatedData = { ...prevData, ...newData }
-				dataRef.current = updatedData
-
-				if (ignoreAutoSave) {
-					Object.keys(newData).forEach((key) =>
-						ignoreAutoSaveFieldsRef.current.add(key)
-					)
-				} else {
-					Object.keys(newData).forEach((key) =>
-						ignoreAutoSaveFieldsRef.current.delete(key)
-					)
-				}
-
-				const shouldAutoSave = Object.keys(newData).some(
-					(key) => !ignoreAutoSaveFieldsRef.current.has(key)
-				)
-
-				if (shouldAutoSave) {
-					debouncedSave()
-				}
-
-				return updatedData
-			})
-		},
-		[]
-	)
 
 	const debouncedSave = useCallback(() => {
 		if (timeoutRef.current) {
@@ -84,6 +59,47 @@ const useAutoSave = ({
 			}
 		}, debounce)
 	}, [debounce])
+
+	const setData: SetEditorDataFunction = useCallback(
+		(newData, options = {}) => {
+			const { ignoreAutoSave = false } = options
+
+			if (isInitialMountRef.current) {
+				dataRef.current = { ...dataRef.current, ...newData }
+				if (ignoreAutoSave) {
+					Object.keys(newData).forEach((key) =>
+						ignoreAutoSaveFieldsRef.current.add(key)
+					)
+				}
+			} else {
+				setDataState((prevData) => {
+					const updatedData = { ...prevData, ...newData }
+					dataRef.current = updatedData
+
+					if (ignoreAutoSave) {
+						Object.keys(newData).forEach((key) =>
+							ignoreAutoSaveFieldsRef.current.add(key)
+						)
+					} else {
+						Object.keys(newData).forEach((key) =>
+							ignoreAutoSaveFieldsRef.current.delete(key)
+						)
+					}
+
+					const shouldAutoSave = Object.keys(newData).some(
+						(key) => !ignoreAutoSaveFieldsRef.current.has(key)
+					)
+
+					if (shouldAutoSave) {
+						debouncedSave()
+					}
+
+					return updatedData
+				})
+			}
+		},
+		[debouncedSave]
+	)
 
 	const forceSave = useCallback(() => {
 		if (timeoutRef.current) {
@@ -128,6 +144,11 @@ const useAutoSave = ({
 			}
 		}
 	}, [interval])
+
+	useLayoutEffect(() => {
+		onAutoSaveRef.current = onAutoSave
+		isInitialMountRef.current = false
+	}, [onAutoSave])
 
 	return [data, setData, forceSave]
 }
