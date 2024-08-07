@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { LinksFunction, MetaFunction } from '@remix-run/node'
 import {
@@ -13,8 +13,7 @@ import * as S from '@effect/schema/Schema'
 import { ExtractRow, NonEmptyString1000, Query } from '@evolu/common'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
-import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import { EditorData, EditorShortcuts } from '~/lib/types'
+import { EditorData } from '~/lib/types'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
 import { EffortsTable } from '~/services/evolu/database'
 import {

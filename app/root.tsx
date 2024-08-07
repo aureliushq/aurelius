@@ -84,7 +84,7 @@ export const meta: MetaFunction = () => [
 	},
 	{
 		property: 'og:image',
-		content: '/images/aurelius_open_graph.png',
+		content: '/images/og.png',
 	},
 	{
 		name: 'theme-color',
@@ -130,7 +130,7 @@ export const meta: MetaFunction = () => [
 	},
 	{
 		name: 'twitter:image',
-		content: 'https://aurelius.ink/images/og.png',
+		content: '/images/og.png',
 	},
 	{
 		name: 'viewport',
