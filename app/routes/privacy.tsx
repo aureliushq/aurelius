@@ -43,14 +43,21 @@ const PrivacyPolicy = () => {
 						that only you have the key to. Even if someone
 						intercepted it, they couldn't peek inside.
 					</span>
-					<h2>No tracking or analytics</h2>
+					<h2>Tracking/Analytics</h2>
 					<span>
 						Aurelius also respects your right to write in peace,
 						without feeling watched. That's why Aurelius doesn't use
-						any cookies or tracking tools. Your writing habits,
-						preferences, and ideas are your business, not mine. I'm
-						here to provide a great writing experience, not to
-						analyze your every move.
+						any cookies to track your activities in your browser.
+						The only thing I track is the number of visitors to the
+						site, and that's only to help me understand how many
+						people are using Aurelius. I use an analytics tool
+						called Medama, which doesn't use any cookies or collect
+						any personal data and is fully compliant with GDPR and
+						related regulations. I have self-hosted Medama on my own
+						server, so no third-party has access to the data. Your
+						writing habits, preferences, and ideas are your
+						business, not mine. I'm here to provide a great writing
+						experience, not to analyze your every move.
 					</span>
 					<br />
 					<span>
