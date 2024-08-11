@@ -218,11 +218,7 @@ const Editor = ({
 	}
 
 	const handleTitleChange = (title: string) => {
-		if (editorData.title.trim() === '') {
-			setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
-		} else {
-			setEditorData({ title })
-		}
+		setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
 	}
 
 	const handleWordCountChange = (count: number) => {

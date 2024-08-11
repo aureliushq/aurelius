@@ -3,6 +3,7 @@ import {
 	FormEvent,
 	ReactNode,
 	SetStateAction,
+	useContext,
 	useEffect,
 	useState,
 } from 'react'
@@ -40,6 +41,7 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
+import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
 	WritingSessionDialogProps,
 	WritingSessionSettings,
@@ -107,9 +109,11 @@ const WritingSessionTimer = ({
 	writingSessionOpen,
 	writingSessionSettings,
 }: WritingSessionTimerProps) => {
+	const { sessionTimer } = useContext<AureliusProviderData>(AureliusContext)
+
 	const [elapsedMinutes, setElapsedMinutes] = useState(0)
 	const [startingWordCount, setStartingWordCount] = useState(wordCount)
-	const sessionTimer = useTimer()
+
 	const { toast } = useToast()
 
 	const pauseWritingSession = () => {
