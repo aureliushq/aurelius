@@ -247,10 +247,6 @@ const Editor = ({
 		}
 	}, [writingSessionSettings])
 
-	useEffect(() => {
-		wordCount.current = data?.wordCount ?? 0
-	}, [data])
-
 	return (
 		<>
 			<ScrollArea className='w-screen h-screen relative'>
