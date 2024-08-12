@@ -108,7 +108,9 @@ const Editor = ({
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
-	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(true)
+	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(
+		data.title.trim() === ''
+	)
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)

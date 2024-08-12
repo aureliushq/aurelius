@@ -62,7 +62,7 @@ export const clientAction = async ({
 		content: S.decodeSync(Content)(content),
 		effortId: effort.id,
 		slug: S.decodeSync(NonEmptyString100)(finalSlug),
-		title: S.decodeSync(NonEmptyString1000)(writingTitle),
+		title: S.decodeSync(NonEmptyString1000)(title),
 		wordCount: S.decodeSync(Int)(wordCount),
 	})
 
