@@ -50,9 +50,9 @@ const columns: ColumnDef<Writing>[] = [
 		cell: ({ row }) => (
 			<div
 				className='w-[360px] text-left truncate'
-				title={row.original.title}
+				title={row.original?.title || 'Untitled'}
 			>
-				{row.original.title}
+				{row.original?.title || 'Untitled'}
 			</div>
 		),
 		header: 'Title',

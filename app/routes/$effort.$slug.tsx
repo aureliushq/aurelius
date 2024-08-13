@@ -76,7 +76,7 @@ const ViewWriting = () => {
 				<h1
 					className={`font-extrabold leading-tight ${settings?.titleFont}`}
 				>
-					{writing?.title}
+					{writing?.title || 'Untitled'}
 				</h1>
 				<div
 					className={`leading-loose ${settings?.bodyFont}`}

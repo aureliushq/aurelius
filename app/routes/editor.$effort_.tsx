@@ -9,7 +9,7 @@ import {
 } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { NonEmptyString1000 } from '@evolu/common'
+import { String1000 } from '@evolu/common'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
@@ -62,7 +62,7 @@ export const clientAction = async ({
 		content: S.decodeSync(Content)(content),
 		effortId: effort.id,
 		slug: S.decodeSync(NonEmptyString100)(finalSlug),
-		title: S.decodeSync(NonEmptyString1000)(title),
+		title: S.decodeSync(String1000)(title),
 		wordCount: S.decodeSync(Int)(wordCount),
 	})
 

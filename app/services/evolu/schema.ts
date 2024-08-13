@@ -73,7 +73,7 @@ export const _Help = table({
 	id: HelpId,
 	content: Content,
 	slug: NonEmptyString100,
-	title: NonEmptyString1000,
+	title: String1000,
 	wordCount: Int,
 })
 export type HelpTable = typeof _Help.Type
@@ -84,7 +84,7 @@ export const Books = table({
 	author: S.NullOr(NonEmptyString1000),
 	effortId: WritingEffortId,
 	slug: NonEmptyString100,
-	title: NonEmptyString1000,
+	title: String1000,
 	type: EffortType,
 	wordCount: Int,
 })
@@ -95,7 +95,7 @@ export const Chapters = table({
 	bookId: BookId,
 	content: Content,
 	slug: NonEmptyString100,
-	title: NonEmptyString1000,
+	title: String1000,
 	wordCount: Int,
 })
 export type ChaptersTable = typeof Chapters.Type
@@ -106,7 +106,7 @@ export const Essays = table({
 	content: Content,
 	effortId: WritingEffortId,
 	slug: NonEmptyString100,
-	title: NonEmptyString1000,
+	title: String1000,
 	type: EffortType,
 	wordCount: Int,
 })
@@ -118,7 +118,7 @@ export const Journals = table({
 	content: Content,
 	effortId: WritingEffortId,
 	slug: NonEmptyString100,
-	title: NonEmptyString1000,
+	title: String1000,
 	type: EffortType,
 	wordCount: Int,
 })
@@ -130,7 +130,7 @@ export const Posts = table({
 	content: Content,
 	effortId: WritingEffortId,
 	slug: NonEmptyString100,
-	title: NonEmptyString1000,
+	title: String1000,
 	type: EffortType,
 	wordCount: Int,
 })

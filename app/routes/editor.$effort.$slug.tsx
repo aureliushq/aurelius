@@ -9,7 +9,7 @@ import {
 } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { ExtractRow, NonEmptyString1000, Query } from '@evolu/common'
+import { ExtractRow, Query, String1000 } from '@evolu/common'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { EditorData } from '~/lib/types'
@@ -73,7 +73,7 @@ export const clientAction = async ({
 
 		const data = {
 			content: S.decodeSync(Content)(content),
-			title: S.decodeSync(NonEmptyString1000)(title),
+			title: S.decodeSync(String1000)(title),
 			wordCount: S.decodeSync(Int)(wordCount),
 		} as ExtractRow<Query<EffortsTable>>
 
@@ -118,7 +118,7 @@ const Writing = () => {
 		<Editor
 			data={{
 				content: writing.content as string,
-				title: writing.title as string,
+				title: (writing?.title || '') as string,
 				wordCount: writing?.wordCount ?? 0,
 			}}
 			isSaving={isSaving}
