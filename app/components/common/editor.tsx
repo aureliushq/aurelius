@@ -146,7 +146,7 @@ const Editor = ({
 				width: 762,
 				height: 432,
 			}),
-			Link,
+			Link.configure({ openOnClick: false }),
 			Placeholder.configure({
 				placeholder: 'Start writing...',
 			}),

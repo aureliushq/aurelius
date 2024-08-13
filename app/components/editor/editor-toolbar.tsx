@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Editor } from '@tiptap/react'
 import {
@@ -10,6 +10,7 @@ import {
 	QuoteIcon,
 	UnderlineIcon,
 } from 'lucide-react'
+import LinkDialog from '~/components/editor/link-dialog'
 import {
 	Select,
 	SelectContent,
@@ -39,6 +40,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 	)
 	const [activeMarks, setActiveMarks] = useState<string[]>([])
 	const [activeNodes, setActiveNodes] = useState<string[]>([])
+	const [linkOpen, setLinkOpen] = useState<boolean>(false)
 
 	const handleEditorMarksChange = (values: string[]) => {
 		setActiveMarks(values)
@@ -64,8 +66,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 					editor?.chain().focus().toggleHighlight().run()
 					break
 				case EditorMarks.LINK:
-					// TODO: Implement link
-					console.log('link')
+					setLinkOpen(true)
 					break
 			}
 		}
@@ -110,6 +111,35 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 			}
 		}
 	}
+
+	const handleSetLink = useCallback(
+		(link: string) => {
+			console.log('link', link)
+			if (link === null) {
+				return
+			}
+
+			if (link === '') {
+				editor
+					?.chain()
+					.focus()
+					.extendMarkRange('link')
+					.unsetLink()
+					.run()
+				setLinkOpen(false)
+				return
+			}
+
+			editor
+				?.chain()
+				.focus()
+				.extendMarkRange('link')
+				.setLink({ href: link })
+				.run()
+			setLinkOpen(false)
+		},
+		[editor]
+	)
 
 	useEffect(() => {
 		if (editor) {
@@ -297,6 +327,12 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 					</Tooltip>
 				</ToggleGroup>
 			</Toolbar>
+			<LinkDialog
+				defaultValue={editor?.getAttributes('link').href}
+				handleSetLink={handleSetLink}
+				onOpenChange={setLinkOpen}
+				open={linkOpen}
+			/>
 		</>
 	)
 }
