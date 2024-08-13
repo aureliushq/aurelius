@@ -31,11 +31,9 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	}
 
 	return (
-		<Suspense fallback={<LoadingScreen />}>
-			<AureliusContext.Provider value={data}>
-				{children}
-			</AureliusContext.Provider>
-		</Suspense>
+		<AureliusContext.Provider value={data}>
+			{children}
+		</AureliusContext.Provider>
 	)
 }
 
