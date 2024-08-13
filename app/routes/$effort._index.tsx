@@ -87,7 +87,10 @@ const columns: ColumnDef<Writing>[] = [
 		accessorKey: 'actions',
 		cell: ({ row }) => (
 			<div className='flex items-center justify-end gap-2'>
-				<Link to={`/${row.original.effort}/${row.original.slug}`}>
+				<Link
+					prefetch='intent'
+					to={`/${row.original.effort}/${row.original.slug}`}
+				>
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<Button
@@ -102,6 +105,7 @@ const columns: ColumnDef<Writing>[] = [
 					</Tooltip>
 				</Link>
 				<Link
+					prefetch='intent'
 					to={`/editor/${row.original.effort}/${row.original.slug}`}
 				>
 					<Tooltip>

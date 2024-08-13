@@ -243,7 +243,11 @@ const SplashDialog = ({
 							<p className='leading-relaxed italic text-xs text-foreground'>
 								Note: All your data will be saved locally in the
 								browser.{' '}
-								<Link className='underline' to='/privacy'>
+								<Link
+									className='underline'
+									prefetch='intent'
+									to='/privacy'
+								>
 									Learn more
 								</Link>
 								.

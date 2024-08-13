@@ -31,6 +31,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 					<Separator />
 					<div className='flex items-center gap-2'>
 						<Link
+							prefetch='intent'
 							rel='noopener noreferrer'
 							target='_blank'
 							to='/help/getting-started'

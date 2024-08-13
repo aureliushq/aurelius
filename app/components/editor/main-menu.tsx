@@ -98,7 +98,7 @@ const MainMenu = ({
 									</span>
 								</DropdownMenuItem>
 								<DropdownMenuItem>
-									<Link to='/posts'>
+									<Link prefetch='intent' to='/posts'>
 										<span className='w-full h-full flex items-center justify-start cursor-pointer'>
 											<ListIcon className='mr-2 w-4 h-4' />
 											<span>View All Posts</span>
@@ -279,6 +279,7 @@ const MainMenu = ({
 					<DropdownMenuItem>
 						<Link
 							className='w-full h-full flex items-center justify-start cursor-pointer'
+							prefetch='intent'
 							to='/blog'
 						>
 							<PencilIcon className='mr-2 w-4 h-4' />
@@ -330,6 +331,7 @@ const MainMenu = ({
 					<DropdownMenuItem>
 						<Link
 							className='w-full h-full flex items-center justify-start cursor-pointer'
+							prefetch='intent'
 							to='/about'
 						>
 							<BadgeInfoIcon className='mr-2 w-4 h-4' />
@@ -339,6 +341,7 @@ const MainMenu = ({
 					<DropdownMenuItem>
 						<Link
 							className='w-full h-full flex items-center justify-start cursor-pointer'
+							prefetch='intent'
 							to='/privacy'
 						>
 							<ShieldIcon className='mr-2 w-4 h-4' />

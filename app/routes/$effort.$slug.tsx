@@ -64,8 +64,9 @@ const ViewWriting = () => {
 			{effort && (
 				<div className='flex justify-start mb-4 max-w-2xl mx-auto'>
 					<Link
-						to={`/${effort?.slug}`}
 						className='inline-flex items-center justify-center text-sm font-medium'
+						prefetch='intent'
+						to={`/${effort?.slug}`}
 					>
 						<ArrowLeftIcon className='mr-2 h-4 w-4' />
 						See all
