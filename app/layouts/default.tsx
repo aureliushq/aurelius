@@ -1,34 +1,38 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode, Suspense, useContext } from 'react'
 
-import { useNavigate } from '@remix-run/react'
-
+import PreferencesDialog from '~/components/common/preferences-dialog'
 import {
 	E2EEIndicator,
 	HelpButton,
 	HelpDialog,
 	MainMenu,
+	SplashDialog,
 } from '~/components/editor'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useKeyboardShortcuts } from '~/lib/hooks'
+import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 
 const DefaultLayout = ({ children }: { children: ReactNode }) => {
 	const shortcuts = {
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
 		[EditorShortcuts.MAIN_MENU]: () => setMainMenuOpen(!mainMenuOpen),
-		[EditorShortcuts.NEW_POST]: () => createNewPost(),
 	}
 
-	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
+	const {
+		helpOpen,
+		setHelpOpen,
+		mainMenuOpen,
+		setMainMenuOpen,
+		preferencesOpen,
+		handlePreferencesOpen,
+		settings,
+		splashOpen,
+		handleSplashOpen,
+		triggerGlobalShortcut,
+	} = useContext<AureliusProviderData>(AureliusContext)
 
-	const navigate = useNavigate()
-
-	const [helpOpen, setHelpOpen] = useState(false)
-	const [mainMenuOpen, setMainMenuOpen] = useState(false)
-
-	const createNewPost = () => {
-		navigate('/editor/post')
-	}
+	useKeyboardShortcuts(shortcuts)
 
 	return (
 		<>
@@ -38,7 +42,7 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 						<MainMenu
 							mainMenuOpen={mainMenuOpen}
 							setMainMenuOpen={setMainMenuOpen}
-							triggerShortcut={triggerShortcut}
+							triggerShortcut={triggerGlobalShortcut}
 						/>
 					</div>
 				</section>
@@ -50,10 +54,25 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 				<section className='w-screen fixed bottom-0 left-0 z-10'>
 					<div className='flex items-center justify-end p-4 gap-4'>
 						<E2EEIndicator />
-						<HelpButton triggerShortcut={triggerShortcut} />
+						<HelpButton triggerShortcut={triggerGlobalShortcut} />
 					</div>
 				</section>
 			</ScrollArea>
+			<Suspense>
+				<PreferencesDialog
+					preferencesOpen={preferencesOpen}
+					setPreferencesOpen={handlePreferencesOpen}
+					settings={settings}
+				/>
+			</Suspense>
+			<Suspense>
+				<SplashDialog
+					settings={settings}
+					setSplashOpen={handleSplashOpen}
+					splashOpen={splashOpen}
+					triggerShortcut={triggerGlobalShortcut}
+				/>
+			</Suspense>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />
 		</>
 	)
