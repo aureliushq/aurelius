@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import {
 	ColumnDef,
@@ -21,6 +21,7 @@ import {
 	TableRow,
 } from '~/components/ui/table'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
+import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import { useTheme } from '~/lib/providers/theme'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
@@ -39,6 +40,9 @@ export function DataTable<TData, TValue>({
 	data,
 	effort,
 }: DataTableProps<TData, TValue>) {
+	const { triggerGlobalShortcut } =
+		useContext<AureliusProviderData>(AureliusContext)
+
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [sorting, setSorting] = useState<SortingState>([])
 
@@ -75,7 +79,13 @@ export function DataTable<TData, TValue>({
 				/>
 				<div />
 				<div className='flex items-center justify-end'>
-					<Button className='gap-2' size='sm'>
+					<Button
+						className='gap-2'
+						onClick={() =>
+							triggerGlobalShortcut(EditorShortcuts.NEW_POST)
+						}
+						size='sm'
+					>
 						New Post
 						<KeyboardShortcut
 							keys={getShortcutWithModifiers(

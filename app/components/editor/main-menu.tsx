@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
-
 import { Link } from '@remix-run/react'
 
 import {
@@ -43,7 +41,7 @@ import { getShortcutWithModifiers } from '~/lib/utils'
 type MainMenuProps = {
 	focusMode?: boolean
 	mainMenuOpen: boolean
-	setMainMenuOpen: Dispatch<SetStateAction<boolean>>
+	setMainMenuOpen: (open: boolean) => void
 	triggerShortcut: (shortcutName: string) => void
 }
 
