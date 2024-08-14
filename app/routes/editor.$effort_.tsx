@@ -13,6 +13,7 @@ import { String1000 } from '@evolu/common'
 import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
+import { ROUTES } from '~/lib/constants'
 import { EditorData } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import { Arls, arls } from '~/services/arls'
@@ -93,7 +94,7 @@ const NewWriting = () => {
 	)
 
 	const onReset = () => {
-		navigate(`/editor/${effort.slug as string}`)
+		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
 
 	useEffect(() => {

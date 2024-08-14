@@ -4,6 +4,7 @@ import { Timer, useTimer } from 'react-use-precision-timer'
 import { useNavigate } from '@remix-run/react'
 
 import { useQuery } from '@evolu/react'
+import { ROUTES } from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
 import { EditorShortcuts } from '~/lib/types'
 import { SettingsRow, settingsQuery } from '~/services/evolu/client'
@@ -69,7 +70,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 	const createNewPost = () => {
 		handleSplashOpen(false)
-		navigate('/editor/posts')
+		navigate(ROUTES.EDITOR.NEW_POST)
 	}
 
 	const handlePreferencesOpen = (open: boolean) => {

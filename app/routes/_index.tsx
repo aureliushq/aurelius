@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
+import { ROUTES } from '~/lib/constants'
 import { arls } from '~/services/arls'
 import { NonEmptyString100 } from '~/services/evolu/schema'
 
@@ -19,7 +20,6 @@ export const clientLoader = async () => {
 }
 
 const Index = () => {
-	const fetcher = useFetcher()
 	const { writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 
@@ -39,22 +39,8 @@ const Index = () => {
 	}, [])
 
 	const onReset = () => {
-		navigate(`/editor/posts`)
+		navigate(ROUTES.EDITOR.NEW_POST)
 	}
-
-	useEffect(() => {
-		if (
-			fetcher.state === 'idle' &&
-			fetcher.data &&
-			// @ts-expect-error: BS error. It's there. Check how to type fetcher.data.
-			fetcher.data.message === 'ok' &&
-			// @ts-expect-error: BS error. It's there. Check how to type fetcher.data.
-			fetcher.data.redirectTo.trim() !== ''
-		) {
-			// @ts-expect-error: BS error. It's there. Check how to type fetcher.data.
-			navigate(fetcher.data.redirectTo)
-		}
-	}, [fetcher])
 
 	return (
 		<Editor

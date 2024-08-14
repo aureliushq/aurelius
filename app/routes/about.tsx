@@ -107,6 +107,35 @@ const About = () => {
 							</li>
 						</ul>
 					</div>
+					{/*<div className='flex w-full flex-col items-start gap-4 leading-loose text-white'>*/}
+					{/*	<span>*/}
+					{/*		And a special thanks to the following people for*/}
+					{/*		helping me test Aurelius and providing valuable*/}
+					{/*		feedback:*/}
+					{/*	</span>*/}
+					{/*	<ul>*/}
+					{/*		<li>*/}
+					{/*			<a*/}
+					{/*				href='https://www.instagram.com/reflex__god_/'*/}
+					{/*				target='_blank'*/}
+					{/*				rel='noreferrer'*/}
+					{/*				className='text-primary underline'*/}
+					{/*			>*/}
+					{/*				Sreenivasan*/}
+					{/*			</a>{' '}*/}
+					{/*		</li>*/}
+					{/*		<li>*/}
+					{/*			<a*/}
+					{/*				href='https://www.instagram.com/raj.rk98/'*/}
+					{/*				target='_blank'*/}
+					{/*				rel='noreferrer'*/}
+					{/*				className='text-primary underline'*/}
+					{/*			>*/}
+					{/*				Rajkumar*/}
+					{/*			</a>{' '}*/}
+					{/*		</li>*/}
+					{/*	</ul>*/}
+					{/*</div>*/}
 				</div>
 			</div>
 		</DefaultLayout>

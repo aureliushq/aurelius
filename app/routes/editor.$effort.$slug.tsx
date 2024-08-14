@@ -12,6 +12,7 @@ import * as S from '@effect/schema/Schema'
 import { ExtractRow, Query, String1000 } from '@evolu/common'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
+import { ROUTES } from '~/lib/constants'
 import { EditorData } from '~/lib/types'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
 import { EffortsTable } from '~/services/evolu/database'
@@ -111,7 +112,7 @@ const Writing = () => {
 	)
 
 	const onReset = () => {
-		navigate(`/editor/${effort.slug as string}`)
+		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
 
 	return (

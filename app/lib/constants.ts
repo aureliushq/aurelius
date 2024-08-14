@@ -102,3 +102,10 @@ export const ARLS_OPTIONS: SqliteQueryOptions = {
 	logExplainQueryPlan: true,
 	logQueryExecutionTime: true,
 }
+
+export const ROUTES = {
+	EDITOR: {
+		BASE: '/editor',
+		NEW_POST: '/editor/posts',
+	},
+}
