@@ -1,14 +1,5 @@
-import {
-	Suspense,
-	startTransition,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from 'react'
+import { Suspense, useContext, useEffect, useRef, useState } from 'react'
 import ReactPlayer from 'react-player'
-
-import { useNavigate } from '@remix-run/react'
 
 import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 import { CharacterCount } from '@tiptap/extension-character-count'
@@ -73,15 +64,8 @@ const Editor = ({
 		[EditorShortcuts.BLUR]: () => blurInputs(),
 		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
 		[EditorShortcuts.FORCE_SAVE]: () => forceSave(),
-		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
-		[EditorShortcuts.MAIN_MENU]: () => setMainMenuOpen(!mainMenuOpen),
-		[EditorShortcuts.NEW_POST]: () => createNewPost(),
-		[EditorShortcuts.PREFERENCES]: () =>
-			handlePreferencesOpen(!preferencesOpen),
 		[EditorShortcuts.RESET_EDITOR]: () =>
 			setResetEditorOpen(!resetEditorOpen),
-		[EditorShortcuts.SPLASH_DIALOG]: () =>
-			handleSplashDialogOpen(!splashOpen),
 		[EditorShortcuts.WRITING_SESSION]: () =>
 			setWritingSessionOpen(!writingSessionOpen),
 	}
@@ -96,25 +80,30 @@ const Editor = ({
 		debounce: 1000,
 	})
 
-	const { settings } = useContext<AureliusProviderData>(AureliusContext)
+	const {
+		helpOpen,
+		setHelpOpen,
+		mainMenuOpen,
+		setMainMenuOpen,
+		preferencesOpen,
+		handlePreferencesOpen,
+		splashOpen,
+		handleSplashOpen,
+		settings,
+		triggerGlobalShortcut,
+	} = useContext<AureliusProviderData>(AureliusContext)
 
-	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
-
-	const navigate = useNavigate()
+	useKeyboardShortcuts(shortcuts)
 
 	const titleRef = useRef<HTMLTextAreaElement>(null)
 	const wordCount = useRef<number>(data?.wordCount ?? 0)
 
 	const [focusMode, setFocusMode] = useState(false)
-	const [helpOpen, setHelpOpen] = useState(false)
 	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(
 		data.title.trim() === ''
 	)
-	const [mainMenuOpen, setMainMenuOpen] = useState(false)
-	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
-	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
 		useState<WritingSessionSettings>({
@@ -187,25 +176,8 @@ const Editor = ({
 		onReset?.()
 	}
 
-	const createNewPost = () => {
-		handleSplashDialogOpen(false)
-		navigate('/editor/posts')
-	}
-
 	const handleContentChange = (content: string) => {
 		setEditorData({ content })
-	}
-
-	const handlePreferencesOpen = (state: boolean) => {
-		startTransition(() => {
-			setPreferencesOpen(state)
-		})
-	}
-
-	const handleSplashDialogOpen = (state: boolean) => {
-		startTransition(() => {
-			setSplashOpen(state)
-		})
 	}
 
 	const handleTitleBlur = () => {
@@ -258,7 +230,7 @@ const Editor = ({
 							focusMode={focusMode}
 							mainMenuOpen={mainMenuOpen}
 							setMainMenuOpen={setMainMenuOpen}
-							triggerShortcut={triggerShortcut}
+							triggerShortcut={triggerGlobalShortcut}
 						/>
 						<Saving isSaving={isSaving} />
 					</div>
@@ -345,7 +317,7 @@ const Editor = ({
 					>
 						<span className='text-sm text-muted-foreground'>{`${wordCount.current} words`}</span>
 						<E2EEIndicator />
-						<HelpButton triggerShortcut={triggerShortcut} />
+						<HelpButton triggerShortcut={triggerGlobalShortcut} />
 					</div>
 				</section>
 				<Writer
@@ -374,9 +346,9 @@ const Editor = ({
 			<Suspense>
 				<SplashDialog
 					settings={settings}
-					setSplashOpen={handleSplashDialogOpen}
+					setSplashOpen={handleSplashOpen}
 					splashOpen={splashOpen}
-					triggerShortcut={triggerShortcut}
+					triggerShortcut={triggerGlobalShortcut}
 				/>
 			</Suspense>
 		</>
