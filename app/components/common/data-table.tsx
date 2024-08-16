@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 import {
 	ColumnDef,
@@ -10,7 +10,6 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table'
-import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import {
 	Table,
@@ -20,29 +19,21 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table'
-import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import { useTheme } from '~/lib/providers/theme'
-import { EditorShortcuts } from '~/lib/types'
-import { getShortcutWithModifiers } from '~/lib/utils'
-import { WritingEffortsTable } from '~/services/evolu/schema'
-
-import KeyboardShortcut from '../editor/keyboard-shortcut'
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
-	effort: WritingEffortsTable
+	newButton?: ReactNode
+	search?: { placeholder?: string; show?: boolean; value?: string }
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
-	effort,
+	newButton,
+	search = { placeholder: 'Search', show: true },
 }: DataTableProps<TData, TValue>) {
-	const { triggerGlobalShortcut } =
-		useContext<AureliusProviderData>(AureliusContext)
-
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [sorting, setSorting] = useState<SortingState>([])
 
@@ -63,39 +54,31 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<>
-			<div className='flex w-full grid grid-cols-3 gap-4 text-white mb-4'>
-				<Input
-					onChange={(event) =>
-						table
-							.getColumn('title')
-							?.setFilterValue(event.target.value)
-					}
-					placeholder={`Search ${effort.name}`}
-					value={
-						(table
-							.getColumn('title')
-							?.getFilterValue() as string) || ''
-					}
-				/>
-				<div />
-				<div className='flex items-center justify-end'>
-					<Button
-						className='gap-2'
-						onClick={() =>
-							triggerGlobalShortcut(EditorShortcuts.NEW_POST)
-						}
-						size='sm'
-					>
-						New Post
-						<KeyboardShortcut
-							keys={getShortcutWithModifiers(
-								allShortcuts[EditorShortcuts.NEW_POST].key,
-								allShortcuts[EditorShortcuts.NEW_POST].modifiers
-							)}
+			{(search?.show || newButton) && (
+				<div className='flex w-full grid grid-cols-3 gap-4 text-white mb-4'>
+					{search?.show && (
+						<Input
+							onChange={(event) =>
+								table
+									.getColumn('title')
+									?.setFilterValue(event.target.value)
+							}
+							placeholder={search.placeholder}
+							value={
+								(table
+									.getColumn('title')
+									?.getFilterValue() as string) || ''
+							}
 						/>
-					</Button>
+					)}
+					<div />
+					{newButton && (
+						<div className='flex items-center justify-end'>
+							{newButton}
+						</div>
+					)}
 				</div>
-			</div>
+			)}
 			<div className='rounded-lg border border-border'>
 				<Table>
 					<TableHeader>
@@ -117,9 +100,9 @@ export function DataTable<TData, TValue>({
 							</TableRow>
 						))}
 					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
+					{table.getRowModel().rows?.length > 0 && (
+						<TableBody>
+							{table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
 									data-state={
@@ -135,24 +118,27 @@ export function DataTable<TData, TValue>({
 										</TableCell>
 									))}
 								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className='p-16 flex items-center justify-center flex-col gap-4'
-								>
-									<img
-										className={`w-64 h-64 ${theme === 'dark' ? 'invert' : ''}`}
-										src='/images/no-data.svg'
-									/>
-									Nothing here yet! Waiting for you to bring
-									your ideas to life.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
+							))}
+						</TableBody>
+					)}
 				</Table>
+				{table.getRowModel().rows?.length === 0 && (
+					<div className='w-full p-16 flex items-center justify-center flex-col gap-4 text-muted-foreground'>
+						{theme === 'dark' ? (
+							<img
+								className={`w-64 h-64 invert`}
+								src={'/images/no-data-dark.svg'}
+							/>
+						) : (
+							<img
+								className={`w-64 h-64`}
+								src={'/images/no-data-light.svg'}
+							/>
+						)}
+						Nothing here yet! Waiting for you to bring your ideas to
+						life.
+					</div>
+				)}
 			</div>
 		</>
 	)
