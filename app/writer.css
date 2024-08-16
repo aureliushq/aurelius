@@ -45,7 +45,7 @@
 .viewer li,
 .ProseMirror ul,
 .ProseMirror ol {
-	@apply !max-w-3xl !py-0 !px-4;
+	@apply !max-w-3xl !px-4 !py-0;
 }
 
 .viewer ul,
@@ -90,7 +90,7 @@
 
 .viewer h2,
 .ProseMirror h2 {
-	@apply !py-3 !px-0;
+	@apply !px-0 !py-3;
 	/*    @apply max-w-3xl;*/
 	/*    font-size: 2.3rem;*/
 	/*margin: 0.75rem 0;*/
@@ -105,7 +105,7 @@
 
 .viewer pre,
 .ProseMirror pre {
-	@apply !max-w-3xl !rounded-lg !bg-[#d5d6db] dark:!bg-[#1a1b26] !py-3 !py-4;
+	@apply !max-w-3xl !rounded-lg !bg-[#d5d6db] !py-3 !py-4 dark:!bg-[#1a1b26];
 	/* background: #0d0d0d; */
 	font-family: 'JetBrainsMono', monospace !important;
 	/*padding: 0.75rem 1rem;*/
@@ -113,7 +113,7 @@
 
 .viewer pre code,
 .ProseMirror pre code {
-	@apply !max-w-3xl !text-[#565a6e] dark:!text-[#9aa5ce] !p-0 !bg-none !text-[0.8rem];
+	@apply !max-w-3xl !bg-none !p-0 !text-[0.8rem] !text-[#565a6e] dark:!text-[#9aa5ce];
 }
 
 .viewer p code,
