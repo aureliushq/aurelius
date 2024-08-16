@@ -63,6 +63,16 @@ const allShortcuts: AllShortcuts = {
 		key: 's',
 		modifiers: {},
 	},
+	[EditorShortcuts.VIEW_ALL_POSTS]: {
+		description: 'View All Posts',
+		key: 'p',
+		modifiers: { alt: true },
+	},
+	[EditorShortcuts.VIEW_ALL_WRITING_SESSIONS]: {
+		description: 'View All Writing Sessions',
+		key: 'w',
+		modifiers: { alt: true },
+	},
 	[EditorShortcuts.WRITING_SESSION]: {
 		description: 'New Writing Session',
 		key: 't',

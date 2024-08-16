@@ -83,6 +83,8 @@ export enum EditorShortcuts {
 	PREFERENCES = 'preferences',
 	RESET_EDITOR = 'resetEditor',
 	SPLASH_DIALOG = 'splashDialog',
+	VIEW_ALL_POSTS = 'viewAllPosts',
+	VIEW_ALL_WRITING_SESSIONS = 'viewAllWritingSessions',
 	WRITING_SESSION = 'writingSession',
 }
 
