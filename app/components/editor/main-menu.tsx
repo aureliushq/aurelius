@@ -34,6 +34,7 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
+import { ROUTES } from '~/lib/constants'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
@@ -147,12 +148,17 @@ const MainMenu = ({
 								{/*		<span>Resume Previous Session</span>*/}
 								{/*	</span>*/}
 								{/*</DropdownMenuItem>*/}
-								{/*<DropdownMenuItem>*/}
-								{/*	<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
-								{/*		<ListIcon className='mr-2 w-4 h-4' />*/}
-								{/*		<span>View All Sessions</span>*/}
-								{/*	</span>*/}
-								{/*</DropdownMenuItem>*/}
+								<DropdownMenuItem>
+									<Link
+										prefetch='intent'
+										to={ROUTES.VIEW.WRITING_SESSIONS}
+									>
+										<span className='w-full h-full flex items-center justify-start cursor-pointer'>
+											<ListIcon className='mr-2 w-4 h-4' />
+											<span>View All Sessions</span>
+										</span>
+									</Link>
+								</DropdownMenuItem>
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>
 					</DropdownMenuSub>

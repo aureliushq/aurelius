@@ -108,4 +108,8 @@ export const ROUTES = {
 		BASE: '/editor',
 		NEW_POST: '/editor/posts',
 	},
+	VIEW: {
+		POSTS: '/posts',
+		WRITING_SESSIONS: '/sessions',
+	},
 }
