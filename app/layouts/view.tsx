@@ -11,7 +11,7 @@ import {
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 
-const EffortLayout = ({ children }: { children: ReactNode }) => {
+const ViewLayout = ({ children }: { children: ReactNode }) => {
 	const {
 		helpOpen,
 		setHelpOpen,
@@ -69,4 +69,4 @@ const EffortLayout = ({ children }: { children: ReactNode }) => {
 	)
 }
 
-export default EffortLayout
+export default ViewLayout

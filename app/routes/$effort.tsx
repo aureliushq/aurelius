@@ -1,12 +1,12 @@
 import { Outlet } from '@remix-run/react'
 
-import EffortLayout from '~/layouts/effort'
+import ViewLayout from '~/layouts/view'
 
 const EffortRoot = () => {
 	return (
-		<EffortLayout>
+		<ViewLayout>
 			<Outlet />
-		</EffortLayout>
+		</ViewLayout>
 	)
 }
 
