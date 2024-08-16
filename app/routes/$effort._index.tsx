@@ -1,3 +1,5 @@
+import { useContext } from 'react'
+
 import { ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
@@ -6,12 +8,17 @@ import { formatDistanceToNow } from 'date-fns'
 import { ChevronDown, ChevronUp, EyeIcon, PencilIcon } from 'lucide-react'
 import invariant from 'tiny-invariant'
 import { DataTable } from '~/components/common/data-table'
+import KeyboardShortcut from '~/components/editor/keyboard-shortcut'
 import { Button } from '~/components/ui/button'
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
+import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
+import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
+import { EditorShortcuts } from '~/lib/types'
+import { getShortcutWithModifiers } from '~/lib/utils'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
 import { EffortsTable } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
@@ -128,6 +135,9 @@ const columns: ColumnDef<Writing>[] = [
 ]
 
 const EffortHome = () => {
+	const { triggerGlobalShortcut } =
+		useContext<AureliusProviderData>(AureliusContext)
+
 	const { effort, writings } = useLoaderData<typeof clientLoader>()
 
 	const data = writings.map((writing) => ({
@@ -142,7 +152,28 @@ const EffortHome = () => {
 			<div className='prose dark:prose-invert max-w-none flex w-full flex items-center justify-between text-white'>
 				<h1 className='mb-4 text-center'>{effort.name}</h1>
 			</div>
-			<DataTable columns={columns} data={data} effort={effort} />
+			<DataTable
+				columns={columns}
+				data={data}
+				newButton={
+					<Button
+						className='gap-2'
+						onClick={() =>
+							triggerGlobalShortcut(EditorShortcuts.NEW_POST)
+						}
+						size='sm'
+					>
+						New Post
+						<KeyboardShortcut
+							keys={getShortcutWithModifiers(
+								allShortcuts[EditorShortcuts.NEW_POST].key,
+								allShortcuts[EditorShortcuts.NEW_POST].modifiers
+							)}
+						/>
+					</Button>
+				}
+				search={{ placeholder: 'Search Posts', show: true }}
+			/>
 		</>
 	)
 }
