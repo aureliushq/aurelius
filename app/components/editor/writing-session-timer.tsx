@@ -90,8 +90,8 @@ type WritingSessionTimerProps = {
 	isMusicPlaying: boolean
 	setFocusMode: Dispatch<SetStateAction<boolean>>
 	setIsMusicPlaying: Dispatch<SetStateAction<boolean>>
-	setWritingSessionSettings: Dispatch<SetStateAction<WritingSessionSettings>>
-	setWritingSessionStatus: Dispatch<SetStateAction<WritingSessionStatus>>
+	setWritingSessionSettings: (settings: WritingSessionSettings) => void
+	setWritingSessionStatus: (status: WritingSessionStatus) => void
 	wordCount: number
 	writingSessionSettings: WritingSessionSettings
 } & WritingSessionDialogProps

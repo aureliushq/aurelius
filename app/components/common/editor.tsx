@@ -39,7 +39,6 @@ import {
 	EditorShortcuts,
 	EditorToolbarMode,
 	MusicChannels,
-	WritingSessionSettings,
 	WritingSessionStatus,
 } from '~/lib/types'
 
@@ -66,8 +65,6 @@ const Editor = ({
 		[EditorShortcuts.FORCE_SAVE]: () => forceSave(),
 		[EditorShortcuts.RESET_EDITOR]: () =>
 			setResetEditorOpen(!resetEditorOpen),
-		[EditorShortcuts.WRITING_SESSION]: () =>
-			setWritingSessionOpen(!writingSessionOpen),
 	}
 
 	const [editorData, setEditorData, forceSave] = useAutoSave({
@@ -91,6 +88,12 @@ const Editor = ({
 		handleSplashOpen,
 		settings,
 		triggerGlobalShortcut,
+		writingSessionOpen,
+		setWritingSessionOpen,
+		writingSessionSettings,
+		setWritingSessionSettings,
+		writingSessionStatus,
+		setWritingSessionStatus,
 	} = useContext<AureliusProviderData>(AureliusContext)
 
 	useKeyboardShortcuts(shortcuts)
@@ -104,16 +107,6 @@ const Editor = ({
 		data.title.trim() === ''
 	)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
-	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
-	const [writingSessionSettings, setWritingSessionSettings] =
-		useState<WritingSessionSettings>({
-			targetDuration: 30,
-			focusMode: true,
-			music: !!settings?.enableMusicPlayer,
-			notifyOnTargetDuration: true,
-		})
-	const [writingSessionStatus, setWritingSessionStatus] =
-		useState<WritingSessionStatus>(WritingSessionStatus.NOT_STARTED)
 
 	const editor = useEditor({
 		content: editorData.content,

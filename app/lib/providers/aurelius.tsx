@@ -6,7 +6,11 @@ import { useNavigate } from '@remix-run/react'
 import { useQuery } from '@evolu/react'
 import { ROUTES } from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
-import { EditorShortcuts } from '~/lib/types'
+import {
+	EditorShortcuts,
+	WritingSessionSettings,
+	WritingSessionStatus,
+} from '~/lib/types'
 import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 
 export type AureliusProviderData = {
@@ -21,6 +25,12 @@ export type AureliusProviderData = {
 	sessionTimer: Timer
 	settings: SettingsRow
 	triggerGlobalShortcut: (shortcutName: string) => void
+	writingSessionOpen: boolean
+	setWritingSessionOpen: (open: boolean) => void
+	writingSessionSettings: WritingSessionSettings
+	setWritingSessionSettings: (settings: WritingSessionSettings) => void
+	writingSessionStatus: WritingSessionStatus
+	setWritingSessionStatus: (status: WritingSessionStatus) => void
 }
 
 export const AureliusContext = createContext<AureliusProviderData>({
@@ -37,6 +47,13 @@ export const AureliusContext = createContext<AureliusProviderData>({
 	// @ts-expect-error: tradeoff between having this comment in multiple places or one place
 	settings: null,
 	triggerGlobalShortcut: (shortcutName: string) => {},
+	writingSessionOpen: false,
+	setWritingSessionOpen: (open: boolean) => {},
+	// @ts-expect-error: tradeoff between having this comment in multiple places or one place
+	writingSessionSettings: null,
+	setWritingSessionSettings: (settings: WritingSessionSettings) => {},
+	writingSessionStatus: WritingSessionStatus.NOT_STARTED,
+	setWritingSessionStatus: (status: WritingSessionStatus) => {},
 })
 
 type AureliusProviderProps = {
@@ -51,6 +68,11 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		[EditorShortcuts.PREFERENCES]: () =>
 			handlePreferencesOpen(!preferencesOpen),
 		[EditorShortcuts.SPLASH_DIALOG]: () => handleSplashOpen(!splashOpen),
+		[EditorShortcuts.VIEW_ALL_POSTS]: () => viewAllPosts(),
+		[EditorShortcuts.VIEW_ALL_WRITING_SESSIONS]: () =>
+			viewAllWritingSessions(),
+		[EditorShortcuts.WRITING_SESSION]: () =>
+			setWritingSessionOpen(!writingSessionOpen),
 	}
 
 	const { triggerShortcut: triggerGlobalShortcut } =
@@ -65,6 +87,16 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
+	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
+	const [writingSessionSettings, setWritingSessionSettings] =
+		useState<WritingSessionSettings>({
+			targetDuration: 30,
+			focusMode: true,
+			music: !!settings?.enableMusicPlayer,
+			notifyOnTargetDuration: true,
+		})
+	const [writingSessionStatus, setWritingSessionStatus] =
+		useState<WritingSessionStatus>(WritingSessionStatus.NOT_STARTED)
 
 	const sessionTimer = useTimer()
 
@@ -85,6 +117,14 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		})
 	}
 
+	const viewAllPosts = () => {
+		navigate(ROUTES.VIEW.POSTS)
+	}
+
+	const viewAllWritingSessions = () => {
+		navigate(ROUTES.VIEW.WRITING_SESSIONS)
+	}
+
 	const data: AureliusProviderData = {
 		helpOpen,
 		setHelpOpen,
@@ -97,6 +137,12 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		sessionTimer,
 		settings,
 		triggerGlobalShortcut,
+		writingSessionOpen,
+		setWritingSessionOpen,
+		writingSessionSettings,
+		setWritingSessionSettings,
+		writingSessionStatus,
+		setWritingSessionStatus,
 	}
 
 	return (
