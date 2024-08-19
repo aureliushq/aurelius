@@ -735,7 +735,7 @@ const Advanced = () => {
 
 	const confirmDelete = () => {
 		toast({
-			title: 'Your data has been deleted',
+			title: 'Your data is being deleted',
 			description:
 				'You can now start fresh with Aurelius! If you want to recover your data, you can import data from another device using sync.',
 		})
