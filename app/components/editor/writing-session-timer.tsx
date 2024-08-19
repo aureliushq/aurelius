@@ -49,7 +49,7 @@ import {
 } from '~/lib/types'
 import { formatTime } from '~/lib/utils'
 import { arls } from '~/services/arls'
-import { WordCount } from '~/services/evolu/schema'
+import { ContentId, WordCount, WritingEffortId } from '~/services/evolu/schema'
 
 const HelpTooltip = ({ children }: { children: string | ReactNode }) => {
 	return (
@@ -109,7 +109,8 @@ const WritingSessionTimer = ({
 	writingSessionOpen,
 	writingSessionSettings,
 }: WritingSessionTimerProps) => {
-	const { sessionTimer } = useContext<AureliusProviderData>(AureliusContext)
+	const { contentId, effortId, sessionTimer } =
+		useContext<AureliusProviderData>(AureliusContext)
 
 	const [elapsedMinutes, setElapsedMinutes] = useState(0)
 	const [startingWordCount, setStartingWordCount] = useState(wordCount)
@@ -174,7 +175,9 @@ const WritingSessionTimer = ({
 			setIsMusicPlaying(false)
 		}
 		arls.writingSessions.create({
+			contentId: S.decodeSync(ContentId)(contentId),
 			duration: S.decodeSync(PositiveInt)(duration),
+			effortId: S.decodeSync(WritingEffortId)(effortId),
 			endingWordCount: S.decodeSync(WordCount)(wordCount),
 			startingWordCount: S.decodeSync(WordCount)(startingWordCount),
 		})
