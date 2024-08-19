@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
 	ClientActionFunctionArgs,
@@ -13,6 +13,7 @@ import { ExtractRow, Query, String1000 } from '@evolu/common'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { ROUTES } from '~/lib/constants'
+import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import { EditorData } from '~/lib/types'
 import { Arls, TableQueryBuilder, arls } from '~/services/arls'
 import { EffortsTable } from '~/services/evolu/database'
@@ -89,6 +90,8 @@ export const clientAction = async ({
 }
 
 const Writing = () => {
+	const { setContentId } = useContext<AureliusProviderData>(AureliusContext)
+
 	const fetcher = useFetcher()
 	const { effort, writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
@@ -114,6 +117,12 @@ const Writing = () => {
 	const onReset = () => {
 		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
+
+	useEffect(() => {
+		if (writing) {
+			setContentId(writing.id)
+		}
+	}, [])
 
 	return (
 		<Editor

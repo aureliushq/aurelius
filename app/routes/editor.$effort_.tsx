@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
 	ClientActionFunctionArgs,
@@ -14,6 +14,7 @@ import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { ROUTES } from '~/lib/constants'
+import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import { EditorData } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import { Arls, arls } from '~/services/arls'
@@ -71,6 +72,8 @@ export const clientAction = async ({
 }
 
 const NewWriting = () => {
+	const { setEffortId } = useContext<AureliusProviderData>(AureliusContext)
+
 	const fetcher = useFetcher()
 	const { effort } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
@@ -96,6 +99,12 @@ const NewWriting = () => {
 	const onReset = () => {
 		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
+
+	useEffect(() => {
+		if (effort) {
+			setEffortId(effort.id)
+		}
+	}, [effort])
 
 	useEffect(() => {
 		if (

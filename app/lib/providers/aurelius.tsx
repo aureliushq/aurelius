@@ -14,6 +14,10 @@ import {
 import { SettingsRow, settingsQuery } from '~/services/evolu/client'
 
 export type AureliusProviderData = {
+	contentId: string
+	setContentId: (id: string) => void
+	effortId: string
+	setEffortId: (id: string) => void
 	helpOpen: boolean
 	setHelpOpen: (open: boolean) => void
 	mainMenuOpen: boolean
@@ -34,6 +38,10 @@ export type AureliusProviderData = {
 }
 
 export const AureliusContext = createContext<AureliusProviderData>({
+	contentId: '',
+	setContentId: () => {},
+	effortId: '',
+	setEffortId: () => {},
 	helpOpen: false,
 	setHelpOpen: () => {},
 	mainMenuOpen: false,
@@ -83,6 +91,8 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const { rows } = useQuery(settingsQuery)
 	const settings = rows[0]
 
+	const [contentId, setContentId] = useState<string>('')
+	const [effortId, setEffortId] = useState<string>('')
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
@@ -126,6 +136,10 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	}
 
 	const data: AureliusProviderData = {
+		contentId,
+		setContentId,
+		effortId,
+		setEffortId,
 		helpOpen,
 		setHelpOpen,
 		mainMenuOpen,
