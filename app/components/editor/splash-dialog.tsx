@@ -7,8 +7,6 @@ import {
 	CircleHelpIcon,
 	FileTextIcon,
 	ListIcon,
-	PencilIcon,
-	RefreshCcwIcon,
 	SettingsIcon,
 	TimerIcon,
 } from 'lucide-react'
@@ -113,17 +111,20 @@ const SplashDialog = ({
 						/>
 					</div>
 					<div className='grid grid-cols-2 w-full min-h-[20rem] h-auto flex-1 flex-grow py-8 pl-8 pr-4 gap-x-12 gap-y-4'>
+						{/*<div className='col-span-2 flex items-center'>*/}
+						{/*	<Input placeholder='Search Posts' />*/}
+						{/*</div>*/}
 						<div className='col-span-1 py-2 flex flex-col'>
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
-								Getting Started
+								New Content
 							</h3>
-							<ul className='text-sm flex flex-col gap-2'>
+							<ul className='text-sm flex flex-col gap-1'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
 										icon={
 											<FileTextIcon className='mr-2 w-4 h-4' />
 										}
-										label='New Post'
+										label='Start New Post'
 										onClick={() =>
 											triggerShortcut(
 												EditorShortcuts.NEW_POST
@@ -144,7 +145,7 @@ const SplashDialog = ({
 										icon={
 											<TimerIcon className='mr-2 w-4 h-4' />
 										}
-										label='New Writing Session'
+										label='Start a Writing Session'
 										onClick={() =>
 											triggerShortcut(
 												EditorShortcuts.WRITING_SESSION
@@ -160,13 +161,28 @@ const SplashDialog = ({
 										)}
 									/>
 								</li>
+							</ul>
+						</div>
+						<div className='col-span-1 py-2 flex flex-col'>
+							<h3 className='text-sm font-semibold text-foreground mb-4'>
+								Manage Content
+							</h3>
+							<ul className='w-full text-sm flex flex-col gap-1'>
+								{/*<li className='w-full flex items-center justify-between'>*/}
+								{/*	<SplashDialogButton*/}
+								{/*		icon={*/}
+								{/*			<PencilIcon className='mr-2 w-4 h-4' />*/}
+								{/*		}*/}
+								{/*		label='Resume Recent Post'*/}
+								{/*	/>*/}
+								{/*</li>*/}
 								<li className='w-full flex items-center justify-between'>
 									<Link className='w-full' to='/dashboard'>
 										<SplashDialogButton
 											icon={
 												<ListIcon className='mr-2 w-4 h-4' />
 											}
-											label='See all posts'
+											label='View All Posts'
 											onClick={() =>
 												triggerShortcut(
 													EditorShortcuts.VIEW_ALL_POSTS
@@ -188,22 +204,7 @@ const SplashDialog = ({
 							</ul>
 						</div>
 						<div className='col-span-1 py-2 flex flex-col'>
-							<h3 className='text-sm font-semibold text-foreground mb-4'>
-								Continue
-							</h3>
-							<ul className='w-full text-sm flex flex-col gap-2'>
-								<li className='w-full flex items-center justify-between'>
-									<SplashDialogButton
-										icon={
-											<PencilIcon className='mr-2 w-4 h-4' />
-										}
-										label='Continue Writing'
-									/>
-								</li>
-							</ul>
-						</div>
-						<div className='col-span-1 py-2 flex flex-col'>
-							<ul className='text-sm flex flex-col gap-2'>
+							<ul className='text-sm flex flex-col gap-1'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
 										icon={
@@ -225,10 +226,6 @@ const SplashDialog = ({
 										)}
 									/>
 								</li>
-							</ul>
-						</div>
-						<div className='col-span-1 py-2 flex flex-col'>
-							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
 										icon={
@@ -252,7 +249,7 @@ const SplashDialog = ({
 						</div>
 						<div className='col-span-1' />
 						<div className='col-span-2 flex flex-col'>
-							<p className='leading-relaxed italic text-xs text-foreground'>
+							<p className='leading-relaxed italic text-sm text-foreground'>
 								Note: All your data will be saved locally in the
 								browser.{' '}
 								<Link
