@@ -52,12 +52,8 @@ export type JournalId = typeof JournalId.Type
 export const PostId = id('Posts')
 export type PostId = typeof PostId.Type
 
-enum ContentId {
-	BookId,
-	EssayId,
-	JournalId,
-	PostId,
-}
+export const ContentId = ChapterId || EssayId || JournalId || PostId
+export type ContentId = typeof ContentId.Type
 
 const SettingsId = id('Settings')
 export type SettingsId = typeof SettingsId.Type
@@ -166,7 +162,7 @@ export type WritingEffortsTable = typeof WritingEfforts.Type
 
 export const WritingSessions = table({
 	id: WritingSessionId,
-	contentId: S.Enums(ContentId),
+	contentId: ContentId,
 	duration: PositiveInt,
 	effortId: WritingEffortId,
 	endingWordCount: WordCount,
