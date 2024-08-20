@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode } from 'react'
+import { FormEvent, ReactNode, useState } from 'react'
 
 import { Form, Link } from '@remix-run/react'
 
@@ -21,6 +21,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '~/components/ui/dialog'
+import { ROUTES } from '~/lib/constants'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
@@ -29,12 +30,14 @@ import { SettingsRow } from '~/services/evolu/client'
 
 const SplashDialogButton = ({
 	badge,
+	description,
 	icon,
 	label,
 	onClick,
 	shortcut,
 }: {
 	badge?: string
+	description?: string
 	icon: ReactNode
 	label: string
 	onClick?: (...args: unknown[]) => void
@@ -42,18 +45,25 @@ const SplashDialogButton = ({
 }) => {
 	return (
 		<Button
-			className='w-[calc(100%+1rem)] justify-between -ml-4'
+			className='w-[calc(100%+1rem)] h-12 justify-between -ml-4'
 			onClick={onClick}
 			variant='ghost'
 		>
-			<span className='inline-flex items-center'>
-				{icon}
-				{label}
-				{badge && (
-					<Badge className='ml-2' variant='outline'>
-						{badge}
-					</Badge>
-				)}
+			<span className='inline-flex flex-col items-start gap-1'>
+				<span className='inline-flex items-center'>
+					{icon}
+					{label}
+					{badge && (
+						<Badge className='ml-2' variant='outline'>
+							{badge}
+						</Badge>
+					)}
+				</span>
+				{description ? (
+					<span className='inline-flex flex-wrap pl-6 text-xs italic'>
+						{description}
+					</span>
+				) : null}
 			</span>
 			{shortcut ? <KeyboardShortcut keys={shortcut} /> : null}
 		</Button>
@@ -116,15 +126,16 @@ const SplashDialog = ({
 						{/*</div>*/}
 						<div className='col-span-1 py-2 flex flex-col'>
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
-								New Content
+								Create
 							</h3>
-							<ul className='text-sm flex flex-col gap-1'>
+							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
+										description='Begin a new post from scratch'
 										icon={
 											<FileTextIcon className='mr-2 w-4 h-4' />
 										}
-										label='Start New Post'
+										label='Start a New Post'
 										onClick={() =>
 											triggerShortcut(
 												EditorShortcuts.NEW_POST
@@ -142,6 +153,7 @@ const SplashDialog = ({
 								</li>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
+										description='Set a timer and focus on your writing'
 										icon={
 											<TimerIcon className='mr-2 w-4 h-4' />
 										}
@@ -163,22 +175,59 @@ const SplashDialog = ({
 								</li>
 							</ul>
 						</div>
+						{/*<div className='col-span-1 py-2 flex flex-col'>*/}
+						{/*	<h3 className='text-sm font-semibold text-foreground mb-4'>*/}
+						{/*		Resume*/}
+						{/*	</h3>*/}
+						{/*	<ul className='w-full text-sm flex flex-col gap-2'>*/}
+						{/*		<li className='w-full flex items-center justify-between'>*/}
+						{/*			<SplashDialogButton*/}
+						{/*				icon={*/}
+						{/*					<PencilIcon className='mr-2 w-4 h-4' />*/}
+						{/*				}*/}
+						{/*				label='Resume Recent Post'*/}
+						{/*			/>*/}
+						{/*		</li>*/}
+						{/*		<li className='w-full flex items-center justify-between'>*/}
+						{/*			<Link className='w-full' to='/dashboard'>*/}
+						{/*				<SplashDialogButton*/}
+						{/*					description='Browse & manage your existing posts'*/}
+						{/*					icon={*/}
+						{/*						<ListIcon className='mr-2 w-4 h-4' />*/}
+						{/*					}*/}
+						{/*					label='View All Posts'*/}
+						{/*					onClick={() =>*/}
+						{/*						triggerShortcut(*/}
+						{/*							EditorShortcuts.VIEW_ALL_POSTS*/}
+						{/*						)*/}
+						{/*					}*/}
+						{/*					shortcut={getShortcutWithModifiers(*/}
+						{/*						allShortcuts[*/}
+						{/*							EditorShortcuts*/}
+						{/*								.VIEW_ALL_POSTS*/}
+						{/*						].key,*/}
+						{/*						allShortcuts[*/}
+						{/*							EditorShortcuts*/}
+						{/*								.VIEW_ALL_POSTS*/}
+						{/*						].modifiers*/}
+						{/*					)}*/}
+						{/*				/>*/}
+						{/*			</Link>*/}
+						{/*		</li>*/}
+						{/*	</ul>*/}
+						{/*</div>*/}
 						<div className='col-span-1 py-2 flex flex-col'>
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
-								Manage Content
+								Explore
 							</h3>
-							<ul className='w-full text-sm flex flex-col gap-1'>
-								{/*<li className='w-full flex items-center justify-between'>*/}
-								{/*	<SplashDialogButton*/}
-								{/*		icon={*/}
-								{/*			<PencilIcon className='mr-2 w-4 h-4' />*/}
-								{/*		}*/}
-								{/*		label='Resume Recent Post'*/}
-								{/*	/>*/}
-								{/*</li>*/}
+							<ul className='w-full text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
-									<Link className='w-full' to='/dashboard'>
+									<Link
+										className='w-full'
+										to={ROUTES.VIEW.POSTS}
+									>
 										<SplashDialogButton
+											description='Browse & manage your existing posts'
 											icon={
 												<ListIcon className='mr-2 w-4 h-4' />
 											}
@@ -201,12 +250,45 @@ const SplashDialog = ({
 										/>
 									</Link>
 								</li>
+								<li className='w-full flex items-center justify-between'>
+									<Link
+										className='w-full'
+										to={ROUTES.VIEW.WRITING_SESSIONS}
+									>
+										<SplashDialogButton
+											description='Browse your past writing sessions'
+											icon={
+												<ListIcon className='mr-2 w-4 h-4' />
+											}
+											label='View All Writing Sessions'
+											onClick={() =>
+												triggerShortcut(
+													EditorShortcuts.VIEW_ALL_WRITING_SESSIONS
+												)
+											}
+											shortcut={getShortcutWithModifiers(
+												allShortcuts[
+													EditorShortcuts
+														.VIEW_ALL_WRITING_SESSIONS
+												].key,
+												allShortcuts[
+													EditorShortcuts
+														.VIEW_ALL_WRITING_SESSIONS
+												].modifiers
+											)}
+										/>
+									</Link>
+								</li>
 							</ul>
 						</div>
 						<div className='col-span-1 py-2 flex flex-col'>
-							<ul className='text-sm flex flex-col gap-1'>
+							{/*<h3 className='text-sm font-semibold text-foreground mb-4'>*/}
+							{/*	Explore*/}
+							{/*</h3>*/}
+							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
+										description='Customize your writing environment'
 										icon={
 											<SettingsIcon className='mr-2 w-4 h-4' />
 										}
@@ -228,10 +310,11 @@ const SplashDialog = ({
 								</li>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
+										description='Find guides, shortcuts, and more'
 										icon={
 											<CircleHelpIcon className='mr-2 w-4 h-4' />
 										}
-										label='Help'
+										label='Resources'
 										onClick={() =>
 											triggerShortcut(
 												EditorShortcuts.HELP
@@ -247,26 +330,23 @@ const SplashDialog = ({
 								</li>
 							</ul>
 						</div>
-						<div className='col-span-1' />
-						<div className='col-span-2 flex flex-col'>
-							<p className='leading-relaxed italic text-sm text-foreground'>
-								Note: All your data will be saved locally in the
-								browser.{' '}
-								<Link
-									className='underline'
-									prefetch='intent'
-									to='/privacy'
-								>
-									Learn more
-								</Link>
-								.
-							</p>
-						</div>
 					</div>
 					<Form
-						className='w-full px-8 py-4 flex items-center gap-2'
+						className='w-full px-8 py-4 flex items-center justify-between gap-2'
 						onChange={handleChange}
 					>
+						<p className='leading-relaxed italic text-xs text-foreground'>
+							Note: All your data will be saved locally in the
+							browser.{' '}
+							<Link
+								className='underline'
+								prefetch='intent'
+								to='/privacy'
+							>
+								Learn more
+							</Link>
+							.
+						</p>
 						<div className='items-center flex space-x-2'>
 							<Checkbox
 								name='dont-show-again'
