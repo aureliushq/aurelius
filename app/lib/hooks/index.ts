@@ -1,4 +1,5 @@
 import useAutoSave from './useAutoSave'
+import useDebounce from './useDebounce'
 import { useKeyboardShortcuts } from './useKeyboardShortcuts'
 
-export { useAutoSave, useKeyboardShortcuts }
+export { useAutoSave, useDebounce, useKeyboardShortcuts }
