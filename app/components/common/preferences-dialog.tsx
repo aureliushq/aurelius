@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 
 import { Form } from '@remix-run/react'
 
@@ -63,6 +63,7 @@ import {
 	SITE_THEMES,
 	TOOLBAR_MODES,
 } from '~/lib/constants'
+import { useDebounce } from '~/lib/hooks'
 import { Theme, useTheme } from '~/lib/providers/theme'
 import {
 	MusicChannels,
@@ -87,82 +88,11 @@ const SavedToastContent = () => (
 	</span>
 )
 
-const Editor = ({ settings }: { settings: SettingsRow }) => {
-	const { toast } = useToast()
-
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault()
-		const formData = new FormData(event.currentTarget)
-
-		const showSplashDialog = formData.get('show-splash-dialog') === 'on'
-		const toolbarMode = formData.get('editor-toolbar-mode') as string
-
-		arls.settings.update(settings.id, {
-			// @ts-ignore
-			showSplashDialog,
-			toolbarMode: S.decodeSync(NonEmptyString100)(toolbarMode),
-		})
-		toast({
-			description: <SavedToastContent />,
-		})
-	}
-
-	return (
-		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-			<section className='flex flex-col gap-4'>
-				<div className='flex items-center justify-between h-10'>
-					<Label className='flex flex-col gap-2'>
-						Show splash screen
-						<small className='text-xs font-light'>
-							Show the popup that lists all the common actions
-							when you load the website
-						</small>
-					</Label>
-					<Switch
-						defaultChecked={!!settings.showSplashDialog}
-						name='show-splash-dialog'
-					/>
-				</div>
-				<Separator />
-				<div className='flex items-center justify-between h-10'>
-					<Label className='flex flex-col gap-2'>
-						Editor toolbar mode
-						<small className='text-xs font-light'>
-							Whether to always show the formatting toolbar or
-							only when text is selected
-						</small>
-					</Label>
-					<Select
-						defaultValue={settings.toolbarMode as string}
-						name='editor-toolbar-mode'
-					>
-						<SelectTrigger className='w-[180px]'>
-							<SelectValue placeholder='Theme' />
-						</SelectTrigger>
-						<SelectContent>
-							{TOOLBAR_MODES.map((mode) => (
-								<SelectItem key={mode.value} value={mode.value}>
-									{mode.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-			</section>
-			<div className='flex justify-start'>
-				<Button size='sm' type='submit'>
-					Save
-				</Button>
-			</div>
-		</Form>
-	)
-}
-
 const Appearance = ({ settings }: { settings: SettingsRow }) => {
 	const { theme, setTheme } = useTheme()
 	const { toast } = useToast()
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+	const handleChange = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 
@@ -183,7 +113,7 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 	}
 
 	return (
-		<Form className='flex flex-col gap-8' onSubmit={handleSubmit}>
+		<Form className='flex flex-col gap-8' onChange={handleChange}>
 			<section className='flex flex-col gap-4'>
 				<div className='flex items-center justify-between h-10'>
 					<Label className='flex flex-col gap-2'>
@@ -266,21 +196,101 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 					</Select>
 				</div>
 			</section>
-			<div className='flex justify-start'>
-				<Button size='sm' type='submit'>
-					Save
-				</Button>
-			</div>
+		</Form>
+	)
+}
+
+const Editor = ({ settings }: { settings: SettingsRow }) => {
+	const { toast } = useToast()
+
+	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const formData = new FormData(event.currentTarget)
+
+		const showSplashDialog = formData.get('show-splash-dialog') === 'on'
+		const toolbarMode = formData.get('editor-toolbar-mode') as string
+
+		arls.settings.update(settings.id, {
+			// @ts-ignore
+			showSplashDialog,
+			toolbarMode: S.decodeSync(NonEmptyString100)(toolbarMode),
+		})
+		toast({
+			description: <SavedToastContent />,
+		})
+	}
+
+	return (
+		<Form className='flex flex-col gap-4' onChange={handleChange}>
+			<section className='flex flex-col gap-4'>
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Show splash screen
+						<small className='text-xs font-light'>
+							Show the popup that lists all the common actions
+							when you load the website
+						</small>
+					</Label>
+					<Switch
+						defaultChecked={!!settings.showSplashDialog}
+						name='show-splash-dialog'
+					/>
+				</div>
+				<Separator />
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Editor toolbar mode
+						<small className='text-xs font-light'>
+							Whether to always show the formatting toolbar or
+							only when text is selected
+						</small>
+					</Label>
+					<Select
+						defaultValue={settings.toolbarMode as string}
+						name='editor-toolbar-mode'
+					>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Mode' />
+						</SelectTrigger>
+						<SelectContent>
+							{TOOLBAR_MODES.map((mode) => (
+								<SelectItem key={mode.value} value={mode.value}>
+									{mode.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+			</section>
 		</Form>
 	)
 }
 
 const Writing = ({ settings }: { settings: SettingsRow }) => {
-	const [dailyGoalType, setDailyGoalType] = useState(DAILY_GOAL_TYPE[0].value)
+	const [dailyGoalType, setDailyGoalType] = useState(
+		settings.writingDailyGoal || DAILY_GOAL_TYPE[0].value
+	)
 	const { toast } = useToast()
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+	const saveFormData = (
+		writingDailyGoal: string,
+		writingDailyTarget: number
+	) => {
+		arls.settings.update(settings.id, {
+			writingDailyGoal: S.decodeSync(NonEmptyString100)(writingDailyGoal),
+			writingDailyTarget: S.decodeSync(Int)(writingDailyTarget),
+		})
+		toast({
+			description: <SavedToastContent />,
+		})
+	}
+
+	const debouncedSaveFormData = useDebounce(saveFormData, 1000)
+
+	const handleChange = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
+		const target = event.target as HTMLInputElement | HTMLSelectElement
+		const { type } = target
 		const formData = new FormData(event.currentTarget)
 
 		const writingDailyGoal = formData.get(
@@ -292,17 +302,15 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 				? parseInt(formData.get('daily-goal-duration') as string, 10)
 				: parseInt(formData.get('daily-goal-word-count') as string, 10)
 
-		arls.settings.update(settings.id, {
-			writingDailyGoal: S.decodeSync(NonEmptyString100)(writingDailyGoal),
-			writingDailyTarget: S.decodeSync(Int)(writingDailyTarget),
-		})
-		toast({
-			description: <SavedToastContent />,
-		})
+		if (type === 'number') {
+			debouncedSaveFormData(writingDailyGoal, writingDailyTarget)
+		} else {
+			saveFormData(writingDailyGoal, writingDailyTarget)
+		}
 	}
 
 	return (
-		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+		<Form className='flex flex-col gap-4' onChange={handleChange}>
 			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Daily Goal
@@ -312,7 +320,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 					</small>
 				</Label>
 				<Select
-					defaultValue={settings.writingDailyGoal as string}
+					defaultValue={dailyGoalType}
 					name='writing-daily-goal-type'
 					onValueChange={(value) =>
 						setDailyGoalType(value as WritingDailyGoalType)
@@ -367,11 +375,6 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 						/>
 					</>
 				)}
-			</div>
-			<div className='flex justify-start'>
-				<Button size='sm' type='submit'>
-					Save
-				</Button>
 			</div>
 		</Form>
 	)
@@ -460,13 +463,11 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 	)
 	const { toast } = useToast()
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault()
-		const formData = new FormData(event.currentTarget)
-
-		const enableMusicPlayer = formData.get('enable-music-player') === 'on'
-		const musicChannel = formData.get('music-channel') as string
-		const youtubeLink = formData.get('youtube-link') as string
+	const saveFormData = (
+		enableMusicPlayer: boolean,
+		musicChannel: string,
+		youtubeLink: string
+	) => {
 		arls.settings.update(settings.id, {
 			// @ts-ignore
 			enableMusicPlayer,
@@ -478,8 +479,26 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 		})
 	}
 
+	const debouncedSaveFormData = useDebounce(saveFormData, 1000)
+
+	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const target = event.target as HTMLInputElement
+		const { type } = target
+		const formData = new FormData(event.currentTarget)
+
+		const enableMusicPlayer = formData.get('enable-music-player') === 'on'
+		const musicChannel = formData.get('music-channel') as string
+		const youtubeLink = formData.get('youtube-link') as string
+		if (type === 'text') {
+			debouncedSaveFormData(enableMusicPlayer, musicChannel, youtubeLink)
+		} else {
+			saveFormData(enableMusicPlayer, musicChannel, youtubeLink)
+		}
+	}
+
 	return (
-		<Form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+		<Form className='flex flex-col gap-4' onChange={handleChange}>
 			<div className='flex items-center justify-between h-10'>
 				<Label className='flex flex-col gap-2'>
 					Enable music player
@@ -496,11 +515,10 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 							<p className='text-sm text-center'>
 								Important: This feature uses YouTube for music
 								playback. Please be aware that enabling it will
-								allow YouTube to track your activity on this
-								site.
-								<br /> If you prefer to avoid tracking, you can
-								open the music channel link in a separate tab
-								and play it there instead.
+								allow YouTube to set cookies for this site.
+								<br /> If you prefer to avoid this, you can open
+								the music channel link in a separate tab and
+								play it there instead.
 							</p>
 						</TooltipContent>
 					</Tooltip>
@@ -558,8 +576,8 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 				<Label className='flex flex-col gap-2'>
 					YouTube Video/Playlist
 					<small className='text-xs font-light'>
-						Link of the YouTube video or playlist to play. Overrides
-						the selected channel.
+						YouTube video or playlist to play. Overrides Channel
+						setting.
 					</small>
 				</Label>
 				<Input
@@ -570,11 +588,6 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 					name='youtube-link'
 					type='text'
 				/>
-			</div>
-			<div className='flex justify-start'>
-				<Button size='sm' type='submit'>
-					Save
-				</Button>
 			</div>
 		</Form>
 	)
@@ -763,9 +776,6 @@ const Advanced = () => {
 			{/*	</div>*/}
 			{/*</section>*/}
 			<section className='flex flex-col gap-4'>
-				<h3 className='font-semibold text-muted-foreground mt-4'>
-					Danger Zone
-				</h3>
 				<div className='flex items-center justify-between p-4 border border-destructive bg-destructive/10 rounded-lg'>
 					<Label className='flex flex-col gap-2'>
 						Delete All Data
@@ -810,9 +820,37 @@ const Advanced = () => {
 	)
 }
 
-const Profile = () => {
+const Profile = ({ settings }: { settings: SettingsRow }) => {
+	const { toast } = useToast()
+
+	const saveFormData = (userName: string) => {
+		arls.settings.update(settings.id, {
+			userName: S.decodeSync(NonEmptyString100)(userName),
+		})
+		toast({
+			description: <SavedToastContent />,
+		})
+	}
+
+	const debouncedSaveFormData = useDebounce(saveFormData, 1000)
+
+	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const target = event.target as HTMLInputElement | HTMLSelectElement
+		const { type } = target
+		const formData = new FormData(event.currentTarget)
+
+		const userName = formData.get('user-name') as string
+
+		if (type === 'text') {
+			debouncedSaveFormData(userName)
+		} else {
+			saveFormData(userName)
+		}
+	}
+
 	return (
-		<Form className='flex flex-col gap-4'>
+		<Form className='flex flex-col gap-4' onChange={handleChange}>
 			<div className='flex items-center justify-between'>
 				<Label className='flex flex-col gap-2'>
 					Name
@@ -822,15 +860,11 @@ const Profile = () => {
 				</Label>
 				<Input
 					className='max-w-64'
-					id='name'
+					defaultValue={settings.userName as string}
+					name='user-name'
 					placeholder='Name'
 					type='text'
 				/>
-			</div>
-			<div className='flex justify-start'>
-				<Button size='sm' type='submit'>
-					Save
-				</Button>
 			</div>
 		</Form>
 	)
@@ -857,11 +891,11 @@ const PreferencesDialog = ({
 			label: 'Writing',
 			content: <Writing settings={settings} />,
 		},
-		{
-			id: 'export',
-			label: 'Export',
-			content: <Export settings={settings} />,
-		},
+		// {
+		// 	id: 'export',
+		// 	label: 'Export',
+		// 	content: <Export settings={settings} />,
+		// },
 		{
 			id: 'music',
 			label: 'Music',
@@ -883,7 +917,7 @@ const PreferencesDialog = ({
 		{
 			id: 'profile',
 			label: 'Profile',
-			content: <Profile />,
+			content: <Profile settings={settings} />,
 		},
 	]
 
