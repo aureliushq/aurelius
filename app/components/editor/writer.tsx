@@ -1,9 +1,7 @@
 import { ChangeEvent, forwardRef, useEffect, useRef } from 'react'
 
-import { BubbleMenu, Editor, EditorContent } from '@tiptap/react'
-import EditorToolbar from '~/components/editor/editor-toolbar'
+import { Editor, EditorContent } from '@tiptap/react'
 import { Textarea } from '~/components/ui/textarea'
-import { EditorToolbarMode } from '~/lib/types'
 import { SettingsRow } from '~/services/evolu/client'
 
 type WriterProps = {
@@ -66,13 +64,6 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 					<div
 						className={`editor-wrapper prose dark:prose-invert flex h-auto min-h-max w-full items-start justify-center pb-12 ${settings?.bodyFont}`}
 					>
-						{editor &&
-							settings?.toolbarMode ===
-								EditorToolbarMode.FLOATING && (
-								<BubbleMenu editor={editor as Editor}>
-									<EditorToolbar editor={editor as Editor} />
-								</BubbleMenu>
-							)}
 						<EditorContent editor={editor as Editor} />
 					</div>
 				</div>

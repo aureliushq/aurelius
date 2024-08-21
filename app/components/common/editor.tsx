@@ -12,7 +12,11 @@ import { Placeholder } from '@tiptap/extension-placeholder'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Underline } from '@tiptap/extension-underline'
 import { Youtube } from '@tiptap/extension-youtube'
-import { Editor as TiptapEditor, useEditor } from '@tiptap/react'
+import {
+	BubbleMenu as BubbleMenuWrapper,
+	Editor as TiptapEditor,
+	useEditor,
+} from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { PauseIcon, PlayIcon } from 'lucide-react'
@@ -228,13 +232,20 @@ const Editor = ({
 						<Saving isSaving={isSaving} />
 					</div>
 					<div className='col-span-3 bg-background p-4 flex items-center justify-center'>
-						{editor &&
-							settings?.toolbarMode ===
-								EditorToolbarMode.FIXED && (
-								<EditorToolbar
+						{settings?.toolbarMode === EditorToolbarMode.FIXED ? (
+							<EditorToolbar editor={editor as TiptapEditor} />
+						) : (
+							// https://github.com/ueberdosis/tiptap/issues/2658
+							<div>
+								<BubbleMenuWrapper
 									editor={editor as TiptapEditor}
-								/>
-							)}
+								>
+									<EditorToolbar
+										editor={editor as TiptapEditor}
+									/>
+								</BubbleMenuWrapper>
+							</div>
+						)}
 					</div>
 					<div className='flex items-center justify-end p-4'>
 						<WritingSessionTimer
