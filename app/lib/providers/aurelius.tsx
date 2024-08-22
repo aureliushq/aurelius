@@ -1,8 +1,15 @@
-import { ReactNode, createContext, startTransition, useState } from 'react'
+import {
+	ReactNode,
+	createContext,
+	startTransition,
+	useEffect,
+	useState,
+} from 'react'
 import { Timer, useTimer } from 'react-use-precision-timer'
 
 import { useNavigate } from '@remix-run/react'
 
+import { ExtractRow, Query } from '@evolu/common'
 import { useQuery } from '@evolu/react'
 import { ROUTES } from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
@@ -11,7 +18,11 @@ import {
 	WritingSessionSettings,
 	WritingSessionStatus,
 } from '~/lib/types'
+import { arls } from '~/services/arls'
 import { SettingsRow, settingsQuery } from '~/services/evolu/client'
+import { PostsTable } from '~/services/evolu/schema'
+
+type PostRow = ExtractRow<Query<PostsTable>>
 
 export type AureliusProviderData = {
 	contentId: string
@@ -20,6 +31,7 @@ export type AureliusProviderData = {
 	setEffortId: (id: string) => void
 	helpOpen: boolean
 	setHelpOpen: (open: boolean) => void
+	latestPosts: ReadonlyArray<PostRow>
 	mainMenuOpen: boolean
 	setMainMenuOpen: (open: boolean) => void
 	preferencesOpen: boolean
@@ -44,6 +56,7 @@ export const AureliusContext = createContext<AureliusProviderData>({
 	setEffortId: () => {},
 	helpOpen: false,
 	setHelpOpen: () => {},
+	latestPosts: [],
 	mainMenuOpen: false,
 	setMainMenuOpen: () => {},
 	preferencesOpen: false,
@@ -94,6 +107,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [contentId, setContentId] = useState<string>('')
 	const [effortId, setEffortId] = useState<string>('')
 	const [helpOpen, setHelpOpen] = useState(false)
+	const [latestPosts, setLatestPosts] = useState<ReadonlyArray<PostRow>>([])
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
 	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
@@ -112,7 +126,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 	const createNewPost = () => {
 		handleSplashOpen(false)
-		navigate(ROUTES.EDITOR.NEW_POST)
+		navigate(ROUTES.EDITOR.POST)
 	}
 
 	const handlePreferencesOpen = (open: boolean) => {
@@ -142,6 +156,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		setEffortId,
 		helpOpen,
 		setHelpOpen,
+		latestPosts,
 		mainMenuOpen,
 		setMainMenuOpen,
 		preferencesOpen,
@@ -158,6 +173,18 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		writingSessionStatus,
 		setWritingSessionStatus,
 	}
+
+	useEffect(() => {
+		const fetchLatestPosts = async () => {
+			const posts = await arls.posts.findMany({
+				orderBy: { column: 'createdAt', direction: 'desc' },
+				limit: 2,
+			})
+			setLatestPosts(posts)
+		}
+
+		fetchLatestPosts().then(() => {})
+	}, [])
 
 	return (
 		<AureliusContext.Provider value={data}>
