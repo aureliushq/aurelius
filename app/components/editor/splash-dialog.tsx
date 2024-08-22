@@ -1,11 +1,15 @@
-import { FormEvent, ReactNode, useState } from 'react'
+import { FormEvent, ReactNode, useContext } from 'react'
 
 import { Form, Link } from '@remix-run/react'
 
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { formatDistanceToNow } from 'date-fns'
 import {
+	AlarmClockCheckIcon,
 	CircleHelpIcon,
+	FileIcon,
 	FileTextIcon,
+	FolderOpenIcon,
 	ListIcon,
 	SettingsIcon,
 	TimerIcon,
@@ -23,6 +27,7 @@ import {
 } from '~/components/ui/dialog'
 import { ROUTES } from '~/lib/constants'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
+import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { arls } from '~/services/arls'
@@ -83,6 +88,8 @@ const SplashDialog = ({
 	splashOpen,
 	triggerShortcut,
 }: SplashDialogProps) => {
+	const { latestPosts } = useContext<AureliusProviderData>(AureliusContext)
+
 	const handleChange = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
@@ -93,7 +100,7 @@ const SplashDialog = ({
 		})
 	}
 
-	// TODO: synced devices is not picking up the correct value initially. it changes after a bit but it should be instant. investigate why.
+	// TODO: synced devices is not picking up the correct value initially. it changes after a bit but it should be instant? investigate why.
 
 	return (
 		<Dialog onOpenChange={setSplashOpen} open={splashOpen}>
@@ -120,7 +127,7 @@ const SplashDialog = ({
 							alt='Aurelius Logo'
 						/>
 					</div>
-					<div className='grid grid-cols-2 w-full min-h-[20rem] h-auto flex-1 flex-grow py-8 pl-8 pr-4 gap-x-12 gap-y-4'>
+					<div className='grid grid-cols-2 w-full min-h-[20rem] h-auto flex-1 flex-grow py-8 pl-8 pr-4 gap-8'>
 						{/*<div className='col-span-2 flex items-center'>*/}
 						{/*	<Input placeholder='Search Posts' />*/}
 						{/*</div>*/}
@@ -133,7 +140,7 @@ const SplashDialog = ({
 									<SplashDialogButton
 										description='Begin a new post from scratch'
 										icon={
-											<FileTextIcon className='mr-2 w-4 h-4' />
+											<FileIcon className='mr-2 w-4 h-4' />
 										}
 										label='Start a New Post'
 										onClick={() =>
@@ -175,47 +182,41 @@ const SplashDialog = ({
 								</li>
 							</ul>
 						</div>
-						{/*<div className='col-span-1 py-2 flex flex-col'>*/}
-						{/*	<h3 className='text-sm font-semibold text-foreground mb-4'>*/}
-						{/*		Resume*/}
-						{/*	</h3>*/}
-						{/*	<ul className='w-full text-sm flex flex-col gap-2'>*/}
-						{/*		<li className='w-full flex items-center justify-between'>*/}
-						{/*			<SplashDialogButton*/}
-						{/*				icon={*/}
-						{/*					<PencilIcon className='mr-2 w-4 h-4' />*/}
-						{/*				}*/}
-						{/*				label='Resume Recent Post'*/}
-						{/*			/>*/}
-						{/*		</li>*/}
-						{/*		<li className='w-full flex items-center justify-between'>*/}
-						{/*			<Link className='w-full' to='/dashboard'>*/}
-						{/*				<SplashDialogButton*/}
-						{/*					description='Browse & manage your existing posts'*/}
-						{/*					icon={*/}
-						{/*						<ListIcon className='mr-2 w-4 h-4' />*/}
-						{/*					}*/}
-						{/*					label='View All Posts'*/}
-						{/*					onClick={() =>*/}
-						{/*						triggerShortcut(*/}
-						{/*							EditorShortcuts.VIEW_ALL_POSTS*/}
-						{/*						)*/}
-						{/*					}*/}
-						{/*					shortcut={getShortcutWithModifiers(*/}
-						{/*						allShortcuts[*/}
-						{/*							EditorShortcuts*/}
-						{/*								.VIEW_ALL_POSTS*/}
-						{/*						].key,*/}
-						{/*						allShortcuts[*/}
-						{/*							EditorShortcuts*/}
-						{/*								.VIEW_ALL_POSTS*/}
-						{/*						].modifiers*/}
-						{/*					)}*/}
-						{/*				/>*/}
-						{/*			</Link>*/}
-						{/*		</li>*/}
-						{/*	</ul>*/}
-						{/*</div>*/}
+						{latestPosts.length > 0 ? (
+							<div className='col-span-1 py-2 flex flex-col'>
+								<h3 className='text-sm font-semibold text-foreground mb-4'>
+									Resume
+								</h3>
+								<ul className='w-full text-sm flex flex-col gap-2'>
+									{latestPosts.map((post) => (
+										<li
+											className='w-full flex items-center justify-between'
+											key={post.id}
+										>
+											<Link
+												className='w-full'
+												to={`${ROUTES.EDITOR.POST}/${post.slug}`}
+											>
+												<SplashDialogButton
+													description={`Written ${formatDistanceToNow(
+														new Date(
+															post.createdAt
+														),
+														{
+															addSuffix: true,
+														}
+													)}`}
+													icon={
+														<FileTextIcon className='mr-2 w-4 h-4' />
+													}
+													label={post.title}
+												/>
+											</Link>
+										</li>
+									))}
+								</ul>
+							</div>
+						) : null}
 						<div className='col-span-1 py-2 flex flex-col'>
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
 								Explore
@@ -229,7 +230,7 @@ const SplashDialog = ({
 										<SplashDialogButton
 											description='Browse & manage your existing posts'
 											icon={
-												<ListIcon className='mr-2 w-4 h-4' />
+												<FolderOpenIcon className='mr-2 w-4 h-4' />
 											}
 											label='View All Posts'
 											onClick={() =>
@@ -258,7 +259,7 @@ const SplashDialog = ({
 										<SplashDialogButton
 											description='Browse your past writing sessions'
 											icon={
-												<ListIcon className='mr-2 w-4 h-4' />
+												<AlarmClockCheckIcon className='mr-2 w-4 h-4' />
 											}
 											label='View All Writing Sessions'
 											onClick={() =>
@@ -282,9 +283,9 @@ const SplashDialog = ({
 							</ul>
 						</div>
 						<div className='col-span-1 py-2 flex flex-col'>
-							{/*<h3 className='text-sm font-semibold text-foreground mb-4'>*/}
-							{/*	Explore*/}
-							{/*</h3>*/}
+							<h3 className='text-sm font-semibold text-foreground mb-4'>
+								Resources
+							</h3>
 							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
@@ -314,7 +315,7 @@ const SplashDialog = ({
 										icon={
 											<CircleHelpIcon className='mr-2 w-4 h-4' />
 										}
-										label='Resources'
+										label='Help'
 										onClick={() =>
 											triggerShortcut(
 												EditorShortcuts.HELP
