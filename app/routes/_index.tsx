@@ -39,7 +39,7 @@ const Index = () => {
 	}, [])
 
 	const onReset = () => {
-		navigate(ROUTES.EDITOR.NEW_POST)
+		navigate(ROUTES.EDITOR.POST)
 	}
 
 	return (

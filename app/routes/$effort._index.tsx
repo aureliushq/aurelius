@@ -32,7 +32,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(effort, 'Writing effort not found')
 
 	if (params.effort === 'help') {
-		const writings = await arls._help.findMany()
+		const writings = await arls._help.findMany({})
 		return { effort, writings }
 	}
 
@@ -40,7 +40,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 		effort.type as keyof Arls
 	] as TableQueryBuilder<EffortsTable>
 	// TODO: implement select
-	const writings = await table.findMany({ effortId: effort.id })
+	const writings = await table.findMany({ where: { effortId: effort.id } })
 	return { effort, writings }
 }
 

@@ -10,7 +10,7 @@ import { EffortsTable } from '~/services/evolu/database'
 import { ContentId, WritingEffortId } from '~/services/evolu/schema'
 
 export const clientLoader = async () => {
-	const writingSessions = await arls.writingSessions.findMany()
+	const writingSessions = await arls.writingSessions.findMany({})
 
 	const sessions = await Promise.all(
 		writingSessions.map(async (session) => {
