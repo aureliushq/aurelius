@@ -14,7 +14,7 @@ import {
 type QueryBuilderMethods<T extends Table> = {
 	create(data: Partial<T>): ExtractRow<Query<T>>
 	delete(where: Partial<T>): Promise<void>
-	findMany(where: Partial<T>): Promise<ReadonlyArray<T>>
+	findMany(options?: FindManyOptions<T>): Promise<ReadonlyArray<T>>
 	findUnique(where: Partial<T>): Promise<T | undefined>
 	update(id: Id, data: Partial<T>): ExtractRow<Query<T>>
 }
@@ -22,6 +22,15 @@ type QueryBuilderMethods<T extends Table> = {
 type QueryBuilderOptions = {
 	readonly subscribe?: boolean
 } & SqliteQueryOptions
+
+type FindManyOptions<T extends Table> = {
+	limit?: number
+	orderBy?: {
+		column: keyof T
+		direction: 'asc' | 'desc'
+	}
+	where?: Partial<T>
+}
 
 export class TableQueryBuilder<T extends Table>
 	implements QueryBuilderMethods<T>
@@ -40,13 +49,26 @@ export class TableQueryBuilder<T extends Table>
 		return
 	}
 
-	async findMany(where: Partial<T> = {}): Promise<ReadonlyArray<T>> {
+	async findMany(options: FindManyOptions<T>): Promise<ReadonlyArray<T>> {
+		const { limit, orderBy, where = {} } = options
 		// TODO: implement subscribe
 		const findManyQuery = evolu.createQuery((db) => {
 			let query = db.selectFrom(this.tableName).selectAll()
+
+			// apply where
 			Object.entries(where).forEach(([key, value]) => {
 				query = query.where(key as any, '=', value)
 			})
+
+			// apply orderBy
+			if (orderBy) {
+				query = query.orderBy(orderBy.column as any, orderBy.direction)
+			}
+
+			// apply limit
+			if (limit) {
+				query = query.limit(limit)
+			}
 
 			return query
 		}, this.options)
