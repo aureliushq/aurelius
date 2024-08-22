@@ -106,7 +106,7 @@ export const ARLS_OPTIONS: SqliteQueryOptions = {
 export const ROUTES = {
 	EDITOR: {
 		BASE: '/editor',
-		NEW_POST: '/editor/posts',
+		POST: '/editor/posts',
 	},
 	VIEW: {
 		POSTS: '/posts',
