@@ -142,7 +142,7 @@ export const Settings = table({
 	showSplashDialog: S.NullOr(SqliteBoolean),
 	titleFont: NonEmptyString100,
 	toolbarMode: NonEmptyString100,
-	userName: NonEmptyString100,
+	userName: String1000,
 	writingDailyGoal: NonEmptyString100,
 	writingDailyTarget: S.NullOr(Int),
 	youtubeLink: String1000,

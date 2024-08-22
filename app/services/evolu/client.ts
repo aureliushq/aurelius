@@ -1,10 +1,5 @@
 import * as S from '@effect/schema/Schema'
-import {
-	ExtractRow,
-	NonEmptyString1000,
-	SqliteBoolean,
-	createIndexes,
-} from '@evolu/common'
+import { ExtractRow, SqliteBoolean, createIndexes } from '@evolu/common'
 import { createEvolu } from '@evolu/common-web'
 import { PositiveInt, String1000 } from '@evolu/react'
 import { Temporal } from 'temporal-polyfill'
@@ -60,6 +55,7 @@ export const evolu = createEvolu(Database, {
 			toolbarMode: S.decodeSync(NonEmptyString100)(
 				EditorToolbarMode.FIXED
 			),
+			userName: S.decodeSync(String1000)(''),
 			writingDailyGoal: S.decodeSync(NonEmptyString100)(
 				WritingDailyGoalType.DURATION
 			),
@@ -88,9 +84,7 @@ export const evolu = createEvolu(Database, {
 		evolu.create('_help', {
 			content: S.decodeSync(Content)(GETTING_STARTED_GUIDE.content),
 			slug: S.decodeSync(NonEmptyString100)('getting-started'),
-			title: S.decodeSync(NonEmptyString1000)(
-				GETTING_STARTED_GUIDE.title
-			),
+			title: S.decodeSync(String1000)(GETTING_STARTED_GUIDE.title),
 			wordCount: S.decodeSync(Int)(0),
 		})
 	},
