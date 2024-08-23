@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode, useContext } from 'react'
+import { FormEvent, ReactNode, useContext, useEffect } from 'react'
 
 import { Form, Link } from '@remix-run/react'
 
@@ -99,6 +99,10 @@ const SplashDialog = ({
 			showSplashDialog,
 		})
 	}
+
+	useEffect(() => {
+		localStorage.setItem('aurelius:splash_shown', 'true')
+	}, [])
 
 	// TODO: synced devices is not picking up the correct value initially. it changes after a bit but it should be instant? investigate why.
 

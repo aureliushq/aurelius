@@ -110,7 +110,11 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [latestPosts, setLatestPosts] = useState<ReadonlyArray<PostRow>>([])
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
-	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
+	const [splashOpen, setSplashOpen] = useState(
+		!(localStorage.getItem('aurelius:splash_shown') !== 'true')
+			? localStorage.getItem('aurelius:splash_shown') !== 'true'
+			: !!settings?.showSplashDialog
+	)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
 		useState<WritingSessionSettings>({

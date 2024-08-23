@@ -38,6 +38,7 @@ const App = ({ children }: { children: ReactNode }) => {
 
 		return () => {
 			document.head.removeChild(script)
+			localStorage.removeItem('aurelius:splash_shown')
 		}
 	}, [])
 
