@@ -73,7 +73,7 @@ const MainMenu = ({
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent>
 								<DropdownMenuItem
-									className='flex items-center justify-between'
+									className='w-full flex items-center justify-between'
 									onClick={() =>
 										triggerShortcut(
 											EditorShortcuts.NEW_POST
@@ -97,31 +97,32 @@ const MainMenu = ({
 										/>
 									</DropdownMenuShortcut>
 								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<Link
-										className='flex items-center justify-between'
-										prefetch='intent'
-										to={ROUTES.VIEW.POSTS}
-									>
-										<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-											<ListIcon className='mr-2 w-4 h-4' />
-											<span>View All Posts</span>
-										</span>
-										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut
-												keys={getShortcutWithModifiers(
-													allShortcuts[
-														EditorShortcuts
-															.VIEW_ALL_POSTS
-													].key,
-													allShortcuts[
-														EditorShortcuts
-															.VIEW_ALL_POSTS
-													].modifiers
-												)}
-											/>
-										</DropdownMenuShortcut>
-									</Link>
+								<DropdownMenuItem
+									className='w-full flex items-center justify-between'
+									onClick={() =>
+										triggerShortcut(
+											EditorShortcuts.VIEW_ALL_POSTS
+										)
+									}
+								>
+									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
+										<ListIcon className='mr-2 w-4 h-4' />
+										<span>View All Posts</span>
+									</span>
+									<DropdownMenuShortcut className='ml-16'>
+										<KeyboardShortcut
+											keys={getShortcutWithModifiers(
+												allShortcuts[
+													EditorShortcuts
+														.VIEW_ALL_POSTS
+												].key,
+												allShortcuts[
+													EditorShortcuts
+														.VIEW_ALL_POSTS
+												].modifiers
+											)}
+										/>
+									</DropdownMenuShortcut>
 								</DropdownMenuItem>
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>
@@ -162,37 +163,32 @@ const MainMenu = ({
 										/>
 									</DropdownMenuShortcut>
 								</DropdownMenuItem>
-								{/*<DropdownMenuItem>*/}
-								{/*	<span className='w-full h-full flex items-center justify-start cursor-pointer'>*/}
-								{/*		<RefreshCcwIcon className='mr-2 w-4 h-4' />*/}
-								{/*		<span>Resume Previous Session</span>*/}
-								{/*	</span>*/}
-								{/*</DropdownMenuItem>*/}
-								<DropdownMenuItem>
-									<Link
-										className='flex items-center justify-between'
-										prefetch='intent'
-										to={ROUTES.VIEW.WRITING_SESSIONS}
-									>
-										<span className='w-full h-full flex items-center justify-start cursor-pointer'>
-											<ListIcon className='mr-2 w-4 h-4' />
-											<span>View All Sessions</span>
-										</span>
-										<DropdownMenuShortcut className='ml-16'>
-											<KeyboardShortcut
-												keys={getShortcutWithModifiers(
-													allShortcuts[
-														EditorShortcuts
-															.VIEW_ALL_WRITING_SESSIONS
-													].key,
-													allShortcuts[
-														EditorShortcuts
-															.VIEW_ALL_WRITING_SESSIONS
-													].modifiers
-												)}
-											/>
-										</DropdownMenuShortcut>
-									</Link>
+								<DropdownMenuItem
+									className='flex items-center justify-between'
+									onClick={() =>
+										triggerShortcut(
+											EditorShortcuts.VIEW_ALL_WRITING_SESSIONS
+										)
+									}
+								>
+									<span className='w-full h-full flex items-center justify-start cursor-pointer'>
+										<ListIcon className='mr-2 w-4 h-4' />
+										<span>View All Sessions</span>
+									</span>
+									<DropdownMenuShortcut className='ml-16'>
+										<KeyboardShortcut
+											keys={getShortcutWithModifiers(
+												allShortcuts[
+													EditorShortcuts
+														.VIEW_ALL_WRITING_SESSIONS
+												].key,
+												allShortcuts[
+													EditorShortcuts
+														.VIEW_ALL_WRITING_SESSIONS
+												].modifiers
+											)}
+										/>
+									</DropdownMenuShortcut>
 								</DropdownMenuItem>
 							</DropdownMenuSubContent>
 						</DropdownMenuPortal>

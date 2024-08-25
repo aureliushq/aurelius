@@ -146,11 +146,17 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	}
 
 	const viewAllPosts = () => {
-		navigate(ROUTES.VIEW.POSTS)
+		setMainMenuOpen(() => false)
+		startTransition(() => {
+			navigate(ROUTES.VIEW.POSTS)
+		})
 	}
 
 	const viewAllWritingSessions = () => {
-		navigate(ROUTES.VIEW.WRITING_SESSIONS)
+		setMainMenuOpen(() => false)
+		startTransition(() => {
+			navigate(ROUTES.VIEW.WRITING_SESSIONS)
+		})
 	}
 
 	const data: AureliusProviderData = {
