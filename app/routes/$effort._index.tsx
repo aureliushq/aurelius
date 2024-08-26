@@ -41,7 +41,11 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	] as TableQueryBuilder<EffortsTable>
 	// TODO: implement select
 	const writings = await table.findMany({ where: { effortId: effort.id } })
-	return { effort, writings }
+	const sortedWritings = [...writings].sort(
+		(a, b) =>
+			new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+	)
+	return { effort, writings: sortedWritings }
 }
 
 interface Writing {
@@ -149,7 +153,7 @@ const EffortHome = () => {
 
 	return (
 		<>
-			<div className='prose dark:prose-invert max-w-none flex w-full flex items-center justify-between text-white'>
+			<div className='prose dark:prose-invert max-w-none w-full flex items-center justify-between text-white'>
 				<h1 className='mb-4 text-center'>{effort.name}</h1>
 			</div>
 			<DataTable
