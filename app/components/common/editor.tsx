@@ -1,5 +1,4 @@
 import { Suspense, useContext, useEffect, useRef, useState } from 'react'
-import ReactPlayer from 'react-player'
 
 import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 import { CharacterCount } from '@tiptap/extension-character-count'
@@ -19,7 +18,6 @@ import {
 } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
-import { PauseIcon, PlayIcon } from 'lucide-react'
 import PreferencesDialog from '~/components/common/preferences-dialog'
 import {
 	E2EEIndicator,
@@ -33,16 +31,14 @@ import {
 	Writer,
 	WritingSessionTimer,
 } from '~/components/editor'
-import { Button } from '~/components/ui/button'
+import MusicPlayer from '~/components/editor/music-player'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import { MUSIC_STATIONS } from '~/lib/constants'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
 	EditorData,
 	EditorShortcuts,
 	EditorToolbarMode,
-	MusicChannels,
 	WritingSessionStatus,
 } from '~/lib/types'
 
@@ -267,55 +263,12 @@ const Editor = ({
 				</section>
 				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
 					{!!settings?.enableMusicPlayer ? (
-						<div
-							className={`p-4 flex items-center transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
-						>
-							{isMusicPlaying ? (
-								<Button
-									className='w-9 h-9'
-									onClick={() => setIsMusicPlaying?.(false)}
-									size='icon'
-									variant='outline'
-								>
-									<PauseIcon className='w-4 h-4' />
-								</Button>
-							) : (
-								<Button
-									className='w-9 h-9'
-									onClick={() => setIsMusicPlaying?.(true)}
-									size='icon'
-									variant='outline'
-								>
-									<PlayIcon className='w-4 h-4' />
-								</Button>
-							)}
-							<Suspense fallback={<div>Loading...</div>}>
-								<ReactPlayer
-									playing={isMusicPlaying}
-									// @ts-ignore
-									url={
-										settings?.youtubeLink ||
-										MUSIC_STATIONS[
-											settings?.musicChannel as MusicChannels
-										]
-									}
-									width='0'
-									height='0'
-									loop={true}
-									config={{
-										youtube: {
-											playerVars: {
-												control: 1,
-												start: 1,
-											},
-										},
-									}}
-								/>
-							</Suspense>
-						</div>
-					) : (
-						<div />
-					)}
+						<MusicPlayer
+							focusMode={focusMode}
+							isMusicPlaying={isMusicPlaying}
+							setIsMusicPlaying={setIsMusicPlaying}
+						/>
+					) : null}
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
