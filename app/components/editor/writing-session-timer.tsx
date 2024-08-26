@@ -143,7 +143,7 @@ const WritingSessionTimer = ({
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 		const targetDuration = parseInt(
-			formData.get('target-duration') as string,
+			formData.get('session-duration') as string,
 			10
 		)
 		const focusMode = formData.get('focus-mode') === 'on'
