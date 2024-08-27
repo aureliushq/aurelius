@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { Timer, TimerRenderer, useTimer } from 'react-use-precision-timer'
 
-import { Form } from '@remix-run/react'
+import { Form, useLocation, useNavigate } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
 import { PositiveInt } from '@evolu/common'
@@ -41,6 +41,7 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
+import { ROUTES } from '~/lib/constants'
 import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
 	WritingSessionDialogProps,
@@ -109,8 +110,11 @@ const WritingSessionTimer = ({
 	writingSessionOpen,
 	writingSessionSettings,
 }: WritingSessionTimerProps) => {
-	const { contentId, effortId, sessionTimer } =
+	const { contentId, effortId, handleSplashOpen, sessionTimer, splashOpen } =
 		useContext<AureliusProviderData>(AureliusContext)
+
+	const location = useLocation()
+	const navigate = useNavigate()
 
 	const [elapsedMinutes, setElapsedMinutes] = useState(0)
 	const [startingWordCount, setStartingWordCount] = useState(wordCount)
@@ -162,6 +166,12 @@ const WritingSessionTimer = ({
 		sessionTimer.start()
 		setWritingSessionOpen(false)
 		setWritingSessionStatus(WritingSessionStatus.RUNNING)
+		if (splashOpen) {
+			handleSplashOpen(false)
+		}
+		if (location.pathname !== ROUTES.EDITOR.POST) {
+			navigate(ROUTES.EDITOR.POST)
+		}
 	}
 
 	const stopWritingSession = () => {
