@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useContext, useEffect } from 'react'
 
-import { Form, Link } from '@remix-run/react'
+import { Form, Link, useNavigate } from '@remix-run/react'
 
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { formatDistanceToNow } from 'date-fns'
@@ -10,7 +10,7 @@ import {
 	FileIcon,
 	FileTextIcon,
 	FolderOpenIcon,
-	ListIcon,
+	RocketIcon,
 	SettingsIcon,
 	TimerIcon,
 } from 'lucide-react'
@@ -44,7 +44,7 @@ const SplashDialogButton = ({
 	badge?: string
 	description?: string
 	icon: ReactNode
-	label: string
+	label: ReactNode | string
 	onClick?: (...args: unknown[]) => void
 	shortcut?: string
 }) => {
@@ -54,8 +54,8 @@ const SplashDialogButton = ({
 			onClick={onClick}
 			variant='ghost'
 		>
-			<span className='inline-flex flex-col items-start gap-1'>
-				<span className='inline-flex items-center'>
+			<span className='w-full inline-flex flex-col items-start gap-1'>
+				<span className='w-full inline-flex items-center'>
 					{icon}
 					{label}
 					{badge && (
@@ -89,6 +89,8 @@ const SplashDialog = ({
 	triggerShortcut,
 }: SplashDialogProps) => {
 	const { latestPosts } = useContext<AureliusProviderData>(AureliusContext)
+
+	const navigate = useNavigate()
 
 	const handleChange = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -142,7 +144,6 @@ const SplashDialog = ({
 							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
-										description='Begin a new post from scratch'
 										icon={
 											<FileIcon className='mr-2 w-4 h-4' />
 										}
@@ -164,7 +165,6 @@ const SplashDialog = ({
 								</li>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
-										description='Set a timer and focus on your writing'
 										icon={
 											<TimerIcon className='mr-2 w-4 h-4' />
 										}
@@ -202,18 +202,38 @@ const SplashDialog = ({
 												to={`${ROUTES.EDITOR.POST}/${post.slug}`}
 											>
 												<SplashDialogButton
-													description={`Written ${formatDistanceToNow(
-														new Date(
-															post.createdAt
-														),
-														{
-															addSuffix: true,
-														}
-													)}`}
 													icon={
 														<FileTextIcon className='mr-2 w-4 h-4' />
 													}
-													label={post.title}
+													label={
+														<span className='w-full flex items-center justify-between'>
+															<span
+																className='w-36 overflow-hidden text-ellipsis text-left'
+																title={
+																	post.title
+																}
+															>
+																{post.title ||
+																	'Untitled Post'}
+															</span>
+															<span
+																className='text-xs italic'
+																title={new Date(
+																	post.createdAt
+																).toDateString()}
+															>
+																{formatDistanceToNow(
+																	new Date(
+																		post.createdAt
+																	),
+																	{
+																		addSuffix:
+																			true,
+																	}
+																)}
+															</span>
+														</span>
+													}
 												/>
 											</Link>
 										</li>
@@ -232,7 +252,6 @@ const SplashDialog = ({
 										to={ROUTES.VIEW.POSTS}
 									>
 										<SplashDialogButton
-											description='Browse & manage your existing posts'
 											icon={
 												<FolderOpenIcon className='mr-2 w-4 h-4' />
 											}
@@ -261,7 +280,6 @@ const SplashDialog = ({
 										to={ROUTES.VIEW.WRITING_SESSIONS}
 									>
 										<SplashDialogButton
-											description='Browse your past writing sessions'
 											icon={
 												<AlarmClockCheckIcon className='mr-2 w-4 h-4' />
 											}
@@ -293,7 +311,41 @@ const SplashDialog = ({
 							<ul className='text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
-										description='Customize your writing environment'
+										icon={
+											<RocketIcon className='mr-2 w-4 h-4' />
+										}
+										label='Getting Started Guide'
+										onClick={() => {
+											setSplashOpen(false)
+											navigate(ROUTES.BASE)
+										}}
+									/>
+								</li>
+								<li className='w-full flex items-center justify-between'>
+									<SplashDialogButton
+										icon={
+											<CircleHelpIcon className='mr-2 w-4 h-4' />
+										}
+										label='Help'
+										onClick={() =>
+											triggerShortcut(
+												EditorShortcuts.HELP
+											)
+										}
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[EditorShortcuts.HELP]
+												.key,
+											allShortcuts[EditorShortcuts.HELP]
+												.modifiers
+										)}
+									/>
+								</li>
+							</ul>
+						</div>
+						<div className='col-span-1 py-2 flex flex-col'>
+							<ul className='text-sm flex flex-col gap-2'>
+								<li className='w-full flex items-center justify-between'>
+									<SplashDialogButton
 										icon={
 											<SettingsIcon className='mr-2 w-4 h-4' />
 										}
@@ -310,26 +362,6 @@ const SplashDialog = ({
 											allShortcuts[
 												EditorShortcuts.PREFERENCES
 											].modifiers
-										)}
-									/>
-								</li>
-								<li className='w-full flex items-center justify-between'>
-									<SplashDialogButton
-										description='Find guides, shortcuts, and more'
-										icon={
-											<CircleHelpIcon className='mr-2 w-4 h-4' />
-										}
-										label='Help'
-										onClick={() =>
-											triggerShortcut(
-												EditorShortcuts.HELP
-											)
-										}
-										shortcut={getShortcutWithModifiers(
-											allShortcuts[EditorShortcuts.HELP]
-												.key,
-											allShortcuts[EditorShortcuts.HELP]
-												.modifiers
 										)}
 									/>
 								</li>
