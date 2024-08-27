@@ -3,6 +3,7 @@ import {
 	createContext,
 	startTransition,
 	useEffect,
+	useRef,
 	useState,
 } from 'react'
 import { Timer, useTimer } from 'react-use-precision-timer'
@@ -29,8 +30,12 @@ export type AureliusProviderData = {
 	setContentId: (id: string) => void
 	effortId: string
 	setEffortId: (id: string) => void
+	focusMode: boolean
+	setFocusMode: (state: boolean) => void
 	helpOpen: boolean
 	setHelpOpen: (open: boolean) => void
+	isMusicPlaying: boolean
+	setIsMusicPlaying: (state: boolean) => void
 	latestPosts: ReadonlyArray<PostRow>
 	mainMenuOpen: boolean
 	setMainMenuOpen: (open: boolean) => void
@@ -41,6 +46,8 @@ export type AureliusProviderData = {
 	sessionTimer: Timer
 	settings: SettingsRow
 	triggerGlobalShortcut: (shortcutName: string) => void
+	wordCount: number
+	handleWordCountChange: (count: number) => void
 	writingSessionOpen: boolean
 	setWritingSessionOpen: (open: boolean) => void
 	writingSessionSettings: WritingSessionSettings
@@ -54,8 +61,12 @@ export const AureliusContext = createContext<AureliusProviderData>({
 	setContentId: () => {},
 	effortId: '',
 	setEffortId: () => {},
+	focusMode: false,
+	setFocusMode: () => {},
 	helpOpen: false,
 	setHelpOpen: () => {},
+	isMusicPlaying: false,
+	setIsMusicPlaying: () => {},
 	latestPosts: [],
 	mainMenuOpen: false,
 	setMainMenuOpen: () => {},
@@ -68,6 +79,8 @@ export const AureliusContext = createContext<AureliusProviderData>({
 	// @ts-expect-error: tradeoff between having this comment in multiple places or one place
 	settings: null,
 	triggerGlobalShortcut: (shortcutName: string) => {},
+	wordCount: 0,
+	handleWordCountChange: (count: number) => {},
 	writingSessionOpen: false,
 	setWritingSessionOpen: (open: boolean) => {},
 	// @ts-expect-error: tradeoff between having this comment in multiple places or one place
@@ -104,9 +117,13 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const { rows } = useQuery(settingsQuery)
 	const settings = rows[0]
 
+	const wordCountRef = useRef<number>(0)
+
 	const [contentId, setContentId] = useState<string>('')
 	const [effortId, setEffortId] = useState<string>('')
+	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
+	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
 	const [latestPosts, setLatestPosts] = useState<ReadonlyArray<PostRow>>([])
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
@@ -145,6 +162,10 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		})
 	}
 
+	const handleWordCountChange = (count: number) => {
+		wordCountRef.current = count
+	}
+
 	const viewAllPosts = () => {
 		setMainMenuOpen(() => false)
 		startTransition(() => {
@@ -164,8 +185,12 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		setContentId,
 		effortId,
 		setEffortId,
+		focusMode,
+		setFocusMode,
 		helpOpen,
 		setHelpOpen,
+		isMusicPlaying,
+		setIsMusicPlaying,
 		latestPosts,
 		mainMenuOpen,
 		setMainMenuOpen,
@@ -176,6 +201,8 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 		sessionTimer,
 		settings,
 		triggerGlobalShortcut,
+		wordCount: wordCountRef.current,
+		handleWordCountChange,
 		writingSessionOpen,
 		setWritingSessionOpen,
 		writingSessionSettings,

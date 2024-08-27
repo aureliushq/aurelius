@@ -78,8 +78,12 @@ const Editor = ({
 	})
 
 	const {
+		focusMode,
+		setFocusMode,
 		helpOpen,
 		setHelpOpen,
+		isMusicPlaying,
+		setIsMusicPlaying,
 		mainMenuOpen,
 		setMainMenuOpen,
 		preferencesOpen,
@@ -88,6 +92,8 @@ const Editor = ({
 		handleSplashOpen,
 		settings,
 		triggerGlobalShortcut,
+		wordCount,
+		handleWordCountChange,
 		writingSessionOpen,
 		setWritingSessionOpen,
 		writingSessionSettings,
@@ -99,10 +105,7 @@ const Editor = ({
 	useKeyboardShortcuts(shortcuts)
 
 	const titleRef = useRef<HTMLTextAreaElement>(null)
-	const wordCount = useRef<number>(data?.wordCount ?? 0)
 
-	const [focusMode, setFocusMode] = useState(false)
-	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(
 		data.title.trim() === ''
 	)
@@ -188,10 +191,6 @@ const Editor = ({
 		setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
 	}
 
-	const handleWordCountChange = (count: number) => {
-		wordCount.current = count
-	}
-
 	useEffect(() => {
 		if (data.content) {
 			const wordCount = editor.storage.characterCount.words()
@@ -255,7 +254,7 @@ const Editor = ({
 								setWritingSessionSettings
 							}
 							setWritingSessionStatus={setWritingSessionStatus}
-							wordCount={wordCount.current}
+							wordCount={wordCount}
 							writingSessionOpen={writingSessionOpen}
 							writingSessionSettings={writingSessionSettings}
 						/>
@@ -272,7 +271,7 @@ const Editor = ({
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
-						<span className='text-sm text-muted-foreground'>{`${wordCount.current} words`}</span>
+						<span className='text-sm text-muted-foreground'>{`${wordCount} words`}</span>
 						<E2EEIndicator />
 						<HelpButton triggerShortcut={triggerGlobalShortcut} />
 					</div>

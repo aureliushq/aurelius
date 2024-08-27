@@ -89,8 +89,8 @@ type WritingSessionTimerProps = {
 	enableMusicPlayer: boolean
 	focusMode: boolean
 	isMusicPlaying: boolean
-	setFocusMode: Dispatch<SetStateAction<boolean>>
-	setIsMusicPlaying: Dispatch<SetStateAction<boolean>>
+	setFocusMode: (state: boolean) => void
+	setIsMusicPlaying: (state: boolean) => void
 	setWritingSessionSettings: (settings: WritingSessionSettings) => void
 	setWritingSessionStatus: (status: WritingSessionStatus) => void
 	wordCount: number

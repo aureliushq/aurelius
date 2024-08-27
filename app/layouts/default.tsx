@@ -7,6 +7,7 @@ import {
 	HelpDialog,
 	MainMenu,
 	SplashDialog,
+	WritingSessionTimer,
 } from '~/components/editor'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useKeyboardShortcuts } from '~/lib/hooks'
@@ -20,8 +21,12 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 	}
 
 	const {
+		focusMode,
+		setFocusMode,
 		helpOpen,
 		setHelpOpen,
+		isMusicPlaying,
+		setIsMusicPlaying,
 		mainMenuOpen,
 		setMainMenuOpen,
 		preferencesOpen,
@@ -30,6 +35,12 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 		splashOpen,
 		handleSplashOpen,
 		triggerGlobalShortcut,
+		wordCount,
+		writingSessionOpen,
+		setWritingSessionOpen,
+		writingSessionSettings,
+		setWritingSessionSettings,
+		setWritingSessionStatus,
 	} = useContext<AureliusProviderData>(AureliusContext)
 
 	useKeyboardShortcuts(shortcuts)
@@ -37,12 +48,30 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<>
 			<ScrollArea className='w-screen h-screen relative'>
-				<section className='w-screen fixed top-0 left-0 z-10'>
+				<section className='w-screen fixed top-0 left-0 grid grid-cols-5 z-10'>
 					<div className='flex items-center justify-start p-4 gap-4'>
 						<MainMenu
 							mainMenuOpen={mainMenuOpen}
 							setMainMenuOpen={setMainMenuOpen}
 							triggerShortcut={triggerGlobalShortcut}
+						/>
+					</div>
+					<div className='col-span-3 bg-background p-4 flex items-center justify-center' />
+					<div className='flex items-center justify-end p-4'>
+						<WritingSessionTimer
+							enableMusicPlayer={!!settings?.enableMusicPlayer}
+							focusMode={focusMode}
+							isMusicPlaying={isMusicPlaying}
+							setFocusMode={setFocusMode}
+							setIsMusicPlaying={setIsMusicPlaying}
+							setWritingSessionOpen={setWritingSessionOpen}
+							setWritingSessionSettings={
+								setWritingSessionSettings
+							}
+							setWritingSessionStatus={setWritingSessionStatus}
+							wordCount={wordCount}
+							writingSessionOpen={writingSessionOpen}
+							writingSessionSettings={writingSessionSettings}
 						/>
 					</div>
 				</section>
