@@ -102,10 +102,6 @@ const SplashDialog = ({
 		})
 	}
 
-	useEffect(() => {
-		localStorage.setItem('aurelius:splash_shown', 'true')
-	}, [])
-
 	// TODO: synced devices is not picking up the correct value initially. it changes after a bit but it should be instant? investigate why.
 
 	return (
@@ -197,45 +193,44 @@ const SplashDialog = ({
 											className='w-full flex items-center justify-between'
 											key={post.id}
 										>
-											<Link
-												className='w-full'
-												to={`${ROUTES.EDITOR.POST}/${post.slug}`}
-											>
-												<SplashDialogButton
-													icon={
-														<FileTextIcon className='mr-2 w-4 h-4' />
-													}
-													label={
-														<span className='w-full flex items-center justify-between'>
-															<span
-																className='w-36 overflow-hidden text-ellipsis text-left'
-																title={
-																	post.title
-																}
-															>
-																{post.title ||
-																	'Untitled Post'}
-															</span>
-															<span
-																className='text-xs italic'
-																title={new Date(
-																	post.createdAt
-																).toDateString()}
-															>
-																{formatDistanceToNow(
-																	new Date(
-																		post.createdAt
-																	),
-																	{
-																		addSuffix:
-																			true,
-																	}
-																)}
-															</span>
+											<SplashDialogButton
+												icon={
+													<FileTextIcon className='mr-2 w-4 h-4' />
+												}
+												label={
+													<span className='w-full flex items-center justify-between'>
+														<span
+															className='w-36 overflow-hidden text-ellipsis text-left'
+															title={post.title}
+														>
+															{post.title ||
+																'Untitled Post'}
 														</span>
-													}
-												/>
-											</Link>
+														<span
+															className='text-xs italic'
+															title={new Date(
+																post.createdAt
+															).toDateString()}
+														>
+															{formatDistanceToNow(
+																new Date(
+																	post.createdAt
+																),
+																{
+																	addSuffix:
+																		true,
+																}
+															)}
+														</span>
+													</span>
+												}
+												onClick={() => {
+													setSplashOpen(false)
+													navigate(
+														`${ROUTES.EDITOR.POST}/${post.slug}`
+													)
+												}}
+											/>
 										</li>
 									))}
 								</ul>
@@ -247,60 +242,48 @@ const SplashDialog = ({
 							</h3>
 							<ul className='w-full text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
-									<Link
-										className='w-full'
-										to={ROUTES.VIEW.POSTS}
-									>
-										<SplashDialogButton
-											icon={
-												<FolderOpenIcon className='mr-2 w-4 h-4' />
-											}
-											label='View All Posts'
-											onClick={() =>
-												triggerShortcut(
-													EditorShortcuts.VIEW_ALL_POSTS
-												)
-											}
-											shortcut={getShortcutWithModifiers(
-												allShortcuts[
-													EditorShortcuts
-														.VIEW_ALL_POSTS
-												].key,
-												allShortcuts[
-													EditorShortcuts
-														.VIEW_ALL_POSTS
-												].modifiers
-											)}
-										/>
-									</Link>
+									<SplashDialogButton
+										icon={
+											<FolderOpenIcon className='mr-2 w-4 h-4' />
+										}
+										label='View All Posts'
+										onClick={() => {
+											setSplashOpen(false)
+											navigate(ROUTES.VIEW.POSTS)
+										}}
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[
+												EditorShortcuts.VIEW_ALL_POSTS
+											].key,
+											allShortcuts[
+												EditorShortcuts.VIEW_ALL_POSTS
+											].modifiers
+										)}
+									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
-									<Link
-										className='w-full'
-										to={ROUTES.VIEW.WRITING_SESSIONS}
-									>
-										<SplashDialogButton
-											icon={
-												<AlarmClockCheckIcon className='mr-2 w-4 h-4' />
-											}
-											label='View All Writing Sessions'
-											onClick={() =>
-												triggerShortcut(
-													EditorShortcuts.VIEW_ALL_WRITING_SESSIONS
-												)
-											}
-											shortcut={getShortcutWithModifiers(
-												allShortcuts[
-													EditorShortcuts
-														.VIEW_ALL_WRITING_SESSIONS
-												].key,
-												allShortcuts[
-													EditorShortcuts
-														.VIEW_ALL_WRITING_SESSIONS
-												].modifiers
-											)}
-										/>
-									</Link>
+									<SplashDialogButton
+										icon={
+											<AlarmClockCheckIcon className='mr-2 w-4 h-4' />
+										}
+										label='View All Writing Sessions'
+										onClick={() => {
+											setSplashOpen(false)
+											navigate(
+												ROUTES.VIEW.WRITING_SESSIONS
+											)
+										}}
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[
+												EditorShortcuts
+													.VIEW_ALL_WRITING_SESSIONS
+											].key,
+											allShortcuts[
+												EditorShortcuts
+													.VIEW_ALL_WRITING_SESSIONS
+											].modifiers
+										)}
+									/>
 								</li>
 							</ul>
 						</div>
