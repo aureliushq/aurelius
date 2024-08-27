@@ -60,6 +60,14 @@ export const SITE_THEMES = [
 	{ value: SiteTheme.SYSTEM, label: 'System' },
 ]
 
+export const GENERAL_SHORTCUTS: ShortcutConfig[] = [
+	{
+		key: 'F11',
+		modifiers: {},
+		description: 'Fullscreen',
+	},
+]
+
 export const FORMATTING_SHORTCUTS: ShortcutConfig[] = [
 	{
 		key: 'b',
@@ -104,6 +112,7 @@ export const ARLS_OPTIONS: SqliteQueryOptions = {
 }
 
 export const ROUTES = {
+	BASE: '/',
 	EDITOR: {
 		BASE: '/editor',
 		POST: '/editor/posts',
