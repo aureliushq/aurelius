@@ -1,11 +1,8 @@
-// import { Link } from '@remix-run/react'
-// import { ExternalLinkIcon } from 'lucide-react'
 import { Link } from '@remix-run/react'
 
 import { ExternalLinkIcon } from 'lucide-react'
 import KeyboardShortcut from '~/components/editor/keyboard-shortcut'
 import { Button } from '~/components/ui/button'
-// import { Button } from '~/components/ui/button'
 import {
 	Dialog,
 	DialogContent,
@@ -13,8 +10,7 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog'
 import { Separator } from '~/components/ui/separator'
-// import { Separator } from '~/components/ui/separator'
-import { FORMATTING_SHORTCUTS } from '~/lib/constants'
+import { FORMATTING_SHORTCUTS, GENERAL_SHORTCUTS } from '~/lib/constants'
 import {
 	allShortcuts,
 	getGlobalShortcuts,
@@ -50,12 +46,34 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 					</div>
 				</DialogHeader>
 				<div className='columns-2 gap-x-8'>
-					<section className='flex flex-col items-start justify-start gap-4 mb-4'>
+					<section className='break-inside-avoid-column flex flex-col items-start justify-start gap-4 mb-4'>
 						<h4 className='text-base font-semibold'>
-							Formatting Shortcuts
+							Keyboard Shortcuts
 						</h4>
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
-							{FORMATTING_SHORTCUTS.map((config, index) => {
+							{[
+								...Object.entries(allShortcuts),
+								...Object.entries(getGlobalShortcuts()),
+							].map(([_, config], index) => {
+								const { description, key, modifiers } =
+									config as ShortcutConfig
+
+								return (
+									<li
+										className='flex items-center justify-between px-4 py-2'
+										key={index}
+									>
+										<p>{description}</p>
+										<KeyboardShortcut
+											keys={getShortcutWithModifiers(
+												key,
+												modifiers
+											)}
+										/>
+									</li>
+								)
+							})}
+							{GENERAL_SHORTCUTS.map((config, index) => {
 								const { description, key, modifiers } =
 									config as ShortcutConfig
 
@@ -78,13 +96,10 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 					</section>
 					<section className='break-inside-avoid-column flex flex-col items-start justify-start gap-4 mb-4'>
 						<h4 className='text-base font-semibold'>
-							Keyboard Shortcuts
+							Formatting Shortcuts
 						</h4>
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
-							{[
-								...Object.entries(allShortcuts),
-								...Object.entries(getGlobalShortcuts()),
-							].map(([_, config], index) => {
+							{FORMATTING_SHORTCUTS.map((config, index) => {
 								const { description, key, modifiers } =
 									config as ShortcutConfig
 
