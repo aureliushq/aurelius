@@ -50,7 +50,7 @@ const allShortcuts: AllShortcuts = {
 	// TODO: this is a global shortcut
 	[EditorShortcuts.PREFERENCES]: {
 		description: 'Preferences',
-		key: 'p',
+		key: ',',
 		modifiers: {},
 	},
 	[EditorShortcuts.RESET_EDITOR]: {
