@@ -267,7 +267,9 @@ const Editor = ({
 							isMusicPlaying={isMusicPlaying}
 							setIsMusicPlaying={setIsMusicPlaying}
 						/>
-					) : null}
+					) : (
+						<div />
+					)}
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
