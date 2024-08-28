@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 import { Form } from '@remix-run/react'
 
@@ -225,7 +225,7 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 			<section className='flex flex-col gap-4'>
 				<div className='flex items-center justify-between h-10'>
 					<Label className='flex flex-col gap-2'>
-						Show splash screen
+						Show quick start
 						<small className='text-xs font-light'>
 							Show the popup that lists all the common actions
 							when you load the website
@@ -825,7 +825,7 @@ const Profile = ({ settings }: { settings: SettingsRow }) => {
 
 	const saveFormData = (userName: string) => {
 		arls.settings.update(settings.id, {
-			userName: S.decodeSync(NonEmptyString100)(userName),
+			userName: S.decodeSync(String1000)(userName),
 		})
 		toast({
 			description: <SavedToastContent />,
