@@ -62,9 +62,9 @@ export const SITE_THEMES = [
 
 export const GENERAL_SHORTCUTS: ShortcutConfig[] = [
 	{
+		description: 'Fullscreen',
 		key: 'F11',
 		modifiers: {},
-		description: 'Fullscreen',
 	},
 ]
 
@@ -101,6 +101,79 @@ export const FORMATTING_SHORTCUTS: ShortcutConfig[] = [
 	},
 ]
 
+export const MARKDOWN_SHORTCUTS: ShortcutConfig[] = [
+	{
+		description: 'Heading 2',
+		key: '##',
+		modifiers: {},
+	},
+	{
+		description: 'Heading 3',
+		key: '###',
+		modifiers: {},
+	},
+	{
+		description: 'Heading 4',
+		key: '####',
+		modifiers: {},
+	},
+	{
+		description: 'Bulleted List',
+		key: '-',
+		modifiers: {},
+	},
+	{
+		description: 'Numbered List',
+		key: '1.',
+		modifiers: {},
+	},
+	{
+		description: 'Bold',
+		key: '**text**',
+		modifiers: {},
+	},
+	{
+		description: 'Italics',
+		key: '*text*',
+		modifiers: {},
+	},
+	{
+		description: 'Strikethrough',
+		key: '~text~',
+		modifiers: {},
+	},
+	{
+		description: 'Highlight',
+		key: '==text==',
+		modifiers: {},
+	},
+	{
+		description: 'Hyperlink',
+		key: '[text](url)',
+		modifiers: {},
+	},
+	{
+		description: 'Inline Code',
+		key: '`text`',
+		modifiers: {},
+	},
+	{
+		description: 'Code Block',
+		key: '```',
+		modifiers: {},
+	},
+	{
+		description: 'Blockquote',
+		key: '>',
+		modifiers: {},
+	},
+	{
+		description: 'Divider',
+		key: '---',
+		modifiers: {},
+	},
+]
+
 export const GETTING_STARTED_GUIDE = {
 	title: 'Getting started with Aurelius',
 	content: content,
@@ -112,11 +185,13 @@ export const ARLS_OPTIONS: SqliteQueryOptions = {
 }
 
 export const ROUTES = {
+	ABOUT: '/about',
 	BASE: '/',
 	EDITOR: {
 		BASE: '/editor',
 		POST: '/editor/posts',
 	},
+	PRIVACY: '/privacy',
 	VIEW: {
 		POSTS: '/posts',
 		WRITING_SESSIONS: '/sessions',

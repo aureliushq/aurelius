@@ -116,6 +116,7 @@ export type ModifierKeys = {
 }
 
 export type ShortcutConfig = {
+	label?: string
 	description: string
 	global?: boolean
 	key: string

@@ -14,6 +14,7 @@ const allShortcuts: AllShortcuts = {
 	[EditorShortcuts.BLUR]: {
 		description: 'Blur',
 		key: 'Escape',
+		label: 'Esc',
 		modifiers: {},
 		runInInputs: true,
 	},
@@ -38,12 +39,12 @@ const allShortcuts: AllShortcuts = {
 	[EditorShortcuts.MAIN_MENU]: {
 		description: 'Main Menu',
 		key: 'm',
-		modifiers: { ctrl: true, shift: true },
+		modifiers: {},
 	},
 	// TODO: this is a global shortcut
 	[EditorShortcuts.NEW_POST]: {
 		description: 'New Post',
-		key: 'n',
+		key: 'p',
 		modifiers: {},
 	},
 	// TODO: this is a global shortcut
@@ -54,13 +55,13 @@ const allShortcuts: AllShortcuts = {
 	},
 	[EditorShortcuts.RESET_EDITOR]: {
 		description: 'Reset Editor',
-		key: 'e',
+		key: 'r',
 		modifiers: {},
 	},
 	// TODO: this is a global shortcut
 	[EditorShortcuts.SPLASH_DIALOG]: {
-		description: 'Show Splash Screen',
-		key: 's',
+		description: 'Quick Start',
+		key: 'q',
 		modifiers: {},
 	},
 	[EditorShortcuts.VIEW_ALL_POSTS]: {
@@ -75,7 +76,7 @@ const allShortcuts: AllShortcuts = {
 	},
 	[EditorShortcuts.WRITING_SESSION]: {
 		description: 'New Writing Session',
-		key: 't',
+		key: 'w',
 		modifiers: {},
 	},
 }
