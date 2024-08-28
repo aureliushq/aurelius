@@ -8,10 +8,9 @@ const GettingStarted = () => {
 			<ul>
 				<li>
 					<p>
-						<strong>Main menu</strong> (<code>cmd-shift-m</code> in
-						MacOS or <code>ctrl-shift-m</code> in Linux/Windows):
-						You can access everything this app has to offer through
-						the main menu.
+						<strong>Main menu</strong> (<code>m</code>): You can
+						access everything this app has to offer through the main
+						menu.
 					</p>
 				</li>
 				<li>
@@ -60,59 +59,57 @@ const GettingStarted = () => {
 			<p>
 				<em>
 					Important: Changes you make here are not saved. To save your
-					work, create a new post (<code>n</code>
-					).
+					work, create a new post (<code>p</code>).
 				</em>
 			</p>
 			<hr />
 			<h3>Saving your data</h3>
 			<p>
-				Aurelius automatically saves your work as you write. By default
-				they're saved to the "Posts" effort. To switch between different
-				writing efforts, you can use the efforts switcher in the main
-				menu or simply press <code>alt-w</code>. This seamless saving
-				and organization helps you focus on your writing without
-				worrying about losing your progress.
+				Aurelius automatically saves your work as you write. This helps
+				you focus on your writing without worrying about losing your
+				progress. If you're paranoid (like I sometimes am), you can save
+				your work manually by pressing <code>ctrl-s</code>.
 			</p>
 			<p>
 				<em>
-					Important: All your data is stored locally in your browser.
-					To use Aurelius across multiple devices, you'll need to sync
-					your data. For syncing, go to Preferences (press{' '}
+					Important: Aurelius doesn't have user accounts, a server, or
+					a database. All your data is stored on your device. To use
+					Aurelius across multiple devices, you'll need to sync your
+					data first. To sync your data, go to Preferences
 				</em>
-				<code>p</code>
+				(<code>p</code>)
 				<em>
-					), select 'Sync', then 'View Code', and follow the provided
+					, select 'Sync', then 'View Code', and follow the provided
 					instructions. This ensures your writing is accessible
 					wherever you need it.
 				</em>
 			</p>
 			<hr />
-			<h3>Writing Efforts</h3>
-			<p>
-				Writing Efforts are organizational tools for categorizing and
-				monitoring your writing projects. They function like folders for
-				similar content types. At the moment, there are four effort
-				types: journals, posts, essays, and books. A "Posts" effort is
-				created by default. You can add as many custom efforts as needed
-				to suit your writing goals and habits.
-			</p>
-			<ul>
-				<li>
-					<p>
-						To create a new writing effort: open the main menu{' '}
-						<code>ctrl/cmd-shift-m</code>, select New &gt; Writing
-						Effort (or press <code>w</code>)
-					</p>
-				</li>
-				<li>
-					<p>
-						To create a new post: open the main menu, select New
-						&gt; Post (or press <code>n</code>)
-					</p>
-				</li>
-			</ul>
-			<hr />
+			{/*<h3>Writing Efforts</h3>*/}
+			{/*<p>*/}
+			{/*	Writing Efforts are organizational tools for categorizing and*/}
+			{/*	monitoring your writing projects. They function like folders for*/}
+			{/*	similar content types. At the moment, there are four effort*/}
+			{/*	types: journals, posts, essays, and books. A "Posts" effort is*/}
+			{/*	created by default. You can add as many custom efforts as needed*/}
+			{/*	to suit your writing goals and habits.*/}
+			{/*</p>*/}
+			{/*<ul>*/}
+			{/*	<li>*/}
+			{/*		<p>*/}
+			{/*			To create a new writing effort: open the main menu{' '}*/}
+			{/*			<code>ctrl/cmd-shift-m</code>, select New &gt; Writing*/}
+			{/*			Effort (or press <code>w</code>)*/}
+			{/*		</p>*/}
+			{/*	</li>*/}
+			{/*	<li>*/}
+			{/*		<p>*/}
+			{/*			To create a new post: open the main menu, select New*/}
+			{/*			&gt; Post (or press <code>n</code>)*/}
+			{/*		</p>*/}
+			{/*	</li>*/}
+			{/*</ul>*/}
+			{/*<hr />*/}
 			<h3>Writing Sessions</h3>
 			<p>
 				When you're ready to write, Writing Sessions help you focus by
@@ -127,7 +124,7 @@ const GettingStarted = () => {
 					<p>
 						To begin a new writing session: open the main menu,
 						select 'Writing Sessions', then 'New Writing Session'.
-						Alternatively, simply press the <code>t</code> key for a
+						Alternatively, simply press the <code>w</code> key for a
 						quick start.
 					</p>
 				</li>
@@ -147,7 +144,7 @@ const GettingStarted = () => {
 			<h3>Preferences</h3>
 			<p>
 				You can customize your experience in Aurelius, using the
-				Preferences dialog (<code>p</code>).
+				Preferences dialog (<code>,</code>).
 			</p>
 			<hr />
 			<h3>Join the conversation</h3>

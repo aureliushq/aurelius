@@ -293,7 +293,7 @@ const SplashDialog = ({
 										icon={
 											<RocketIcon className='mr-2 w-4 h-4' />
 										}
-										label='Getting Started Guide'
+										label='Getting Started'
 										onClick={() => {
 											setSplashOpen(false)
 											navigate(ROUTES.BASE)
@@ -306,7 +306,7 @@ const SplashDialog = ({
 										icon={
 											<BookOpenIcon className='mr-2 w-4 h-4' />
 										}
-										label='Docs'
+										label='Manual'
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
