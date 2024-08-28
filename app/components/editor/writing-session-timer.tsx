@@ -169,7 +169,11 @@ const WritingSessionTimer = ({
 		if (splashOpen) {
 			handleSplashOpen(false)
 		}
-		if (location.pathname !== ROUTES.EDITOR.POST) {
+		if (
+			!location.pathname.startsWith(ROUTES.EDITOR.POST) ||
+			(location.pathname.startsWith(ROUTES.EDITOR.POST) &&
+				location.pathname.replace(ROUTES.EDITOR.POST, '') === '')
+		) {
 			navigate(ROUTES.EDITOR.POST)
 		}
 	}
