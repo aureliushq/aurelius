@@ -6,12 +6,16 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { formatDistanceToNow } from 'date-fns'
 import {
 	AlarmClockCheckIcon,
+	BadgeInfoIcon,
+	BookOpenIcon,
 	CircleHelpIcon,
 	FileIcon,
 	FileTextIcon,
 	FolderOpenIcon,
+	PenLineIcon,
 	RocketIcon,
 	SettingsIcon,
+	ShieldIcon,
 	TimerIcon,
 } from 'lucide-react'
 import KeyboardShortcut from '~/components/editor/keyboard-shortcut'
@@ -50,12 +54,12 @@ const SplashDialogButton = ({
 }) => {
 	return (
 		<Button
-			className='w-[calc(100%+1rem)] h-12 justify-between -ml-4'
+			className='w-[calc(100%+1rem)] h-10 justify-between -ml-4'
 			onClick={onClick}
 			variant='ghost'
 		>
 			<span className='w-full inline-flex flex-col items-start gap-1'>
-				<span className='w-full inline-flex items-center'>
+				<span className='w-full text-sm inline-flex items-center'>
 					{icon}
 					{label}
 					{badge && (
@@ -109,7 +113,7 @@ const SplashDialog = ({
 			<DialogContent className='flex max-w-none w-[48rem] p-0 [&>button]:z-10'>
 				<VisuallyHidden>
 					<DialogHeader>
-						<DialogTitle>Splash Dialog</DialogTitle>
+						<DialogTitle>Quick Start</DialogTitle>
 						<DialogDescription>
 							List of common actions you can do in Aurelius
 						</DialogDescription>
@@ -118,7 +122,7 @@ const SplashDialog = ({
 				<div className='flex flex-col min-h-[36rem] h-auto w-full rounded-lg overflow-hidden divide-y divide-subtle'>
 					<div className='relative w-full h-[16rem] flex items-start justify-start p-8'>
 						<img
-							alt='Splash Dialog Cover'
+							alt="Quick Start dialog cover image that shows a writer's workspace with a laptop, a notebook, and a cup of coffee."
 							className='w-full h-full object-cover object-center z-0 absolute top-0 left-0'
 							src='/images/splash-screen-cover.png'
 						/>
@@ -137,7 +141,7 @@ const SplashDialog = ({
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
 								Create
 							</h3>
-							<ul className='text-sm flex flex-col gap-2'>
+							<ul className='text-sm flex flex-col gap-1'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
 										icon={
@@ -180,67 +184,6 @@ const SplashDialog = ({
 										)}
 									/>
 								</li>
-							</ul>
-						</div>
-						{latestPosts.length > 0 ? (
-							<div className='col-span-1 py-2 flex flex-col'>
-								<h3 className='text-sm font-semibold text-foreground mb-4'>
-									Resume
-								</h3>
-								<ul className='w-full text-sm flex flex-col gap-2'>
-									{latestPosts.map((post) => (
-										<li
-											className='w-full flex items-center justify-between'
-											key={post.id}
-										>
-											<SplashDialogButton
-												icon={
-													<FileTextIcon className='mr-2 w-4 h-4' />
-												}
-												label={
-													<span className='w-full flex items-center justify-between'>
-														<span
-															className='w-36 overflow-hidden text-ellipsis text-left'
-															title={post.title}
-														>
-															{post.title ||
-																'Untitled Post'}
-														</span>
-														<span
-															className='text-xs italic'
-															title={new Date(
-																post.createdAt
-															).toDateString()}
-														>
-															{formatDistanceToNow(
-																new Date(
-																	post.createdAt
-																),
-																{
-																	addSuffix:
-																		true,
-																}
-															)}
-														</span>
-													</span>
-												}
-												onClick={() => {
-													setSplashOpen(false)
-													navigate(
-														`${ROUTES.EDITOR.POST}/${post.slug}`
-													)
-												}}
-											/>
-										</li>
-									))}
-								</ul>
-							</div>
-						) : null}
-						<div className='col-span-1 py-2 flex flex-col'>
-							<h3 className='text-sm font-semibold text-foreground mb-4'>
-								Explore
-							</h3>
-							<ul className='w-full text-sm flex flex-col gap-2'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
 										icon={
@@ -285,13 +228,66 @@ const SplashDialog = ({
 										)}
 									/>
 								</li>
+								{latestPosts.length > 0 ? (
+									<>
+										{latestPosts.map((post) => (
+											<li
+												className='w-full flex items-center justify-between'
+												key={post.id}
+											>
+												<SplashDialogButton
+													icon={
+														<FileTextIcon className='mr-2 w-4 h-4' />
+													}
+													label={
+														<span className='w-full flex items-center justify-between'>
+															<span
+																className='w-36 overflow-hidden text-ellipsis text-left'
+																title={
+																	post.title
+																}
+															>
+																{`Resume: ${
+																	post.title ||
+																	'Untitled'
+																}`}
+															</span>
+															<span
+																className='text-xs italic'
+																title={new Date(
+																	post.createdAt
+																).toDateString()}
+															>
+																{formatDistanceToNow(
+																	new Date(
+																		post.createdAt
+																	),
+																	{
+																		addSuffix:
+																			true,
+																	}
+																)}
+															</span>
+														</span>
+													}
+													onClick={() => {
+														setSplashOpen(false)
+														navigate(
+															`${ROUTES.EDITOR.POST}/${post.slug}`
+														)
+													}}
+												/>
+											</li>
+										))}
+									</>
+								) : null}
 							</ul>
 						</div>
 						<div className='col-span-1 py-2 flex flex-col'>
 							<h3 className='text-sm font-semibold text-foreground mb-4'>
 								Resources
 							</h3>
-							<ul className='text-sm flex flex-col gap-2'>
+							<ul className='text-sm flex flex-col gap-1'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
 										icon={
@@ -302,6 +298,49 @@ const SplashDialog = ({
 											setSplashOpen(false)
 											navigate(ROUTES.BASE)
 										}}
+									/>
+								</li>
+								<li className='w-full flex items-center justify-between'>
+									<SplashDialogButton
+										badge='Coming Soon'
+										icon={
+											<BookOpenIcon className='mr-2 w-4 h-4' />
+										}
+										label='Docs'
+									/>
+								</li>
+								<li className='w-full flex items-center justify-between'>
+									<SplashDialogButton
+										badge='Coming Soon'
+										icon={
+											<PenLineIcon className='mr-2 w-4 h-4' />
+										}
+										label='Blog'
+									/>
+								</li>
+							</ul>
+						</div>
+						<div className='col-span-1 py-2 flex flex-col'>
+							<ul className='text-sm flex flex-col gap-1'>
+								<li className='w-full flex items-center justify-between'>
+									<SplashDialogButton
+										icon={
+											<SettingsIcon className='mr-2 w-4 h-4' />
+										}
+										label='Preferences'
+										onClick={() =>
+											triggerShortcut(
+												EditorShortcuts.PREFERENCES
+											)
+										}
+										shortcut={getShortcutWithModifiers(
+											allShortcuts[
+												EditorShortcuts.PREFERENCES
+											].key,
+											allShortcuts[
+												EditorShortcuts.PREFERENCES
+											].modifiers
+										)}
 									/>
 								</li>
 								<li className='w-full flex items-center justify-between'>
@@ -326,26 +365,29 @@ const SplashDialog = ({
 							</ul>
 						</div>
 						<div className='col-span-1 py-2 flex flex-col'>
-							<ul className='text-sm flex flex-col gap-2'>
+							<ul className='text-sm flex flex-col gap-1'>
 								<li className='w-full flex items-center justify-between'>
 									<SplashDialogButton
 										icon={
-											<SettingsIcon className='mr-2 w-4 h-4' />
+											<BadgeInfoIcon className='mr-2 w-4 h-4' />
 										}
-										label='Preferences'
-										onClick={() =>
-											triggerShortcut(
-												EditorShortcuts.PREFERENCES
-											)
+										label='About'
+										onClick={() => {
+											setSplashOpen(false)
+											navigate(ROUTES.ABOUT)
+										}}
+									/>
+								</li>
+								<li className='w-full flex items-center justify-between'>
+									<SplashDialogButton
+										icon={
+											<ShieldIcon className='mr-2 w-4 h-4' />
 										}
-										shortcut={getShortcutWithModifiers(
-											allShortcuts[
-												EditorShortcuts.PREFERENCES
-											].key,
-											allShortcuts[
-												EditorShortcuts.PREFERENCES
-											].modifiers
-										)}
+										label='Privacy'
+										onClick={() => {
+											setSplashOpen(false)
+											navigate(ROUTES.PRIVACY)
+										}}
 									/>
 								</li>
 							</ul>
