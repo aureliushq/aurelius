@@ -124,10 +124,10 @@ export function DataTable<TData, TValue>({
 				</Table>
 				{table.getRowModel().rows?.length === 0 && (
 					<div className='w-full p-16 flex items-center justify-center flex-col gap-4 text-muted-foreground'>
-						{theme === 'dark' ? (
+						{theme === 'dark' || theme === 'system' ? (
 							<img
 								className={`w-64 h-64 invert`}
-								src={'/images/no-data-dark.svg'}
+								src={'/images/no-data-light.svg'}
 							/>
 						) : (
 							<img
