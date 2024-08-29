@@ -11,6 +11,7 @@ import {
 	CheckIcon,
 	ClipboardIcon,
 	ExternalLinkIcon,
+	LoaderCircleIcon,
 	TriangleAlertIcon,
 } from 'lucide-react'
 import {
@@ -742,15 +743,31 @@ const Sync = () => {
 	)
 }
 
+const DataDeletedToastTitle = () => (
+	<span className='flex items-center'>
+		<LoaderCircleIcon className='w-4 h-4 mr-2 animate-spin' />
+		<span className='text-sm font-semibold'>Please wait...</span>
+	</span>
+)
+
+const DataDeletedToastContent = () => (
+	<div className='pl-6'>
+		<span className='text-sm'>Your data is being deleted.</span>
+	</div>
+)
+
 const Advanced = () => {
 	const { resetOwner } = useEvolu<Database>()
 	const { toast } = useToast()
 
 	const confirmDelete = () => {
 		toast({
-			title: 'Your data is being deleted',
-			description:
-				'You can now start fresh with Aurelius! If you want to recover your data, you can import data from another device using sync.',
+			description: (
+				<>
+					<DataDeletedToastTitle />
+					<DataDeletedToastContent />
+				</>
+			),
 		})
 		setTimeout(() => {
 			resetOwner().then(() => {})
