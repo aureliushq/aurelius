@@ -110,8 +110,14 @@ const WritingSessionTimer = ({
 	writingSessionOpen,
 	writingSessionSettings,
 }: WritingSessionTimerProps) => {
-	const { contentId, effortId, handleSplashOpen, sessionTimer, splashOpen } =
-		useContext<AureliusProviderData>(AureliusContext)
+	const {
+		contentId,
+		effortId,
+		handleSplashOpen,
+		handleWordCountChange,
+		sessionTimer,
+		splashOpen,
+	} = useContext<AureliusProviderData>(AureliusContext)
 
 	const location = useLocation()
 	const navigate = useNavigate()
@@ -169,11 +175,12 @@ const WritingSessionTimer = ({
 		if (splashOpen) {
 			handleSplashOpen(false)
 		}
-		if (
-			!location.pathname.startsWith(ROUTES.EDITOR.POST) ||
-			(location.pathname.startsWith(ROUTES.EDITOR.POST) &&
-				location.pathname.replace(ROUTES.EDITOR.POST, '') === '')
-		) {
+		if (!location.pathname.startsWith(ROUTES.EDITOR.POST) || !contentId) {
+			if (!contentId) {
+				// reset the word count if the user is not in the editor so starting word count is accurate
+				handleWordCountChange(0)
+				setStartingWordCount(() => 0)
+			}
 			navigate(ROUTES.EDITOR.POST)
 		}
 	}
@@ -189,7 +196,7 @@ const WritingSessionTimer = ({
 			setIsMusicPlaying(false)
 		}
 		arls.writingSessions.create({
-			contentId: S.decodeSync(ContentId)(contentId),
+			contentId: S.decodeSync(S.NullOr(ContentId))(contentId || null),
 			duration: S.decodeSync(PositiveInt)(duration),
 			effortId: S.decodeSync(WritingEffortId)(effortId),
 			endingWordCount: S.decodeSync(WordCount)(wordCount),

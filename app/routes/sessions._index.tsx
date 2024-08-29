@@ -17,15 +17,25 @@ export const clientLoader = async () => {
 			const effort = await arls.writingEfforts.findUnique({
 				id: S.decodeSync(WritingEffortId)(session.effortId),
 			})
-			const table = arls[effort?.type as keyof Arls]
-			const writing = (await table.findUnique({
-				// @ts-ignore
-				id: S.decodeSync(ContentId)(session.contentId),
-			})) as ExtractRow<Query<EffortsTable>>
+			if (session.contentId) {
+				const table = arls[effort?.type as keyof Arls]
+				const writing = (await table.findUnique({
+					// @ts-ignore
+					id: S.decodeSync(ContentId)(session.contentId),
+				})) as ExtractRow<Query<EffortsTable>>
+
+				return {
+					content: writing?.title,
+					contentSlug: `/${effort?.slug}/${writing?.slug}`,
+					duration: session.duration,
+					effort: effort?.name,
+					words: session.endingWordCount - session.startingWordCount,
+				}
+			}
 
 			return {
-				content: writing?.title,
-				contentSlug: `/${effort?.slug}/${writing?.slug}`,
+				content: 'No Content Written',
+				contentSlug: '',
 				duration: session.duration,
 				effort: effort?.name,
 				words: session.endingWordCount - session.startingWordCount,
@@ -47,15 +57,25 @@ interface WritingSession {
 const columns: ColumnDef<WritingSession>[] = [
 	{
 		accessorKey: 'content',
-		cell: ({ row }) => (
-			<Link
-				className='w-[360px] text-left truncate text-primary'
-				relative='path'
-				to={row.original?.contentSlug}
-			>
-				{row.original?.content || 'Untitled'}
-			</Link>
-		),
+		cell: ({ row }) => {
+			if (row.original?.contentSlug) {
+				return (
+					<Link
+						className='w-[360px] text-left truncate text-primary'
+						relative='path'
+						to={row.original?.contentSlug}
+					>
+						{row.original?.content || 'Untitled'}
+					</Link>
+				)
+			}
+
+			return (
+				<span className='w-[360px] text-left truncate text-foreground'>
+					{row.original?.content}
+				</span>
+			)
+		},
 		header: 'Content Title',
 	},
 	{

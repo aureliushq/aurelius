@@ -163,7 +163,7 @@ export type WritingEffortsTable = typeof WritingEfforts.Type
 
 export const WritingSessions = table({
 	id: WritingSessionId,
-	contentId: ContentId,
+	contentId: S.NullOr(ContentId),
 	duration: PositiveInt,
 	effortId: WritingEffortId,
 	endingWordCount: WordCount,
