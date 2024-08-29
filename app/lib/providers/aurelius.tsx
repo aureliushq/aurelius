@@ -158,7 +158,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 	const handleSplashOpen = (open: boolean) => {
 		startTransition(() => {
-			setSplashOpen(open)
+			setSplashOpen(() => open)
 		})
 	}
 
@@ -168,6 +168,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 	const viewAllPosts = () => {
 		setMainMenuOpen(() => false)
+		handleSplashOpen(false)
 		startTransition(() => {
 			navigate(ROUTES.VIEW.POSTS)
 		})
@@ -175,6 +176,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 	const viewAllWritingSessions = () => {
 		setMainMenuOpen(() => false)
+		handleSplashOpen(false)
 		startTransition(() => {
 			navigate(ROUTES.VIEW.WRITING_SESSIONS)
 		})

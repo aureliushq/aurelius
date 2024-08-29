@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import {
 	AllShortcuts,
@@ -10,7 +10,6 @@ import {
 
 // Centralized record of all shortcuts
 const allShortcuts: AllShortcuts = {
-	// TODO: add all local shortcuts here
 	[EditorShortcuts.BLUR]: {
 		description: 'Blur',
 		key: 'Escape',
@@ -35,13 +34,11 @@ const allShortcuts: AllShortcuts = {
 		key: '?',
 		modifiers: {},
 	},
-	// TODO: this is a global shortcut
 	[EditorShortcuts.MAIN_MENU]: {
 		description: 'Main Menu',
 		key: 'm',
 		modifiers: {},
 	},
-	// TODO: this is a global shortcut
 	[EditorShortcuts.NEW_POST]: {
 		description: 'New Post',
 		key: 'p',
@@ -58,7 +55,6 @@ const allShortcuts: AllShortcuts = {
 		key: 'r',
 		modifiers: {},
 	},
-	// TODO: this is a global shortcut
 	[EditorShortcuts.SPLASH_DIALOG]: {
 		description: 'Quick Start',
 		key: 'q',
@@ -96,6 +92,14 @@ export const setGlobalShortcutAction = (
 }
 
 const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
+	const sortedShortcuts = useMemo(() => {
+		return Object.entries(allShortcuts).sort(([, a], [, b]) => {
+			const aModifiers = Object.values(a.modifiers).filter(Boolean).length
+			const bModifiers = Object.values(b.modifiers).filter(Boolean).length
+			return bModifiers - aModifiers
+		})
+	}, [])
+
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
 			const isInputField =
@@ -112,8 +116,7 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 				meta: event.metaKey,
 			}
 
-			for (const shortcutName in allShortcuts) {
-				const shortcutConfig = allShortcuts[shortcutName]
+			for (const [shortcutName, shortcutConfig] of sortedShortcuts) {
 				const {
 					global,
 					key: shortcutKey,
