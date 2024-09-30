@@ -130,7 +130,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [splashOpen, setSplashOpen] = useState(
 		!(localStorage.getItem('aurelius:splash_shown') !== 'true')
 			? localStorage.getItem('aurelius:splash_shown') !== 'true'
-			: !!settings?.showSplashDialog
+			: !!settings?.showSplashDialog,
 	)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =

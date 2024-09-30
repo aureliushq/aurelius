@@ -73,7 +73,7 @@ const SessionTimer = ({
 	timer: Timer
 }) => {
 	const { hours, minutes, seconds } = formatTime(
-		timer.getElapsedRunningTime()
+		timer.getElapsedRunningTime(),
 	)
 
 	useEffect(() => {
@@ -154,7 +154,7 @@ const WritingSessionTimer = ({
 		const formData = new FormData(event.currentTarget)
 		const targetDuration = parseInt(
 			formData.get('session-duration') as string,
-			10
+			10,
 		)
 		const focusMode = formData.get('focus-mode') === 'on'
 		const music = formData.get('music') === 'on'

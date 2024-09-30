@@ -37,7 +37,7 @@ export class TableQueryBuilder<T extends Table>
 {
 	constructor(
 		private tableName: TableName,
-		private options: QueryBuilderOptions = ARLS_OPTIONS
+		private options: QueryBuilderOptions = ARLS_OPTIONS,
 	) {}
 
 	create(data: Partial<T>): ExtractRow<Query<T>> {

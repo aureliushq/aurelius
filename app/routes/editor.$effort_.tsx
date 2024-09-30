@@ -86,14 +86,14 @@ const NewWriting = () => {
 
 			fetcher.submit(
 				{ content, title, wordCount: wordCount ?? 0 },
-				{ method: 'POST', encType: 'application/json' }
+				{ method: 'POST', encType: 'application/json' },
 			)
 
 			setTimeout(() => {
 				setIsSaving(false)
 			}, 3000)
 		},
-		[]
+		[],
 	)
 
 	const onReset = () => {

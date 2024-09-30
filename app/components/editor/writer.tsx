@@ -69,7 +69,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 				</div>
 			</section>
 		)
-	}
+	},
 )
 
 export default Writer

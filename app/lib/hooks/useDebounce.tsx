@@ -4,7 +4,7 @@ type DebouncedFunction<T extends any[]> = (...args: T) => void
 
 function useDebounce<T extends any[]>(
 	func: (...args: T) => void,
-	delay: number
+	delay: number,
 ): DebouncedFunction<T> {
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -17,7 +17,7 @@ function useDebounce<T extends any[]>(
 				func(...args)
 			}, delay)
 		},
-		[func, delay]
+		[func, delay],
 	)
 }
 

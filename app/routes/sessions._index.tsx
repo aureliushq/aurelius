@@ -40,7 +40,7 @@ export const clientLoader = async () => {
 				effort: effort?.name,
 				words: session.endingWordCount - session.startingWordCount,
 			}
-		})
+		}),
 	)
 
 	return { sessions }

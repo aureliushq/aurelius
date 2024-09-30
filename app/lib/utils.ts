@@ -24,7 +24,7 @@ export const formatTime = (timestamp: number) => {
 
 export const getShortcutWithModifiers = (
 	key: string,
-	modifiers: ModifierKeys
+	modifiers: ModifierKeys,
 ) => {
 	return `${Object.entries(modifiers)
 		.filter(([_, active]) => active)
@@ -40,7 +40,7 @@ export const capitalize = ({
 	lower: boolean
 }) =>
 	(lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
-		match.toUpperCase()
+		match.toUpperCase(),
 	)
 
 export const checkSlugUniqueness = async ({
@@ -90,7 +90,7 @@ export const convertMsToHumanReadable = (ms: number): string => {
 	}
 	if (seconds > 0 || (milliseconds > 0 && parts.length === 0)) {
 		parts.push(
-			`${seconds}.${milliseconds.toString().padStart(3, '0')} second${seconds !== 1 ? 's' : ''}`
+			`${seconds}.${milliseconds.toString().padStart(3, '0')} second${seconds !== 1 ? 's' : ''}`,
 		)
 	}
 

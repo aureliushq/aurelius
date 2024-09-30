@@ -43,7 +43,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	const writings = await table.findMany({ where: { effortId: effort.id } })
 	const sortedWritings = [...writings].sort(
 		(a, b) =>
-			new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+			new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
 	)
 	return { effort, writings: sortedWritings }
 }
@@ -171,7 +171,8 @@ const EffortHome = () => {
 						<KeyboardShortcut
 							keys={getShortcutWithModifiers(
 								allShortcuts[EditorShortcuts.NEW_POST].key,
-								allShortcuts[EditorShortcuts.NEW_POST].modifiers
+								allShortcuts[EditorShortcuts.NEW_POST]
+									.modifiers,
 							)}
 						/>
 					</Button>

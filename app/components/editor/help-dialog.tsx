@@ -58,7 +58,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
 							{APP_SHORTCUTS.sort((a, b) => {
 								return a.description.localeCompare(
-									b.description
+									b.description,
 								)
 							}).map((config, index) => {
 								const { description, key, label, modifiers } =
@@ -73,7 +73,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 										<KeyboardShortcut
 											keys={getShortcutWithModifiers(
 												label ?? key,
-												modifiers
+												modifiers,
 											)}
 										/>
 									</li>
@@ -86,7 +86,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
 							{FORMATTING_SHORTCUTS.sort((a, b) => {
 								return a.description.localeCompare(
-									b.description
+									b.description,
 								)
 							}).map((config, index) => {
 								const { description, key, label, modifiers } =
@@ -101,7 +101,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 										<KeyboardShortcut
 											keys={getShortcutWithModifiers(
 												label ?? key,
-												modifiers
+												modifiers,
 											)}
 										/>
 									</li>
@@ -125,7 +125,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 										<KeyboardShortcut
 											keys={getShortcutWithModifiers(
 												label ?? key,
-												modifiers
+												modifiers,
 											)}
 											lowercase={true}
 										/>

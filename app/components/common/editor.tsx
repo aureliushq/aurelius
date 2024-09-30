@@ -107,7 +107,7 @@ const Editor = ({
 	const titleRef = useRef<HTMLTextAreaElement>(null)
 
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(
-		data.title.trim() === ''
+		data.title.trim() === '',
 	)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
 

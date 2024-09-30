@@ -269,13 +269,13 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 
 const Writing = ({ settings }: { settings: SettingsRow }) => {
 	const [dailyGoalType, setDailyGoalType] = useState(
-		settings.writingDailyGoal || DAILY_GOAL_TYPE[0].value
+		settings.writingDailyGoal || DAILY_GOAL_TYPE[0].value,
 	)
 	const { toast } = useToast()
 
 	const saveFormData = (
 		writingDailyGoal: string,
-		writingDailyTarget: number
+		writingDailyTarget: number,
 	) => {
 		arls.settings.update(settings.id, {
 			writingDailyGoal: S.decodeSync(NonEmptyString100)(writingDailyGoal),
@@ -295,7 +295,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 		const formData = new FormData(event.currentTarget)
 
 		const writingDailyGoal = formData.get(
-			'writing-daily-goal-type'
+			'writing-daily-goal-type',
 		) as string
 		const writingDailyTarget =
 			(writingDailyGoal as WritingDailyGoalType) ===
@@ -460,14 +460,14 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 
 const Music = ({ settings }: { settings: SettingsRow }) => {
 	const [selectedChannel, setSelectedChannel] = useState(
-		settings.musicChannel as string
+		settings.musicChannel as string,
 	)
 	const { toast } = useToast()
 
 	const saveFormData = (
 		enableMusicPlayer: boolean,
 		musicChannel: string,
-		youtubeLink: string
+		youtubeLink: string,
 	) => {
 		arls.settings.update(settings.id, {
 			// @ts-ignore
@@ -636,7 +636,7 @@ const Sync = () => {
 						onSuccess: (mnemonic) => {
 							restoreOwner(mnemonic).then(() => {})
 						},
-					})
+					}),
 				)
 		}, 3000)
 	}
@@ -674,7 +674,7 @@ const Sync = () => {
 									className='absolute top-1 right-1 p-0 w-5 h-5'
 									onClick={() => {
 										copyToClipboard(
-											owner?.mnemonic as string
+											owner?.mnemonic as string,
 										).then(() => {
 											setHasCopied(true)
 										})

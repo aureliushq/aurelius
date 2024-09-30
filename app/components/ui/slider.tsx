@@ -14,20 +14,20 @@ const Slider = React.forwardRef<
 			props.orientation === 'vertical'
 				? 'h-full flex-col justify-center'
 				: 'w-full items-center',
-			className
+			className,
 		)}
 		{...props}
 	>
 		<SliderPrimitive.Track
 			className={cn(
 				'relative grow overflow-hidden rounded-full bg-secondary',
-				props.orientation === 'vertical' ? 'h-full w-2' : 'h-2 w-full'
+				props.orientation === 'vertical' ? 'h-full w-2' : 'h-2 w-full',
 			)}
 		>
 			<SliderPrimitive.Range
 				className={cn(
 					'absolute bg-primary',
-					props.orientation === 'vertical' ? 'w-full' : 'h-full'
+					props.orientation === 'vertical' ? 'w-full' : 'h-full',
 				)}
 			/>
 		</SliderPrimitive.Track>
@@ -35,7 +35,7 @@ const Slider = React.forwardRef<
 			className={cn(
 				'flex h-5 w-5 rounded-full border-2 border-primary ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50',
 				'bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-				props.orientation === 'vertical' ? '-ml-1.5' : ''
+				props.orientation === 'vertical' ? '-ml-1.5' : '',
 			)}
 		/>
 	</SliderPrimitive.Root>
