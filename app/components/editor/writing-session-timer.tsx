@@ -1,13 +1,13 @@
 import {
-	Dispatch,
-	FormEvent,
-	ReactNode,
-	SetStateAction,
+	type Dispatch,
+	type FormEvent,
+	type ReactNode,
+	type SetStateAction,
 	useContext,
 	useEffect,
 	useState,
 } from 'react'
-import { Timer, TimerRenderer, useTimer } from 'react-use-precision-timer'
+import { type Timer, TimerRenderer, useTimer } from 'react-use-precision-timer'
 
 import { Form, useLocation, useNavigate } from '@remix-run/react'
 
@@ -42,10 +42,13 @@ import {
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
-	WritingSessionDialogProps,
-	WritingSessionSettings,
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
+import {
+	type WritingSessionDialogProps,
+	type WritingSessionSettings,
 	WritingSessionStatus,
 } from '~/lib/types'
 import { formatTime } from '~/lib/utils'
@@ -76,8 +79,9 @@ const SessionTimer = ({
 		timer.getElapsedRunningTime()
 	)
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
-		setElapsedMinutes(() => parseInt(minutes, 10))
+		setElapsedMinutes(() => Number.parseInt(minutes, 10))
 	}, [minutes])
 
 	return (
@@ -152,7 +156,7 @@ const WritingSessionTimer = ({
 	const startWritingSession = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
-		const targetDuration = parseInt(
+		const targetDuration = Number.parseInt(
 			formData.get('session-duration') as string,
 			10
 		)
@@ -185,7 +189,7 @@ const WritingSessionTimer = ({
 		}
 	}
 
-	const stopWritingSession = () => {
+	const stopWritingSession = async () => {
 		const duration = sessionTimer.getElapsedRunningTime()
 		sessionTimer.stop()
 		setWritingSessionStatus(WritingSessionStatus.STOPPED)
@@ -195,7 +199,7 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.music && !isMusicPlaying) {
 			setIsMusicPlaying(false)
 		}
-		arls.writingSessions.create({
+		await arls.writingSessions.create({
 			contentId: S.decodeSync(S.NullOr(ContentId))(contentId || null),
 			duration: S.decodeSync(PositiveInt)(duration),
 			effortId: S.decodeSync(WritingEffortId)(effortId),
@@ -204,6 +208,7 @@ const WritingSessionTimer = ({
 		})
 	}
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		// check if the session has reached the target duration
 		if (

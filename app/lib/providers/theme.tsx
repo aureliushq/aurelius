@@ -29,7 +29,7 @@ export function ThemeProvider({
 	const [theme, setTheme] = useState<Theme>(() =>
 		localStorage
 			? (localStorage.getItem(storageKey) as Theme)
-			: defaultTheme
+			: defaultTheme,
 	)
 
 	useEffect(() => {
@@ -39,7 +39,7 @@ export function ThemeProvider({
 
 		if (theme === 'system') {
 			const systemTheme = window.matchMedia(
-				'(prefers-color-scheme: dark)'
+				'(prefers-color-scheme: dark)',
 			).matches
 				? 'dark'
 				: 'light'

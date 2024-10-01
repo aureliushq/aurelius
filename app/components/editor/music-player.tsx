@@ -17,8 +17,8 @@ import {
 import { Separator } from '~/components/ui/separator'
 import { Slider } from '~/components/ui/slider'
 import { MUSIC_STATIONS } from '~/lib/constants'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
-import { MusicChannels } from '~/lib/types'
+import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import type { MusicChannels } from '~/lib/types'
 
 type MusicPlayerProps = {
 	focusMode: boolean

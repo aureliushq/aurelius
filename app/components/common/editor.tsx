@@ -13,7 +13,7 @@ import { Underline } from '@tiptap/extension-underline'
 import { Youtube } from '@tiptap/extension-youtube'
 import {
 	BubbleMenu as BubbleMenuWrapper,
-	Editor as TiptapEditor,
+	type Editor as TiptapEditor,
 	useEditor,
 } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
@@ -34,9 +34,12 @@ import {
 import MusicPlayer from '~/components/editor/music-player'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
 import {
-	EditorData,
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
+import {
+	type EditorData,
 	EditorShortcuts,
 	EditorToolbarMode,
 	WritingSessionStatus,
@@ -147,13 +150,13 @@ const Editor = ({
 			}),
 		],
 		onCreate({ editor }) {
-			let html = editor.isEmpty ? '' : editor.getHTML()
+			const html = editor.isEmpty ? '' : editor.getHTML()
 			const wordCount = editor.storage.characterCount.words()
 			handleContentChange(html)
 			handleWordCountChange(wordCount)
 		},
 		onUpdate({ editor }) {
-			let html = editor.isEmpty ? '' : editor.getHTML()
+			const html = editor.isEmpty ? '' : editor.getHTML()
 			const wordCount = editor.storage.characterCount.words()
 			handleContentChange(html)
 			handleWordCountChange(wordCount)
@@ -191,6 +194,7 @@ const Editor = ({
 		setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
 	}
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (data.content) {
 			const wordCount = editor.storage.characterCount.words()
@@ -198,6 +202,7 @@ const Editor = ({
 		}
 	}, [data.content])
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (
 			writingSessionStatus === WritingSessionStatus.RUNNING &&
@@ -261,7 +266,7 @@ const Editor = ({
 					</div>
 				</section>
 				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
-					{!!settings?.enableMusicPlayer ? (
+					{settings?.enableMusicPlayer ? (
 						<MusicPlayer
 							focusMode={focusMode}
 							isMusicPlaying={isMusicPlaying}

@@ -1,8 +1,8 @@
 import { useContext } from 'react'
 
-import { LinksFunction } from '@remix-run/node'
+import type { LinksFunction } from '@remix-run/node'
 import {
-	ClientLoaderFunctionArgs,
+	type ClientLoaderFunctionArgs,
 	Link,
 	Links,
 	Meta,
@@ -13,8 +13,8 @@ import * as S from '@effect/schema/Schema'
 import { ArrowLeftIcon } from 'lucide-react'
 import invariant from 'tiny-invariant'
 import { AureliusContext } from '~/lib/providers/aurelius'
-import { Arls, TableQueryBuilder, arls } from '~/services/arls'
-import { EffortsTable } from '~/services/evolu/database'
+import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
+import type { EffortsTable } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
 import writerStylesheet from '~/writer.css?url'
 

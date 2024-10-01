@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react'
 
 import {
-	AllShortcuts,
+	type AllShortcuts,
 	EditorShortcuts,
-	ModifierKeys,
-	ShortcutAction,
-	ShortcutActions,
+	type ModifierKeys,
+	type ShortcutAction,
+	type ShortcutActions,
 } from '~/lib/types'
 
 // Centralized record of all shortcuts
@@ -79,14 +79,14 @@ const allShortcuts: AllShortcuts = {
 
 // Global store for global shortcut actions
 // TODO: add all global shortcut actions here
-let globalShortcutActions: ShortcutActions = {}
+const globalShortcutActions: ShortcutActions = {}
 
 // Function to set global shortcut actions
 export const setGlobalShortcutAction = (
 	shortcutName: string,
 	action: ShortcutAction
 ): void => {
-	if (allShortcuts[shortcutName] && allShortcuts[shortcutName].global) {
+	if (allShortcuts?.[shortcutName].global) {
 		globalShortcutActions[shortcutName] = action
 	}
 }
@@ -100,6 +100,7 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 		})
 	}, [])
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
 			const isInputField =

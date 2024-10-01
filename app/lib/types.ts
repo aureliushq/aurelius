@@ -4,6 +4,7 @@ export type EditorData = {
 	content: string
 	title: string
 	wordCount?: number
+	// biome-ignore lint: suspicious/noExplicitAny
 	[key: string]: any
 }
 

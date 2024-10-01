@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 
 import { Form } from '@remix-run/react'
 
@@ -65,17 +65,17 @@ import {
 	TOOLBAR_MODES,
 } from '~/lib/constants'
 import { useDebounce } from '~/lib/hooks'
-import { Theme, useTheme } from '~/lib/providers/theme'
+import { type Theme, useTheme } from '~/lib/providers/theme'
 import {
-	MusicChannels,
-	PreferencesDialogProps,
+	type MusicChannels,
+	type PreferencesDialogProps,
 	SiteTheme,
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
 import { arls } from '~/services/arls'
-import { SettingsRow } from '~/services/evolu/client'
-import { Database } from '~/services/evolu/database'
+import type { SettingsRow } from '~/services/evolu/client'
+import type { Database } from '~/services/evolu/database'
 import { Int, NonEmptyString100 } from '~/services/evolu/schema'
 
 // TODO: Autosave settings on change
@@ -93,14 +93,15 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 	const { theme, setTheme } = useTheme()
 	const { toast } = useToast()
 
-	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+	const handleChange = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 
 		const bodyFont = formData.get('body-font') as string
 		const titleFont = formData.get('title-font') as string
 
-		arls.settings.update(settings.id, {
+		// @ts-ignore
+		await arls.settings.update(settings.id, {
 			bodyFont: S.decodeSync(NonEmptyString100)(bodyFont),
 			titleFont: S.decodeSync(NonEmptyString100)(titleFont),
 		})
@@ -204,14 +205,15 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 const Editor = ({ settings }: { settings: SettingsRow }) => {
 	const { toast } = useToast()
 
-	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+	const handleChange = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 
 		const showSplashDialog = formData.get('show-splash-dialog') === 'on'
 		const toolbarMode = formData.get('editor-toolbar-mode') as string
 
-		arls.settings.update(settings.id, {
+		// @ts-ignore
+		await arls.settings.update(settings.id, {
 			// @ts-ignore
 			showSplashDialog,
 			toolbarMode: S.decodeSync(NonEmptyString100)(toolbarMode),
@@ -273,11 +275,12 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 	)
 	const { toast } = useToast()
 
-	const saveFormData = (
+	const saveFormData = async (
 		writingDailyGoal: string,
 		writingDailyTarget: number
 	) => {
-		arls.settings.update(settings.id, {
+		// @ts-ignore
+		await arls.settings.update(settings.id, {
 			writingDailyGoal: S.decodeSync(NonEmptyString100)(writingDailyGoal),
 			writingDailyTarget: S.decodeSync(Int)(writingDailyTarget),
 		})
@@ -288,7 +291,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 
 	const debouncedSaveFormData = useDebounce(saveFormData, 1000)
 
-	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+	const handleChange = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const target = event.target as HTMLInputElement | HTMLSelectElement
 		const { type } = target
@@ -300,13 +303,19 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 		const writingDailyTarget =
 			(writingDailyGoal as WritingDailyGoalType) ===
 			WritingDailyGoalType.DURATION
-				? parseInt(formData.get('daily-goal-duration') as string, 10)
-				: parseInt(formData.get('daily-goal-word-count') as string, 10)
+				? Number.parseInt(
+						formData.get('daily-goal-duration') as string,
+						10
+					)
+				: Number.parseInt(
+						formData.get('daily-goal-word-count') as string,
+						10
+					)
 
 		if (type === 'number') {
 			debouncedSaveFormData(writingDailyGoal, writingDailyTarget)
 		} else {
-			saveFormData(writingDailyGoal, writingDailyTarget)
+			await saveFormData(writingDailyGoal, writingDailyTarget)
 		}
 	}
 
@@ -321,11 +330,13 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 					</small>
 				</Label>
 				<Select
+					// @ts-ignore
 					defaultValue={dailyGoalType}
 					name='writing-daily-goal-type'
 					onValueChange={(value) =>
 						setDailyGoalType(value as WritingDailyGoalType)
 					}
+					// @ts-ignore
 					value={dailyGoalType}
 				>
 					<SelectTrigger className='w-[180px]'>
@@ -384,7 +395,7 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 const Export = ({ settings }: { settings: SettingsRow }) => {
 	const { toast } = useToast()
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 
@@ -393,7 +404,8 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 			? formData.get('export-watermark') === 'on'
 			: true
 
-		arls.settings.update(settings.id, {
+		// @ts-ignore
+		await arls.settings.update(settings.id, {
 			exportImageFooter: S.decodeSync(String1000)(exportImageFooter),
 			// @ts-ignore
 			exportImageWatermark,
@@ -464,12 +476,13 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 	)
 	const { toast } = useToast()
 
-	const saveFormData = (
+	const saveFormData = async (
 		enableMusicPlayer: boolean,
 		musicChannel: string,
 		youtubeLink: string
 	) => {
-		arls.settings.update(settings.id, {
+		// @ts-ignore
+		await arls.settings.update(settings.id, {
 			// @ts-ignore
 			enableMusicPlayer,
 			musicChannel: S.decodeSync(NonEmptyString100)(musicChannel),
@@ -482,7 +495,7 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 
 	const debouncedSaveFormData = useDebounce(saveFormData, 1000)
 
-	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+	const handleChange = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const target = event.target as HTMLInputElement
 		const { type } = target
@@ -494,7 +507,7 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 		if (type === 'text') {
 			debouncedSaveFormData(enableMusicPlayer, musicChannel, youtubeLink)
 		} else {
-			saveFormData(enableMusicPlayer, musicChannel, youtubeLink)
+			await saveFormData(enableMusicPlayer, musicChannel, youtubeLink)
 		}
 	}
 
@@ -601,6 +614,7 @@ const Sync = () => {
 
 	const owner = getOwner()
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		setTimeout(() => {
 			setHasCopied(false)
@@ -840,8 +854,9 @@ const Advanced = () => {
 const Profile = ({ settings }: { settings: SettingsRow }) => {
 	const { toast } = useToast()
 
-	const saveFormData = (userName: string) => {
-		arls.settings.update(settings.id, {
+	const saveFormData = async (userName: string) => {
+		// @ts-ignore
+		await arls.settings.update(settings.id, {
 			userName: S.decodeSync(String1000)(userName),
 		})
 		toast({
@@ -851,7 +866,7 @@ const Profile = ({ settings }: { settings: SettingsRow }) => {
 
 	const debouncedSaveFormData = useDebounce(saveFormData, 1000)
 
-	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+	const handleChange = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const target = event.target as HTMLInputElement | HTMLSelectElement
 		const { type } = target
@@ -862,7 +877,7 @@ const Profile = ({ settings }: { settings: SettingsRow }) => {
 		if (type === 'text') {
 			debouncedSaveFormData(userName)
 		} else {
-			saveFormData(userName)
+			await saveFormData(userName)
 		}
 	}
 

@@ -1,9 +1,9 @@
-import { ReactNode, useState } from 'react'
+import { type ReactNode, useState } from 'react'
 
 import {
-	ColumnDef,
-	ColumnFiltersState,
-	SortingState,
+	type ColumnDef,
+	type ColumnFiltersState,
+	type SortingState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
@@ -126,13 +126,15 @@ export function DataTable<TData, TValue>({
 					<div className='w-full p-16 flex items-center justify-center flex-col gap-4 text-muted-foreground'>
 						{theme === 'dark' || theme === 'system' ? (
 							<img
-								className={`w-64 h-64 invert`}
-								src={'/images/no-data-light.svg'}
+								alt='Illustration of a person pointing to an large empty notebook'
+								className='w-64 h-64 invert'
+								src='/images/no-data-light.svg'
 							/>
 						) : (
 							<img
-								className={`w-64 h-64`}
-								src={'/images/no-data-light.svg'}
+								alt='Illustration of a person pointing to an large empty notebook'
+								className='w-64 h-64'
+								src='/images/no-data-light.svg'
 							/>
 						)}
 						Nothing here yet! Waiting for you to bring your ideas to

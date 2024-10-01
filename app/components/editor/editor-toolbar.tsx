@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { Editor } from '@tiptap/react'
+import type { Editor } from '@tiptap/react'
 import {
 	BoldIcon,
 	CodeIcon,
@@ -36,7 +36,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 	]
 
 	const [activeHeadingMark, setActiveHeadingMark] = useState<string>(
-		EditorHeadings.NORMAL
+		EditorHeadings.NORMAL,
 	)
 	const [activeMarks, setActiveMarks] = useState<string[]>([])
 	const [activeNodes, setActiveNodes] = useState<string[]>([])
@@ -138,7 +138,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 				.run()
 			setLinkOpen(false)
 		},
-		[editor]
+		[editor],
 	)
 
 	useEffect(() => {

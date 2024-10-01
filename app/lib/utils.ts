@@ -1,8 +1,8 @@
 import * as S from '@effect/schema/Schema'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { ModifierKeys } from '~/lib/types'
-import { Arls, arls } from '~/services/arls'
+import type { ModifierKeys } from '~/lib/types'
+import { type Arls, arls } from '~/services/arls'
 import { NonEmptyString100, WritingEffortId } from '~/services/evolu/schema'
 
 export function cn(...inputs: ClassValue[]) {
@@ -24,7 +24,7 @@ export const formatTime = (timestamp: number) => {
 
 export const getShortcutWithModifiers = (
 	key: string,
-	modifiers: ModifierKeys
+	modifiers: ModifierKeys,
 ) => {
 	return `${Object.entries(modifiers)
 		.filter(([_, active]) => active)
@@ -40,7 +40,7 @@ export const capitalize = ({
 	lower: boolean
 }) =>
 	(lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
-		match.toUpperCase()
+		match.toUpperCase(),
 	)
 
 export const checkSlugUniqueness = async ({
@@ -90,7 +90,7 @@ export const convertMsToHumanReadable = (ms: number): string => {
 	}
 	if (seconds > 0 || (milliseconds > 0 && parts.length === 0)) {
 		parts.push(
-			`${seconds}.${milliseconds.toString().padStart(3, '0')} second${seconds !== 1 ? 's' : ''}`
+			`${seconds}.${milliseconds.toString().padStart(3, '0')} second${seconds !== 1 ? 's' : ''}`,
 		)
 	}
 

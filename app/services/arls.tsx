@@ -1,8 +1,8 @@
-import { ExtractRow, Query, SqliteQueryOptions } from '@evolu/common'
+import type { ExtractRow, Query, SqliteQueryOptions } from '@evolu/common'
 import { ARLS_OPTIONS } from '~/lib/constants'
-import { evolu } from '~/services/evolu/client'
-import { Id, Table, TableName } from '~/services/evolu/database'
-import {
+import { createEvoluClient } from '~/services/evolu/client'
+import type { Id, Table, TableName } from '~/services/evolu/database'
+import type {
 	BooksTable,
 	HelpTable,
 	PostsTable,
@@ -12,11 +12,11 @@ import {
 } from '~/services/evolu/schema'
 
 type QueryBuilderMethods<T extends Table> = {
-	create(data: Partial<T>): ExtractRow<Query<T>>
+	create(data: Partial<T>): Promise<ExtractRow<Query<T>>>
 	delete(where: Partial<T>): Promise<void>
 	findMany(options?: FindManyOptions<T>): Promise<ReadonlyArray<T>>
 	findUnique(where: Partial<T>): Promise<T | undefined>
-	update(id: Id, data: Partial<T>): ExtractRow<Query<T>>
+	update(id: Id, data: Partial<T>): Promise<ExtractRow<Query<T>>>
 }
 
 type QueryBuilderOptions = {
@@ -40,8 +40,15 @@ export class TableQueryBuilder<T extends Table>
 		private options: QueryBuilderOptions = ARLS_OPTIONS
 	) {}
 
-	create(data: Partial<T>): ExtractRow<Query<T>> {
-		return evolu.create(this.tableName, data) as ExtractRow<Query<T>>
+	private getEvolu() {
+		return createEvoluClient()
+	}
+
+	async create(data: Partial<T>): Promise<ExtractRow<Query<T>>> {
+		const evolu = this.getEvolu()
+		return evolu.create(this.tableName, data) as unknown as Promise<
+			ExtractRow<Query<T>>
+		>
 	}
 
 	async delete(where: Partial<T>): Promise<void> {
@@ -50,19 +57,22 @@ export class TableQueryBuilder<T extends Table>
 	}
 
 	async findMany(options: FindManyOptions<T>): Promise<ReadonlyArray<T>> {
+		const evolu = this.getEvolu()
 		const { limit, orderBy, where = {} } = options
 		// TODO: implement subscribe
 		const findManyQuery = evolu.createQuery((db) => {
 			let query = db.selectFrom(this.tableName).selectAll()
 
 			// apply where
-			Object.entries(where).forEach(([key, value]) => {
-				query = query.where(key as any, '=', value)
-			})
+			for (const [key, value] of Object.entries(where)) {
+				// @ts-ignore
+				query = query.where(key, '=', value)
+			}
 
 			// apply orderBy
 			if (orderBy) {
-				query = query.orderBy(orderBy.column as any, orderBy.direction)
+				// @ts-ignore
+				query = query.orderBy(orderBy.column, orderBy.direction)
 			}
 
 			// apply limit
@@ -77,11 +87,13 @@ export class TableQueryBuilder<T extends Table>
 	}
 
 	async findUnique(where: Partial<T>): Promise<T | undefined> {
-		let findUniqueQuery = evolu.createQuery((db) => {
+		const evolu = this.getEvolu()
+		const findUniqueQuery = evolu.createQuery((db) => {
 			let query = db.selectFrom(this.tableName).selectAll()
-			Object.entries(where).forEach(([key, value]) => {
-				query = query.where(key as any, '=', value)
-			})
+			for (const [key, value] of Object.entries(where)) {
+				// @ts-ignore
+				query = query.where(key, '=', value)
+			}
 
 			return query
 		}, this.options)
@@ -89,10 +101,12 @@ export class TableQueryBuilder<T extends Table>
 		return row as Readonly<T>
 	}
 
-	update(id: Id, data: Partial<T>): ExtractRow<Query<T>> {
-		return evolu.update(this.tableName, { id, ...data }) as ExtractRow<
-			Query<T>
-		>
+	async update(id: Id, data: Partial<T>): Promise<ExtractRow<Query<T>>> {
+		const evolu = this.getEvolu()
+		return evolu.update(this.tableName, {
+			id,
+			...data,
+		}) as unknown as Promise<ExtractRow<Query<T>>>
 	}
 }
 

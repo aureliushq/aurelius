@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
+	type ClientActionFunctionArgs,
+	type ClientLoaderFunctionArgs,
 	useFetcher,
 	useLoaderData,
 	useNavigate,
@@ -14,10 +14,13 @@ import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
-import { EditorData } from '~/lib/types'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
+import type { EditorData } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
-import { Arls, arls } from '~/services/arls'
+import { type Arls, arls } from '~/services/arls'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 
 const slugger = new GithubSlugger()
@@ -60,7 +63,7 @@ export const clientAction = async ({
 	} while (!isUnique)
 
 	const table = arls[effort.type as keyof Arls]
-	table.create({
+	await table.create({
 		content: S.decodeSync(Content)(content),
 		effortId: effort.id,
 		slug: S.decodeSync(NonEmptyString100)(finalSlug),
@@ -80,6 +83,7 @@ const NewWriting = () => {
 
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	const onAutoSave = useCallback(
 		({ content, title, wordCount }: EditorData) => {
 			setIsSaving(true)
@@ -100,12 +104,14 @@ const NewWriting = () => {
 		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (effort) {
 			setEffortId(effort.id)
 		}
 	}, [effort])
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (
 			fetcher.state === 'idle' &&

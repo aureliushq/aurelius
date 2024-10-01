@@ -1,8 +1,8 @@
-import { ChangeEvent, forwardRef, useEffect, useRef } from 'react'
+import { type ChangeEvent, forwardRef, useEffect, useRef } from 'react'
 
-import { Editor, EditorContent } from '@tiptap/react'
+import { type Editor, EditorContent } from '@tiptap/react'
 import { Textarea } from '~/components/ui/textarea'
-import { SettingsRow } from '~/services/evolu/client'
+import type { SettingsRow } from '~/services/evolu/client'
 
 type WriterProps = {
 	content: string
@@ -17,6 +17,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 	({ content, editor, onTitleBlur, settings, setTitle, title }, titleRef) => {
 		const internalRef = useRef<HTMLTextAreaElement | null>(null)
 
+		// biome-ignore lint: correctness/useExhaustiveDependencies
 		useEffect(() => {
 			if (!title && !content) {
 				internalRef.current?.focus()
@@ -27,6 +28,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 			}
 		}, [])
 
+		// biome-ignore lint: correctness/useExhaustiveDependencies
 		useEffect(() => {
 			const textarea = internalRef.current
 			if (textarea) {

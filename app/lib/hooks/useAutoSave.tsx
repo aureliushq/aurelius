@@ -6,7 +6,7 @@ import {
 	useState,
 } from 'react'
 
-import { EditorData } from '~/lib/types'
+import type { EditorData } from '~/lib/types'
 
 type SetEditorDataOptions = {
 	ignoreAutoSave?: boolean
@@ -14,7 +14,7 @@ type SetEditorDataOptions = {
 
 export type SetEditorDataFunction = (
 	data: Partial<EditorData>,
-	options?: SetEditorDataOptions
+	options?: SetEditorDataOptions,
 ) => void
 
 type AutoSaveProps = {
@@ -68,7 +68,7 @@ const useAutoSave = ({
 				dataRef.current = { ...dataRef.current, ...newData }
 				if (ignoreAutoSave) {
 					Object.keys(newData).forEach((key) =>
-						ignoreAutoSaveFieldsRef.current.add(key)
+						ignoreAutoSaveFieldsRef.current.add(key),
 					)
 				}
 			} else {
@@ -78,16 +78,16 @@ const useAutoSave = ({
 
 					if (ignoreAutoSave) {
 						Object.keys(newData).forEach((key) =>
-							ignoreAutoSaveFieldsRef.current.add(key)
+							ignoreAutoSaveFieldsRef.current.add(key),
 						)
 					} else {
 						Object.keys(newData).forEach((key) =>
-							ignoreAutoSaveFieldsRef.current.delete(key)
+							ignoreAutoSaveFieldsRef.current.delete(key),
 						)
 					}
 
 					const shouldAutoSave = Object.keys(newData).some(
-						(key) => !ignoreAutoSaveFieldsRef.current.has(key)
+						(key) => !ignoreAutoSaveFieldsRef.current.has(key),
 					)
 
 					if (shouldAutoSave) {
@@ -98,7 +98,7 @@ const useAutoSave = ({
 				})
 			}
 		},
-		[debouncedSave]
+		[debouncedSave],
 	)
 
 	const forceSave = useCallback(() => {
