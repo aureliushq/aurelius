@@ -73,7 +73,7 @@ const SessionTimer = ({
 	timer: Timer
 }) => {
 	const { hours, minutes, seconds } = formatTime(
-		timer.getElapsedRunningTime(),
+		timer.getElapsedRunningTime()
 	)
 
 	useEffect(() => {
@@ -154,7 +154,7 @@ const WritingSessionTimer = ({
 		const formData = new FormData(event.currentTarget)
 		const targetDuration = parseInt(
 			formData.get('session-duration') as string,
-			10,
+			10
 		)
 		const focusMode = formData.get('focus-mode') === 'on'
 		const music = formData.get('music') === 'on'
@@ -185,7 +185,7 @@ const WritingSessionTimer = ({
 		}
 	}
 
-	const stopWritingSession = () => {
+	const stopWritingSession = async () => {
 		const duration = sessionTimer.getElapsedRunningTime()
 		sessionTimer.stop()
 		setWritingSessionStatus(WritingSessionStatus.STOPPED)
@@ -195,7 +195,7 @@ const WritingSessionTimer = ({
 		if (writingSessionSettings.music && !isMusicPlaying) {
 			setIsMusicPlaying(false)
 		}
-		arls.writingSessions.create({
+		await arls.writingSessions.create({
 			contentId: S.decodeSync(S.NullOr(ContentId))(contentId || null),
 			duration: S.decodeSync(PositiveInt)(duration),
 			effortId: S.decodeSync(WritingEffortId)(effortId),

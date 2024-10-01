@@ -96,11 +96,12 @@ const SplashDialog = ({
 
 	const navigate = useNavigate()
 
-	const handleChange = (event: FormEvent<HTMLFormElement>) => {
+	const handleChange = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
 		const showSplashDialog = formData.get('dont-show-again') !== 'on'
-		arls.settings.update(settings.id, {
+		// @ts-ignore
+		await arls.settings.update(settings.id, {
 			// @ts-ignore
 			showSplashDialog,
 		})
@@ -150,7 +151,7 @@ const SplashDialog = ({
 										label='Start a New Post'
 										onClick={() =>
 											triggerShortcut(
-												EditorShortcuts.NEW_POST,
+												EditorShortcuts.NEW_POST
 											)
 										}
 										shortcut={getShortcutWithModifiers(
@@ -159,7 +160,7 @@ const SplashDialog = ({
 											].key,
 											allShortcuts[
 												EditorShortcuts.NEW_POST
-											].modifiers,
+											].modifiers
 										)}
 									/>
 								</li>
@@ -171,7 +172,7 @@ const SplashDialog = ({
 										label='Start a Writing Session'
 										onClick={() =>
 											triggerShortcut(
-												EditorShortcuts.WRITING_SESSION,
+												EditorShortcuts.WRITING_SESSION
 											)
 										}
 										shortcut={getShortcutWithModifiers(
@@ -180,7 +181,7 @@ const SplashDialog = ({
 											].key,
 											allShortcuts[
 												EditorShortcuts.WRITING_SESSION
-											].modifiers,
+											].modifiers
 										)}
 									/>
 								</li>
@@ -200,7 +201,7 @@ const SplashDialog = ({
 											].key,
 											allShortcuts[
 												EditorShortcuts.VIEW_ALL_POSTS
-											].modifiers,
+											].modifiers
 										)}
 									/>
 								</li>
@@ -213,7 +214,7 @@ const SplashDialog = ({
 										onClick={() => {
 											setSplashOpen(false)
 											navigate(
-												ROUTES.VIEW.WRITING_SESSIONS,
+												ROUTES.VIEW.WRITING_SESSIONS
 											)
 										}}
 										shortcut={getShortcutWithModifiers(
@@ -224,7 +225,7 @@ const SplashDialog = ({
 											allShortcuts[
 												EditorShortcuts
 													.VIEW_ALL_WRITING_SESSIONS
-											].modifiers,
+											].modifiers
 										)}
 									/>
 								</li>
@@ -255,16 +256,17 @@ const SplashDialog = ({
 															<span
 																className='text-xs italic'
 																title={new Date(
-																	post.createdAt,
+																	post.createdAt
 																).toDateString()}
 															>
 																{formatDistanceToNow(
 																	new Date(
-																		post.createdAt,
+																		post.createdAt
 																	),
 																	{
-																		addSuffix: true,
-																	},
+																		addSuffix:
+																			true,
+																	}
 																)}
 															</span>
 														</span>
@@ -272,7 +274,7 @@ const SplashDialog = ({
 													onClick={() => {
 														setSplashOpen(false)
 														navigate(
-															`${ROUTES.EDITOR.POST}/${post.slug}`,
+															`${ROUTES.EDITOR.POST}/${post.slug}`
 														)
 													}}
 												/>
@@ -329,7 +331,7 @@ const SplashDialog = ({
 										label='Preferences'
 										onClick={() =>
 											triggerShortcut(
-												EditorShortcuts.PREFERENCES,
+												EditorShortcuts.PREFERENCES
 											)
 										}
 										shortcut={getShortcutWithModifiers(
@@ -338,7 +340,7 @@ const SplashDialog = ({
 											].key,
 											allShortcuts[
 												EditorShortcuts.PREFERENCES
-											].modifiers,
+											].modifiers
 										)}
 									/>
 								</li>
@@ -350,14 +352,14 @@ const SplashDialog = ({
 										label='Help'
 										onClick={() =>
 											triggerShortcut(
-												EditorShortcuts.HELP,
+												EditorShortcuts.HELP
 											)
 										}
 										shortcut={getShortcutWithModifiers(
 											allShortcuts[EditorShortcuts.HELP]
 												.key,
 											allShortcuts[EditorShortcuts.HELP]
-												.modifiers,
+												.modifiers
 										)}
 									/>
 								</li>

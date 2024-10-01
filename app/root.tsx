@@ -1,6 +1,6 @@
-import { ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 
-import { LinksFunction } from '@remix-run/node'
+import type { LinksFunction } from '@remix-run/node'
 import {
 	Link,
 	Links,
@@ -11,6 +11,7 @@ import {
 	useRouteError,
 } from '@remix-run/react'
 
+import type { Evolu, EvoluSchema } from '@evolu/common'
 import { EvoluProvider } from '@evolu/react'
 import { Button } from '~/components/ui/button'
 import { Toaster } from '~/components/ui/toaster'
@@ -18,7 +19,7 @@ import { TooltipProvider } from '~/components/ui/tooltip'
 import stylesheet from '~/globals.css?url'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { ThemeProvider, useTheme } from '~/lib/providers/theme'
-import { evolu } from '~/services/evolu/client'
+import { createEvoluClient } from '~/services/evolu/client'
 import writerStylesheet from '~/writer.css?url'
 
 export const links: LinksFunction = () => [
@@ -88,12 +89,12 @@ const App = ({ children }: { children: ReactNode }) => {
 	)
 }
 
-const Error = () => {
+const ErrorComponent = () => {
 	const error = useRouteError()
 	const { theme } = useTheme()
 
-	let title
-	let message
+	let title: string
+	let message: string
 	// @ts-expect-error: it's fine
 	switch (error?.status) {
 		case 404:
@@ -117,6 +118,7 @@ const Error = () => {
 		<div className='flex w-full h-full items-center justify-center'>
 			<div className='flex flex-col items-center gap-4'>
 				<img
+					alt='Error'
 					className={`w-64 h-64 ${theme === 'dark' ? 'invert' : ''}`}
 					src='/images/crashed-error.svg'
 				/>
@@ -131,12 +133,17 @@ const Error = () => {
 }
 
 export const ErrorBoundary = () => {
+	const evolu = createEvoluClient()
+
 	return (
 		<ThemeProvider>
-			<EvoluProvider value={evolu}>
+			<EvoluProvider
+				// @ts-ignore
+				value={evolu}
+			>
 				<AureliusProvider>
 					<App>
-						<Error />
+						<ErrorComponent />
 					</App>
 				</AureliusProvider>
 			</EvoluProvider>
@@ -145,9 +152,14 @@ export const ErrorBoundary = () => {
 }
 
 const AppWithProviders = () => {
+	const evolu = createEvoluClient()
+
 	return (
 		<ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-			<EvoluProvider value={evolu}>
+			<EvoluProvider
+				// @ts-ignore
+				value={evolu}
+			>
 				<TooltipProvider>
 					<AureliusProvider>
 						<App>

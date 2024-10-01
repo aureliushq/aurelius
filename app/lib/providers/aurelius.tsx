@@ -11,7 +11,7 @@ import { Timer, useTimer } from 'react-use-precision-timer'
 import { useNavigate } from '@remix-run/react'
 
 import { ExtractRow, Query } from '@evolu/common'
-import { useQuery } from '@evolu/react'
+import { useEvolu, useQuery } from '@evolu/react'
 import { ROUTES } from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
 import {
@@ -20,7 +20,7 @@ import {
 	WritingSessionStatus,
 } from '~/lib/types'
 import { arls } from '~/services/arls'
-import { SettingsRow, settingsQuery } from '~/services/evolu/client'
+import { SettingsRow, createSettingsQuery } from '~/services/evolu/client'
 import { PostsTable } from '~/services/evolu/schema'
 
 type PostRow = ExtractRow<Query<PostsTable>>
@@ -114,6 +114,8 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 	const navigate = useNavigate()
 
+	const evolu = useEvolu()
+	const settingsQuery = createSettingsQuery(evolu)
 	const { rows } = useQuery(settingsQuery)
 	const settings = rows[0]
 
@@ -130,7 +132,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [splashOpen, setSplashOpen] = useState(
 		!(localStorage.getItem('aurelius:splash_shown') !== 'true')
 			? localStorage.getItem('aurelius:splash_shown') !== 'true'
-			: !!settings?.showSplashDialog,
+			: !!settings?.showSplashDialog
 	)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
