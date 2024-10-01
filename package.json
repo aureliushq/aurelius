@@ -5,11 +5,11 @@
 	"type": "module",
 	"scripts": {
 		"build": "remix vite:build",
-		"dev": "remix vite:dev",
-		"lint": "biome lint --write .",
-		"start": "remix-serve ./build/server/index.js",
 		"clean": "rimraf node_modules build",
+		"dev": "remix vite:dev",
 		"format": "biome format --write .",
+		"lint": "biome lint --write .",
+		"start": "wrangler pages dev ./build/client",
 		"typecheck": "tsc"
 	},
 	"dependencies": {
@@ -38,9 +38,9 @@
 		"@radix-ui/react-toolbar": "^1.1.0",
 		"@radix-ui/react-tooltip": "^1.1.2",
 		"@radix-ui/react-visually-hidden": "^1.1.0",
-		"@remix-run/node": "^2.10.2",
-		"@remix-run/react": "^2.10.2",
-		"@remix-run/serve": "^2.10.2",
+		"@remix-run/cloudflare": "2.12.1",
+		"@remix-run/cloudflare-pages": "2.12.1",
+		"@remix-run/react": "2.12.1",
 		"@tanstack/react-table": "^8.19.3",
 		"@tiptap/core": "2.4.0",
 		"@tiptap/extension-bubble-menu": "2.4.0",
@@ -82,8 +82,9 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
+		"@cloudflare/workers-types": "^4.20240512.0",
 		"@flydotio/dockerfile": "^0.5.8",
-		"@remix-run/dev": "^2.10.2",
+		"@remix-run/dev": "2.12.1",
 		"@tailwindcss/typography": "^0.5.13",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@types/react": "^18.3.3",
@@ -104,7 +105,8 @@
 		"tailwindcss": "^3.4.4",
 		"typescript": "^5.5.3",
 		"vite": "^5.3.3",
-		"vite-tsconfig-paths": "^4.3.2"
+		"vite-tsconfig-paths": "^4.3.2",
+		"wrangler": "3.57.1"
 	},
 	"engines": {
 		"node": ">=20.0.0"
@@ -113,5 +115,10 @@
 		"react": "18.3.0-canary-feed8f3f9-20240118",
 		"react-dom": "18.3.0-canary-feed8f3f9-20240118"
 	},
-	"trustedDependencies": ["@biomejs/biome", "better-sqlite3", "esbuild"]
+	"trustedDependencies": [
+		"@biomejs/biome",
+		"better-sqlite3",
+		"esbuild",
+		"workerd"
+	]
 }
