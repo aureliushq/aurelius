@@ -31,7 +31,10 @@ import {
 } from '~/components/ui/dialog'
 import { ROUTES } from '~/lib/constants'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { arls } from '~/services/arls'
@@ -123,7 +126,7 @@ const SplashDialog = ({
 				<div className='flex flex-col min-h-[36rem] h-auto w-full rounded-lg overflow-hidden divide-y divide-subtle'>
 					<div className='relative w-full h-[16rem] flex items-start justify-start p-8'>
 						<img
-							alt="Quick Start dialog cover image that shows a writer's workspace with a laptop, a notebook, and a cup of coffee."
+							alt="Quick Start dialog cover that shows a writer's workspace with a laptop, a notebook, and a cup of coffee."
 							className='w-full h-full object-cover object-center z-0 absolute top-0 left-0'
 							src='/images/splash-screen-cover.png'
 						/>

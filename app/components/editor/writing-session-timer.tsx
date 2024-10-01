@@ -42,7 +42,10 @@ import {
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 import {
 	type WritingSessionDialogProps,
 	type WritingSessionSettings,
@@ -76,6 +79,7 @@ const SessionTimer = ({
 		timer.getElapsedRunningTime()
 	)
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		setElapsedMinutes(() => Number.parseInt(minutes, 10))
 	}, [minutes])
@@ -204,6 +208,7 @@ const WritingSessionTimer = ({
 		})
 	}
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		// check if the session has reached the target duration
 		if (

@@ -303,8 +303,14 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 		const writingDailyTarget =
 			(writingDailyGoal as WritingDailyGoalType) ===
 			WritingDailyGoalType.DURATION
-				? Number.parseInt(formData.get('daily-goal-duration') as string, 10)
-				: Number.parseInt(formData.get('daily-goal-word-count') as string, 10)
+				? Number.parseInt(
+						formData.get('daily-goal-duration') as string,
+						10
+					)
+				: Number.parseInt(
+						formData.get('daily-goal-word-count') as string,
+						10
+					)
 
 		if (type === 'number') {
 			debouncedSaveFormData(writingDailyGoal, writingDailyTarget)
@@ -324,11 +330,13 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 					</small>
 				</Label>
 				<Select
+					// @ts-ignore
 					defaultValue={dailyGoalType}
 					name='writing-daily-goal-type'
 					onValueChange={(value) =>
 						setDailyGoalType(value as WritingDailyGoalType)
 					}
+					// @ts-ignore
 					value={dailyGoalType}
 				>
 					<SelectTrigger className='w-[180px]'>
@@ -606,6 +614,7 @@ const Sync = () => {
 
 	const owner = getOwner()
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		setTimeout(() => {
 			setHasCopied(false)

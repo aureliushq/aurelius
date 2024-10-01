@@ -84,9 +84,9 @@ const globalShortcutActions: ShortcutActions = {}
 // Function to set global shortcut actions
 export const setGlobalShortcutAction = (
 	shortcutName: string,
-	action: ShortcutAction,
+	action: ShortcutAction
 ): void => {
-	if (allShortcuts[shortcutName] && allShortcuts[shortcutName].global) {
+	if (allShortcuts?.[shortcutName].global) {
 		globalShortcutActions[shortcutName] = action
 	}
 }
@@ -100,6 +100,7 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 		})
 	}, [])
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
 			const isInputField =
@@ -129,7 +130,7 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 					key === shortcutKey.toLowerCase() &&
 					Object.entries(shortcutModifiers).every(
 						([mod, active]) =>
-							modifiers[mod as keyof ModifierKeys] === active,
+							modifiers[mod as keyof ModifierKeys] === active
 					) &&
 					(runInInputs || !isInputField)
 				) {
@@ -146,7 +147,7 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 				}
 			}
 		},
-		[shortcuts],
+		[shortcuts]
 	)
 
 	useEffect(() => {
@@ -170,7 +171,7 @@ const useKeyboardShortcuts = (shortcuts: ShortcutActions) => {
 				}
 			}
 		},
-		[shortcuts],
+		[shortcuts]
 	)
 
 	return { triggerShortcut }

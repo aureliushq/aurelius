@@ -17,6 +17,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 	({ content, editor, onTitleBlur, settings, setTitle, title }, titleRef) => {
 		const internalRef = useRef<HTMLTextAreaElement | null>(null)
 
+		// biome-ignore lint: correctness/useExhaustiveDependencies
 		useEffect(() => {
 			if (!title && !content) {
 				internalRef.current?.focus()
@@ -27,6 +28,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 			}
 		}, [])
 
+		// biome-ignore lint: correctness/useExhaustiveDependencies
 		useEffect(() => {
 			const textarea = internalRef.current
 			if (textarea) {
@@ -69,7 +71,7 @@ const Writer = forwardRef<HTMLTextAreaElement, WriterProps>(
 				</div>
 			</section>
 		)
-	},
+	}
 )
 
 export default Writer

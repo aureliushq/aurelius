@@ -58,22 +58,22 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
 							{APP_SHORTCUTS.sort((a, b) => {
 								return a.description.localeCompare(
-									b.description,
+									b.description
 								)
-							}).map((config, index) => {
+							}).map((config) => {
 								const { description, key, label, modifiers } =
 									config as ShortcutConfig
 
 								return (
 									<li
 										className='flex items-center justify-between px-4 py-2'
-										key={index}
+										key={key}
 									>
 										<p>{description}</p>
 										<KeyboardShortcut
 											keys={getShortcutWithModifiers(
 												label ?? key,
-												modifiers,
+												modifiers
 											)}
 										/>
 									</li>
@@ -86,22 +86,22 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
 							{FORMATTING_SHORTCUTS.sort((a, b) => {
 								return a.description.localeCompare(
-									b.description,
+									b.description
 								)
-							}).map((config, index) => {
+							}).map((config) => {
 								const { description, key, label, modifiers } =
 									config as ShortcutConfig
 
 								return (
 									<li
 										className='flex items-center justify-between px-4 py-2'
-										key={index}
+										key={key}
 									>
 										<p>{description}</p>
 										<KeyboardShortcut
 											keys={getShortcutWithModifiers(
 												label ?? key,
-												modifiers,
+												modifiers
 											)}
 										/>
 									</li>
@@ -112,20 +112,20 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 					<section className='break-inside-avoid-column flex flex-col items-start justify-start gap-4 mb-4'>
 						<h4 className='text-base font-semibold'>Markdown</h4>
 						<ul className='w-full border border-subtle divide-y divide-subtle rounded-lg text-sm'>
-							{MARKDOWN_SHORTCUTS.map((config, index) => {
+							{MARKDOWN_SHORTCUTS.map((config) => {
 								const { description, key, label, modifiers } =
 									config as ShortcutConfig
 
 								return (
 									<li
 										className='flex items-center justify-between px-4 py-2'
-										key={index}
+										key={key}
 									>
 										<p>{description}</p>
 										<KeyboardShortcut
 											keys={getShortcutWithModifiers(
 												label ?? key,
-												modifiers,
+												modifiers
 											)}
 											lowercase={true}
 										/>

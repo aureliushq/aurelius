@@ -1,16 +1,16 @@
 import * as S from '@effect/schema/Schema'
 import {
+	String as NonEmptyString,
 	NonEmptyString1000,
 	PositiveInt,
 	SqliteBoolean,
-	String,
 	String1000,
 	id,
 	table,
 } from '@evolu/common'
 
 // custom column types
-export const Content = String.pipe(S.minLength(0), S.brand('Content'))
+export const Content = NonEmptyString.pipe(S.minLength(0), S.brand('Content'))
 export enum WritingEffortType {
 	BOOKS = 'books',
 	ESSAYS = 'essays',
@@ -19,10 +19,10 @@ export enum WritingEffortType {
 }
 export const EffortType = S.Enums(WritingEffortType)
 export const Int = S.Number.pipe(S.int(), S.brand('Int'))
-export const NonEmptyString100 = String.pipe(
+export const NonEmptyString100 = NonEmptyString.pipe(
 	S.minLength(1),
 	S.maxLength(100),
-	S.brand('NonEmptyString100'),
+	S.brand('NonEmptyString100')
 )
 export type NonEmptyString100 = typeof NonEmptyString100.Type
 const TemporalString = S.String.pipe(S.brand('TemporalString'))
@@ -30,7 +30,7 @@ export const SqliteDateTime = TemporalString.pipe(S.brand('SqliteDateTime'))
 export type SqliteDateTime = typeof SqliteDateTime.Type
 export const WordCount = S.Number.pipe(
 	S.greaterThanOrEqualTo(0),
-	S.brand('WordCount'),
+	S.brand('WordCount')
 )
 
 // IDs

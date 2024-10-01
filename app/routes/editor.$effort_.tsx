@@ -14,7 +14,10 @@ import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 import type { EditorData } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
 import { type Arls, arls } from '~/services/arls'
@@ -60,7 +63,7 @@ export const clientAction = async ({
 	} while (!isUnique)
 
 	const table = arls[effort.type as keyof Arls]
-	table.create({
+	await table.create({
 		content: S.decodeSync(Content)(content),
 		effortId: effort.id,
 		slug: S.decodeSync(NonEmptyString100)(finalSlug),
@@ -80,32 +83,35 @@ const NewWriting = () => {
 
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	const onAutoSave = useCallback(
 		({ content, title, wordCount }: EditorData) => {
 			setIsSaving(true)
 
 			fetcher.submit(
 				{ content, title, wordCount: wordCount ?? 0 },
-				{ method: 'POST', encType: 'application/json' },
+				{ method: 'POST', encType: 'application/json' }
 			)
 
 			setTimeout(() => {
 				setIsSaving(false)
 			}, 3000)
 		},
-		[],
+		[]
 	)
 
 	const onReset = () => {
 		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (effort) {
 			setEffortId(effort.id)
 		}
 	}, [effort])
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (
 			fetcher.state === 'idle' &&

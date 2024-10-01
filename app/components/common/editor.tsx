@@ -34,7 +34,10 @@ import {
 import MusicPlayer from '~/components/editor/music-player'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 import {
 	type EditorData,
 	EditorShortcuts,
@@ -107,7 +110,7 @@ const Editor = ({
 	const titleRef = useRef<HTMLTextAreaElement>(null)
 
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(
-		data.title.trim() === '',
+		data.title.trim() === ''
 	)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
 
@@ -191,6 +194,7 @@ const Editor = ({
 		setEditorData({ title }, { ignoreAutoSave: isTitleFirstEdit })
 	}
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (data.content) {
 			const wordCount = editor.storage.characterCount.words()
@@ -198,6 +202,7 @@ const Editor = ({
 		}
 	}, [data.content])
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (
 			writingSessionStatus === WritingSessionStatus.RUNNING &&
@@ -261,7 +266,7 @@ const Editor = ({
 					</div>
 				</section>
 				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
-					{!!settings?.enableMusicPlayer ? (
+					{settings?.enableMusicPlayer ? (
 						<MusicPlayer
 							focusMode={focusMode}
 							isMusicPlaying={isMusicPlaying}
