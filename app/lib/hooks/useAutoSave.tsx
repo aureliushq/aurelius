@@ -6,7 +6,7 @@ import {
 	useState,
 } from 'react'
 
-import { EditorData } from '~/lib/types'
+import type { EditorData } from '~/lib/types'
 
 type SetEditorDataOptions = {
 	ignoreAutoSave?: boolean

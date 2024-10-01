@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 
 import { Form } from '@remix-run/react'
 
@@ -65,17 +65,17 @@ import {
 	TOOLBAR_MODES,
 } from '~/lib/constants'
 import { useDebounce } from '~/lib/hooks'
-import { Theme, useTheme } from '~/lib/providers/theme'
+import { type Theme, useTheme } from '~/lib/providers/theme'
 import {
-	MusicChannels,
-	PreferencesDialogProps,
+	type MusicChannels,
+	type PreferencesDialogProps,
 	SiteTheme,
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
 import { arls } from '~/services/arls'
-import { SettingsRow } from '~/services/evolu/client'
-import { Database } from '~/services/evolu/database'
+import type { SettingsRow } from '~/services/evolu/client'
+import type { Database } from '~/services/evolu/database'
 import { Int, NonEmptyString100 } from '~/services/evolu/schema'
 
 // TODO: Autosave settings on change
@@ -303,8 +303,8 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 		const writingDailyTarget =
 			(writingDailyGoal as WritingDailyGoalType) ===
 			WritingDailyGoalType.DURATION
-				? parseInt(formData.get('daily-goal-duration') as string, 10)
-				: parseInt(formData.get('daily-goal-word-count') as string, 10)
+				? Number.parseInt(formData.get('daily-goal-duration') as string, 10)
+				: Number.parseInt(formData.get('daily-goal-word-count') as string, 10)
 
 		if (type === 'number') {
 			debouncedSaveFormData(writingDailyGoal, writingDailyTarget)

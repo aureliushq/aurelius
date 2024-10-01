@@ -1,11 +1,11 @@
-import { SqliteQueryOptions } from '@evolu/common'
+import type { SqliteQueryOptions } from '@evolu/common'
 import { content } from '~/components/common/getting-started'
 import {
 	EditorSansSerifFonts,
 	EditorSerifFonts,
 	EditorToolbarMode,
 	MusicChannels,
-	ShortcutConfig,
+	type ShortcutConfig,
 	SiteTheme,
 	WritingDailyGoalType,
 } from '~/lib/types'

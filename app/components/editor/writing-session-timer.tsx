@@ -1,13 +1,13 @@
 import {
-	Dispatch,
-	FormEvent,
-	ReactNode,
-	SetStateAction,
+	type Dispatch,
+	type FormEvent,
+	type ReactNode,
+	type SetStateAction,
 	useContext,
 	useEffect,
 	useState,
 } from 'react'
-import { Timer, TimerRenderer, useTimer } from 'react-use-precision-timer'
+import { type Timer, TimerRenderer, useTimer } from 'react-use-precision-timer'
 
 import { Form, useLocation, useNavigate } from '@remix-run/react'
 
@@ -42,10 +42,10 @@ import {
 } from '~/components/ui/tooltip'
 import { useToast } from '~/components/ui/use-toast'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
+import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
 import {
-	WritingSessionDialogProps,
-	WritingSessionSettings,
+	type WritingSessionDialogProps,
+	type WritingSessionSettings,
 	WritingSessionStatus,
 } from '~/lib/types'
 import { formatTime } from '~/lib/utils'
@@ -77,7 +77,7 @@ const SessionTimer = ({
 	)
 
 	useEffect(() => {
-		setElapsedMinutes(() => parseInt(minutes, 10))
+		setElapsedMinutes(() => Number.parseInt(minutes, 10))
 	}, [minutes])
 
 	return (
@@ -152,7 +152,7 @@ const WritingSessionTimer = ({
 	const startWritingSession = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const formData = new FormData(event.currentTarget)
-		const targetDuration = parseInt(
+		const targetDuration = Number.parseInt(
 			formData.get('session-duration') as string,
 			10
 		)

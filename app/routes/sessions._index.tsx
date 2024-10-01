@@ -1,12 +1,12 @@
 import { Link, useLoaderData } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { ExtractRow, Query } from '@evolu/common'
-import { ColumnDef } from '@tanstack/react-table'
+import type { ExtractRow, Query } from '@evolu/common'
+import type { ColumnDef } from '@tanstack/react-table'
 import { formatDistance } from 'date-fns'
 import { DataTable } from '~/components/common/data-table'
-import { Arls, arls } from '~/services/arls'
-import { EffortsTable } from '~/services/evolu/database'
+import { type Arls, arls } from '~/services/arls'
+import type { EffortsTable } from '~/services/evolu/database'
 import { ContentId, WritingEffortId } from '~/services/evolu/schema'
 
 export const clientLoader = async () => {

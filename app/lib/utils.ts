@@ -1,8 +1,8 @@
 import * as S from '@effect/schema/Schema'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { ModifierKeys } from '~/lib/types'
-import { Arls, arls } from '~/services/arls'
+import type { ModifierKeys } from '~/lib/types'
+import { type Arls, arls } from '~/services/arls'
 import { NonEmptyString100, WritingEffortId } from '~/services/evolu/schema'
 
 export function cn(...inputs: ClassValue[]) {

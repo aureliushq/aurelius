@@ -13,7 +13,7 @@ import { Underline } from '@tiptap/extension-underline'
 import { Youtube } from '@tiptap/extension-youtube'
 import {
 	BubbleMenu as BubbleMenuWrapper,
-	Editor as TiptapEditor,
+	type Editor as TiptapEditor,
 	useEditor,
 } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
@@ -34,9 +34,9 @@ import {
 import MusicPlayer from '~/components/editor/music-player'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
+import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
 import {
-	EditorData,
+	type EditorData,
 	EditorShortcuts,
 	EditorToolbarMode,
 	WritingSessionStatus,
@@ -147,13 +147,13 @@ const Editor = ({
 			}),
 		],
 		onCreate({ editor }) {
-			let html = editor.isEmpty ? '' : editor.getHTML()
+			const html = editor.isEmpty ? '' : editor.getHTML()
 			const wordCount = editor.storage.characterCount.words()
 			handleContentChange(html)
 			handleWordCountChange(wordCount)
 		},
 		onUpdate({ editor }) {
-			let html = editor.isEmpty ? '' : editor.getHTML()
+			const html = editor.isEmpty ? '' : editor.getHTML()
 			const wordCount = editor.storage.characterCount.words()
 			handleContentChange(html)
 			handleWordCountChange(wordCount)

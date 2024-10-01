@@ -19,7 +19,7 @@ import {
 	allShortcuts,
 	getGlobalShortcuts,
 } from '~/lib/hooks/useKeyboardShortcuts'
-import { HelpDialogProps, ShortcutConfig } from '~/lib/types'
+import type { HelpDialogProps, ShortcutConfig } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 
 const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {

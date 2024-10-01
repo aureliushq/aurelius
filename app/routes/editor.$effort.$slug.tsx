@@ -1,22 +1,22 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
+	type ClientActionFunctionArgs,
+	type ClientLoaderFunctionArgs,
 	useFetcher,
 	useLoaderData,
 	useNavigate,
 } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { ExtractRow, Query, String1000 } from '@evolu/common'
+import { type ExtractRow, type Query, String1000 } from '@evolu/common'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
-import { EditorData } from '~/lib/types'
-import { Arls, TableQueryBuilder, arls } from '~/services/arls'
-import { EffortsTable } from '~/services/evolu/database'
+import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import type { EditorData } from '~/lib/types'
+import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
+import type { EffortsTable } from '~/services/evolu/database'
 import {
 	Content,
 	Int,

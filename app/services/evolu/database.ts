@@ -1,31 +1,31 @@
 import { database } from '@evolu/common'
 import {
-	BookId,
+	type BookId,
 	Books,
-	BooksTable,
-	ChapterId,
+	type BooksTable,
+	type ChapterId,
 	Chapters,
-	ChaptersTable,
-	EssayId,
+	type ChaptersTable,
+	type EssayId,
 	Essays,
-	EssaysTable,
-	HelpId,
-	HelpTable,
-	JournalId,
+	type EssaysTable,
+	type HelpId,
+	type HelpTable,
+	type JournalId,
 	Journals,
-	JournalsTable,
-	PostId,
+	type JournalsTable,
+	type PostId,
 	Posts,
-	PostsTable,
+	type PostsTable,
 	Settings,
-	SettingsId,
-	SettingsTable,
-	WritingEffortId,
+	type SettingsId,
+	type SettingsTable,
+	type WritingEffortId,
 	WritingEfforts,
-	WritingEffortsTable,
-	WritingSessionId,
+	type WritingEffortsTable,
+	type WritingSessionId,
 	WritingSessions,
-	WritingSessionsTable,
+	type WritingSessionsTable,
 	_Help,
 } from '~/services/evolu/schema'
 
@@ -69,4 +69,5 @@ export type Id =
 	| WritingEffortId
 	| WritingSessionId
 
+// biome-ignore lint: it's fine
 export { Database }

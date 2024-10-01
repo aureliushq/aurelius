@@ -1,9 +1,9 @@
-import { ReactNode, useState } from 'react'
+import { type ReactNode, useState } from 'react'
 
 import {
-	ColumnDef,
-	ColumnFiltersState,
-	SortingState,
+	type ColumnDef,
+	type ColumnFiltersState,
+	type SortingState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,

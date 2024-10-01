@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode, useContext, useEffect } from 'react'
+import { type FormEvent, type ReactNode, useContext, useEffect } from 'react'
 
 import { Form, Link, useNavigate } from '@remix-run/react'
 
@@ -31,11 +31,11 @@ import {
 } from '~/components/ui/dialog'
 import { ROUTES } from '~/lib/constants'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
+import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { arls } from '~/services/arls'
-import { SettingsRow } from '~/services/evolu/client'
+import type { SettingsRow } from '~/services/evolu/client'
 
 const SplashDialogButton = ({
 	badge,

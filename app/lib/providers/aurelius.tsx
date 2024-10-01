@@ -1,27 +1,27 @@
 import {
-	ReactNode,
+	type ReactNode,
 	createContext,
 	startTransition,
 	useEffect,
 	useRef,
 	useState,
 } from 'react'
-import { Timer, useTimer } from 'react-use-precision-timer'
+import { type Timer, useTimer } from 'react-use-precision-timer'
 
 import { useNavigate } from '@remix-run/react'
 
-import { ExtractRow, Query } from '@evolu/common'
+import type { ExtractRow, Query } from '@evolu/common'
 import { useEvolu, useQuery } from '@evolu/react'
 import { ROUTES } from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
 import {
 	EditorShortcuts,
-	WritingSessionSettings,
+	type WritingSessionSettings,
 	WritingSessionStatus,
 } from '~/lib/types'
 import { arls } from '~/services/arls'
-import { SettingsRow, createSettingsQuery } from '~/services/evolu/client'
-import { PostsTable } from '~/services/evolu/schema'
+import { type SettingsRow, createSettingsQuery } from '~/services/evolu/client'
+import type { PostsTable } from '~/services/evolu/schema'
 
 type PostRow = ExtractRow<Query<PostsTable>>
 

@@ -1,9 +1,9 @@
 import { useContext } from 'react'
 
-import { ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
+import { type ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import { formatDistanceToNow } from 'date-fns'
 import { ChevronDown, ChevronUp, EyeIcon, PencilIcon } from 'lucide-react'
 import invariant from 'tiny-invariant'
@@ -16,11 +16,11 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
+import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
-import { Arls, TableQueryBuilder, arls } from '~/services/arls'
-import { EffortsTable } from '~/services/evolu/database'
+import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
+import type { EffortsTable } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {

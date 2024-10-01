@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
+	type ClientActionFunctionArgs,
+	type ClientLoaderFunctionArgs,
 	useFetcher,
 	useLoaderData,
 	useNavigate,
@@ -14,10 +14,10 @@ import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
 import Editor from '~/components/common/editor'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, AureliusProviderData } from '~/lib/providers/aurelius'
-import { EditorData } from '~/lib/types'
+import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import type { EditorData } from '~/lib/types'
 import { checkSlugUniqueness } from '~/lib/utils'
-import { Arls, arls } from '~/services/arls'
+import { type Arls, arls } from '~/services/arls'
 import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 
 const slugger = new GithubSlugger()

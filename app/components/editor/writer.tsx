@@ -1,8 +1,8 @@
-import { ChangeEvent, forwardRef, useEffect, useRef } from 'react'
+import { type ChangeEvent, forwardRef, useEffect, useRef } from 'react'
 
-import { Editor, EditorContent } from '@tiptap/react'
+import { type Editor, EditorContent } from '@tiptap/react'
 import { Textarea } from '~/components/ui/textarea'
-import { SettingsRow } from '~/services/evolu/client'
+import type { SettingsRow } from '~/services/evolu/client'
 
 type WriterProps = {
 	content: string
