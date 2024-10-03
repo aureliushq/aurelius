@@ -30,7 +30,6 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import { ROUTES } from '~/lib/constants'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
