@@ -46,24 +46,24 @@ export const createEvoluClient = () => {
 		initialData: (evolu) => {
 			evolu.create('settings', {
 				bodyFont: S.decodeSync(NonEmptyString100)(
-					EditorSerifFonts.MERRIWEATHER
+					EditorSerifFonts.MERRIWEATHER,
 				),
 				enableMusicPlayer: S.decodeSync(SqliteBoolean)(0),
 				exportImageFooter: S.decodeSync(String1000)(''),
 				exportImageWatermark: S.decodeSync(SqliteBoolean)(1),
 				musicChannel: S.decodeSync(NonEmptyString100)(
-					MusicChannels.LOFI_HIP_HOP
+					MusicChannels.LOFI_HIP_HOP,
 				),
 				showSplashDialog: S.decodeSync(SqliteBoolean)(1),
 				titleFont: S.decodeSync(NonEmptyString100)(
-					EditorSansSerifFonts.INTER
+					EditorSansSerifFonts.INTER,
 				),
 				toolbarMode: S.decodeSync(NonEmptyString100)(
-					EditorToolbarMode.FIXED
+					EditorToolbarMode.FIXED,
 				),
 				userName: S.decodeSync(String1000)(''),
 				writingDailyGoal: S.decodeSync(NonEmptyString100)(
-					WritingDailyGoalType.DURATION
+					WritingDailyGoalType.DURATION,
 				),
 				writingDailyTarget: S.decodeSync(Int)(30),
 				youtubeLink: S.decodeSync(String1000)(''),
@@ -82,7 +82,7 @@ export const createEvoluClient = () => {
 				slug: S.decodeSync(NonEmptyString100)('posts'),
 				targetWordCount: S.decodeSync(PositiveInt)(300),
 				time: S.decodeSync(SqliteDateTime)(
-					Temporal.PlainTime.from('12:30:00').toString()
+					Temporal.PlainTime.from('12:30:00').toString(),
 				),
 				type: S.decodeSync(EffortType)(WritingEffortType.POSTS),
 			})

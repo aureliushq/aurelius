@@ -1,4 +1,4 @@
-import { Suspense, useContext, useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useContext, useEffect, useRef, useState } from 'react'
 
 import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 import { CharacterCount } from '@tiptap/extension-character-count'
@@ -19,6 +19,7 @@ import {
 import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import PreferencesDialog from '~/components/common/preferences-dialog'
+import SuspenseFallback from '~/components/common/suspense-fallback'
 import {
 	E2EEIndicator,
 	EditorToolbar,
@@ -28,10 +29,8 @@ import {
 	ResetEditor,
 	Saving,
 	SplashDialog,
-	Writer,
 	WritingSessionTimer,
 } from '~/components/editor'
-import MusicPlayer from '~/components/editor/music-player'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import {
@@ -44,6 +43,8 @@ import {
 	EditorToolbarMode,
 	WritingSessionStatus,
 } from '~/lib/types'
+
+const Writer = lazy(() => import('~/components/editor/writer'))
 
 const lowlight = createLowlight(common)
 
@@ -110,7 +111,7 @@ const Editor = ({
 	const titleRef = useRef<HTMLTextAreaElement>(null)
 
 	const [isTitleFirstEdit, setIsTitleFirstEdit] = useState<boolean>(
-		data.title.trim() === ''
+		data.title.trim() === '',
 	)
 	const [resetEditorOpen, setResetEditorOpen] = useState(false)
 
@@ -266,15 +267,15 @@ const Editor = ({
 					</div>
 				</section>
 				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
-					{settings?.enableMusicPlayer ? (
-						<MusicPlayer
-							focusMode={focusMode}
-							isMusicPlaying={isMusicPlaying}
-							setIsMusicPlaying={setIsMusicPlaying}
-						/>
-					) : (
-						<div />
-					)}
+					{/*{settings?.enableMusicPlayer ? (*/}
+					{/*	<MusicPlayer*/}
+					{/*		focusMode={focusMode}*/}
+					{/*		isMusicPlaying={isMusicPlaying}*/}
+					{/*		setIsMusicPlaying={setIsMusicPlaying}*/}
+					{/*	/>*/}
+					{/*) : (*/}
+					<div />
+					{/*)}*/}
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
@@ -283,15 +284,17 @@ const Editor = ({
 						<HelpButton triggerShortcut={triggerGlobalShortcut} />
 					</div>
 				</section>
-				<Writer
-					content={editorData.content}
-					editor={editor}
-					onTitleBlur={handleTitleBlur}
-					ref={titleRef}
-					settings={settings}
-					setTitle={handleTitleChange}
-					title={editorData.title}
-				/>
+				<Suspense fallback={<SuspenseFallback />}>
+					<Writer
+						content={editorData.content}
+						editor={editor}
+						onTitleBlur={handleTitleBlur}
+						ref={titleRef}
+						settings={settings}
+						setTitle={handleTitleChange}
+						title={editorData.title}
+					/>
+				</Suspense>
 			</ScrollArea>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />
 			<Suspense>

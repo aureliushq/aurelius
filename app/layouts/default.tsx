@@ -11,7 +11,10 @@ import {
 } from '~/components/editor'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useKeyboardShortcuts } from '~/lib/hooks'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 
 const DefaultLayout = ({ children }: { children: ReactNode }) => {

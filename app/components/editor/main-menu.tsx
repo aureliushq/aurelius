@@ -30,7 +30,6 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import { ROUTES } from '~/lib/constants'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
@@ -72,7 +71,7 @@ const MainMenu = ({
 									className='w-full flex items-center justify-between'
 									onClick={() =>
 										triggerShortcut(
-											EditorShortcuts.NEW_POST
+											EditorShortcuts.NEW_POST,
 										)
 									}
 								>
@@ -88,7 +87,7 @@ const MainMenu = ({
 												].key,
 												allShortcuts[
 													EditorShortcuts.NEW_POST
-												].modifiers
+												].modifiers,
 											)}
 										/>
 									</DropdownMenuShortcut>
@@ -97,7 +96,7 @@ const MainMenu = ({
 									className='w-full flex items-center justify-between'
 									onClick={() =>
 										triggerShortcut(
-											EditorShortcuts.VIEW_ALL_POSTS
+											EditorShortcuts.VIEW_ALL_POSTS,
 										)
 									}
 								>
@@ -115,7 +114,7 @@ const MainMenu = ({
 												allShortcuts[
 													EditorShortcuts
 														.VIEW_ALL_POSTS
-												].modifiers
+												].modifiers,
 											)}
 										/>
 									</DropdownMenuShortcut>
@@ -136,7 +135,7 @@ const MainMenu = ({
 									className='flex items-center justify-between'
 									onClick={() =>
 										triggerShortcut(
-											EditorShortcuts.WRITING_SESSION
+											EditorShortcuts.WRITING_SESSION,
 										)
 									}
 								>
@@ -154,7 +153,7 @@ const MainMenu = ({
 												allShortcuts[
 													EditorShortcuts
 														.WRITING_SESSION
-												].modifiers
+												].modifiers,
 											)}
 										/>
 									</DropdownMenuShortcut>
@@ -163,7 +162,7 @@ const MainMenu = ({
 									className='flex items-center justify-between'
 									onClick={() =>
 										triggerShortcut(
-											EditorShortcuts.VIEW_ALL_WRITING_SESSIONS
+											EditorShortcuts.VIEW_ALL_WRITING_SESSIONS,
 										)
 									}
 								>
@@ -181,7 +180,7 @@ const MainMenu = ({
 												allShortcuts[
 													EditorShortcuts
 														.VIEW_ALL_WRITING_SESSIONS
-												].modifiers
+												].modifiers,
 											)}
 										/>
 									</DropdownMenuShortcut>
@@ -252,7 +251,7 @@ const MainMenu = ({
 										allShortcuts[EditorShortcuts.FOCUS_MODE]
 											.key,
 										allShortcuts[EditorShortcuts.FOCUS_MODE]
-											.modifiers
+											.modifiers,
 									)}
 								/>
 							</DropdownMenuShortcut>
@@ -276,7 +275,7 @@ const MainMenu = ({
 										].key,
 										allShortcuts[
 											EditorShortcuts.RESET_EDITOR
-										].modifiers
+										].modifiers,
 									)}
 								/>
 							</DropdownMenuShortcut>
@@ -300,7 +299,7 @@ const MainMenu = ({
 										].key,
 										allShortcuts[
 											EditorShortcuts.PREFERENCES
-										].modifiers
+										].modifiers,
 									)}
 								/>
 							</DropdownMenuShortcut>
@@ -342,7 +341,7 @@ const MainMenu = ({
 									keys={getShortcutWithModifiers(
 										allShortcuts[EditorShortcuts.HELP].key,
 										allShortcuts[EditorShortcuts.HELP]
-											.modifiers
+											.modifiers,
 									)}
 								/>
 							</DropdownMenuShortcut>

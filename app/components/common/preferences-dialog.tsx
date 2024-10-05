@@ -271,13 +271,13 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 
 const Writing = ({ settings }: { settings: SettingsRow }) => {
 	const [dailyGoalType, setDailyGoalType] = useState(
-		settings.writingDailyGoal || DAILY_GOAL_TYPE[0].value
+		settings.writingDailyGoal || DAILY_GOAL_TYPE[0].value,
 	)
 	const { toast } = useToast()
 
 	const saveFormData = async (
 		writingDailyGoal: string,
-		writingDailyTarget: number
+		writingDailyTarget: number,
 	) => {
 		// @ts-ignore
 		await arls.settings.update(settings.id, {
@@ -298,18 +298,18 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 		const formData = new FormData(event.currentTarget)
 
 		const writingDailyGoal = formData.get(
-			'writing-daily-goal-type'
+			'writing-daily-goal-type',
 		) as string
 		const writingDailyTarget =
 			(writingDailyGoal as WritingDailyGoalType) ===
 			WritingDailyGoalType.DURATION
 				? Number.parseInt(
 						formData.get('daily-goal-duration') as string,
-						10
+						10,
 					)
 				: Number.parseInt(
 						formData.get('daily-goal-word-count') as string,
-						10
+						10,
 					)
 
 		if (type === 'number') {
@@ -472,14 +472,14 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 
 const Music = ({ settings }: { settings: SettingsRow }) => {
 	const [selectedChannel, setSelectedChannel] = useState(
-		settings.musicChannel as string
+		settings.musicChannel as string,
 	)
 	const { toast } = useToast()
 
 	const saveFormData = async (
 		enableMusicPlayer: boolean,
 		musicChannel: string,
-		youtubeLink: string
+		youtubeLink: string,
 	) => {
 		// @ts-ignore
 		await arls.settings.update(settings.id, {
@@ -650,7 +650,7 @@ const Sync = () => {
 						onSuccess: (mnemonic) => {
 							restoreOwner(mnemonic).then(() => {})
 						},
-					})
+					}),
 				)
 		}, 3000)
 	}
@@ -688,7 +688,7 @@ const Sync = () => {
 									className='absolute top-1 right-1 p-0 w-5 h-5'
 									onClick={() => {
 										copyToClipboard(
-											owner?.mnemonic as string
+											owner?.mnemonic as string,
 										).then(() => {
 											setHasCopied(true)
 										})

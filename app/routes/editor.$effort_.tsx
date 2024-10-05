@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import {
+	Suspense,
+	lazy,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from 'react'
 
 import {
 	type ClientActionFunctionArgs,
@@ -8,30 +15,22 @@ import {
 	useNavigate,
 } from '@remix-run/react'
 
-import * as S from '@effect/schema/Schema'
-import { String1000 } from '@evolu/common'
-import GithubSlugger from 'github-slugger'
 import invariant from 'tiny-invariant'
-import Editor from '~/components/common/editor'
+import SuspenseFallback from '~/components/common/suspense-fallback'
+import { createWriting } from '~/lib/actions'
 import { ROUTES } from '~/lib/constants'
+import { loadEffort } from '~/lib/loaders'
 import {
 	AureliusContext,
 	type AureliusProviderData,
 } from '~/lib/providers/aurelius'
 import type { EditorData } from '~/lib/types'
-import { checkSlugUniqueness } from '~/lib/utils'
-import { type Arls, arls } from '~/services/arls'
-import { Content, Int, NonEmptyString100 } from '~/services/evolu/schema'
 
-const slugger = new GithubSlugger()
+const Editor = lazy(() => import('~/components/common/editor'))
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Effort cannot be empty')
-	const effort = await arls.writingEfforts.findUnique({
-		slug: S.decodeSync(NonEmptyString100)(params.effort),
-	})
-	invariant(effort, 'Writing effort not found')
-
+	const effort = await loadEffort(params.effort)
 	return { effort }
 }
 
@@ -40,38 +39,13 @@ export const clientAction = async ({
 	request,
 }: ClientActionFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
-	const effort = await arls.writingEfforts.findUnique({
-		slug: S.decodeSync(NonEmptyString100)(params.effort),
-	})
+	const effort = await loadEffort(params.effort)
 	invariant(effort, 'Writing effort not found')
 
 	const body: EditorData & { wordCount: number } = await request.json()
-	const { content, title, wordCount } = body
+	const { slug } = await createWriting({ body, effort })
 
-	const writingTitle = title.trim() !== '' ? title : 'Untitled'
-	let finalSlug = ''
-	let isUnique = false
-	do {
-		const generatedSlug = slugger.slug(writingTitle)
-		const { isUnique: isSlugUnique, slug } = await checkSlugUniqueness({
-			effortId: effort.id,
-			effortType: effort.type,
-			slug: generatedSlug,
-		})
-		isUnique = isSlugUnique
-		finalSlug = slug
-	} while (!isUnique)
-
-	const table = arls[effort.type as keyof Arls]
-	await table.create({
-		content: S.decodeSync(Content)(content),
-		effortId: effort.id,
-		slug: S.decodeSync(NonEmptyString100)(finalSlug),
-		title: S.decodeSync(String1000)(title),
-		wordCount: S.decodeSync(Int)(wordCount),
-	})
-
-	return { message: 'ok', redirectTo: `/editor/${effort.slug}/${finalSlug}` }
+	return { message: 'ok', redirectTo: `/editor/${effort.slug}/${slug}` }
 }
 
 const NewWriting = () => {
@@ -90,14 +64,14 @@ const NewWriting = () => {
 
 			fetcher.submit(
 				{ content, title, wordCount: wordCount ?? 0 },
-				{ method: 'POST', encType: 'application/json' }
+				{ method: 'POST', encType: 'application/json' },
 			)
 
 			setTimeout(() => {
 				setIsSaving(false)
 			}, 3000)
 		},
-		[]
+		[],
 	)
 
 	const onReset = () => {
@@ -127,12 +101,14 @@ const NewWriting = () => {
 	}, [fetcher])
 
 	return (
-		<Editor
-			data={{ content: '', title: '', wordCount: 0 }}
-			isSaving={isSaving}
-			onAutoSave={onAutoSave}
-			onReset={onReset}
-		/>
+		<Suspense fallback={<SuspenseFallback />}>
+			<Editor
+				data={{ content: '', title: '', wordCount: 0 }}
+				isSaving={isSaving}
+				onAutoSave={onAutoSave}
+				onReset={onReset}
+			/>
+		</Suspense>
 	)
 }
 

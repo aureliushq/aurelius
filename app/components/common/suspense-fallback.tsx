@@ -1,7 +1,12 @@
+import { LoaderCircleIcon } from 'lucide-react'
+import { useTheme } from '~/lib/providers/theme'
+
 const SuspenseFallback = () => {
+	const { theme } = useTheme()
+
 	return (
 		<div className='w-screen h-screen flex justify-center items-center'>
-			<video src='/images/loading_animation.webm' loop />
+			<LoaderCircleIcon className='w-12 h-12 animate-spin text-primary' />
 		</div>
 	)
 }

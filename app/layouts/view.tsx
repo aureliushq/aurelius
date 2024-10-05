@@ -10,7 +10,10 @@ import {
 	WritingSessionTimer,
 } from '~/components/editor'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 
 const ViewLayout = ({ children }: { children: ReactNode }) => {
 	const {
