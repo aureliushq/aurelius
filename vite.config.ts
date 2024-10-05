@@ -21,6 +21,7 @@ export default defineConfig({
 			presets: [RemixPWAPreset()],
 		}),
 		RemixVitePWAPlugin({
+			base: '/',
 			devOptions: {
 				enabled: true,
 				suppressWarnings: true,
@@ -35,8 +36,9 @@ export default defineConfig({
 				'fonts/*.ttf',
 			],
 			injectManifest: {
-				globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+				globPatterns: ['**/*.{js,css,html,png,svg,ico,json,wasm}'],
 			},
+			injectRegister: 'auto',
 			manifest: {
 				name: 'Aurelius',
 				short_name: 'Aurelius',
@@ -68,8 +70,17 @@ export default defineConfig({
 						purpose: 'maskable',
 					},
 				],
+				start_url: '/',
+				edge_side_panel: {
+					preferred_width: 480,
+				},
 			},
 			registerType: 'prompt',
+			remix: {
+				injectManifest: {
+					clientsClaimMode: 'auto',
+				},
+			},
 			srcDir: 'app',
 			strategies: 'injectManifest',
 		}),

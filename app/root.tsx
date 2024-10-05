@@ -12,6 +12,7 @@ import {
 } from '@remix-run/react'
 
 import { EvoluProvider } from '@evolu/react'
+import { PWAManifest } from '~/components/pwa'
 import { Button } from '~/components/ui/button'
 import { Toaster } from '~/components/ui/toaster'
 import { TooltipProvider } from '~/components/ui/tooltip'
@@ -86,6 +87,7 @@ const App = ({ children }: { children: ReactNode }) => {
 					media='(prefers-color-scheme: dark)'
 				/>
 				<Meta />
+				<PWAManifest />
 				<Links />
 			</head>
 			<body className='w-screen h-screen !p-0'>

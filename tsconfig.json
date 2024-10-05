@@ -13,6 +13,7 @@
 			"@remix-run/node",
 			"vite/client",
 			"vite-plugin-pwa/client",
+			"vite-plugin-pwa/info",
 			"@vite-pwa/remix/remix-sw"
 		],
 		"isolatedModules": true,
