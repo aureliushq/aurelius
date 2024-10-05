@@ -11,19 +11,20 @@ import {
 	useRouteError,
 } from '@remix-run/react'
 
-import type { Evolu, EvoluSchema } from '@evolu/common'
 import { EvoluProvider } from '@evolu/react'
 import { Button } from '~/components/ui/button'
 import { Toaster } from '~/components/ui/toaster'
 import { TooltipProvider } from '~/components/ui/tooltip'
-import stylesheet from '~/globals.css?url'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { ThemeProvider, useTheme } from '~/lib/providers/theme'
 import { createEvoluClient } from '~/services/evolu/client'
-import writerStylesheet from '~/writer.css?url'
+import fontsStylesheet from '~/styles/fonts.css?url'
+import globalStylesheet from '~/styles/globals.css?url'
+import writerStylesheet from '~/styles/writer.css?url'
 
 export const links: LinksFunction = () => [
-	{ rel: 'stylesheet', href: stylesheet },
+	{ rel: 'stylesheet', href: globalStylesheet },
+	{ rel: 'stylesheet', href: fontsStylesheet },
 	{ rel: 'stylesheet', href: writerStylesheet },
 ]
 
@@ -45,36 +46,44 @@ const App = ({ children }: { children: ReactNode }) => {
 	return (
 		<html className={theme ?? 'dark'} lang='en'>
 			<head>
+				<meta
+					name='viewport'
+					content='width=device-width,initial-scale=1'
+				/>
 				<title>Aurelius</title>
-				<meta name='description' content='' />
-				<link rel='preconnect' href='https://fonts.bunny.net' />
-				<link
-					rel='stylesheet'
-					href='https://fonts.bunny.net/css?family=inter:100,200,300,400,500,600,700,800,900|lato:400,700|libre-baskerville:400,700|merriweather:400,700|noto-serif:400,700|open-sans:400,700|pt-serif:400,700|roboto:400,700'
-					crossOrigin='anonymous'
+				<meta
+					name='description'
+					content='Aurelius: A secure writing app that helps you build consistent writing habits. Enjoy a clutter-free writing space, set timed sessions, and organize multiple projects - all while keeping your work private.'
 				/>
-				<link rel='manifest' href='/site.webmanifest' />
-				<link
-					rel='apple-touch-icon'
-					sizes='180x180'
-					href='/apple-touch-icon.png'
-				/>
+				{/*<link rel='preconnect' href='https://fonts.bunny.net' />*/}
+				{/*<link*/}
+				{/*	rel='stylesheet'*/}
+				{/*	href='https://fonts.bunny.net/css?family=inter:100,200,300,400,500,600,700,800,900|lato:400,700|libre-baskerville:400,700|merriweather:400,700|noto-serif:400,700|open-sans:400,700|pt-serif:400,700|roboto:400,700'*/}
+				{/*	crossOrigin='anonymous'*/}
+				{/*/>*/}
 				<link
 					rel='icon'
+					href='/favicon-32x32.png'
 					type='image/png'
 					sizes='32x32'
-					href='/favicon-32x32.png'
 				/>
 				<link
 					rel='icon'
+					href='/favicon-16x16.png'
 					type='image/png'
 					sizes='16x16'
-					href='/favicon-16x16.png'
 				/>
-				<link
-					rel='mask-icon'
-					color='#5bbad5'
-					href='/safari-pinned-tab.svg'
+				<link rel='apple-touch-icon' href='/apple-touch-icon.png' />
+				<link rel='manifest' href='/site.webmanifest' />
+				<meta
+					name='theme-color'
+					content='#2cb67d'
+					media='(prefers-color-scheme: light)'
+				/>
+				<meta
+					name='theme-color'
+					content='#2cb67d'
+					media='(prefers-color-scheme: dark)'
 				/>
 				<Meta />
 				<Links />

@@ -16,7 +16,7 @@ import { AureliusContext } from '~/lib/providers/aurelius'
 import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
 import type { EffortsTable } from '~/services/evolu/database'
 import { NonEmptyString100 } from '~/services/evolu/schema'
-import writerStylesheet from '~/writer.css?url'
+import writerStylesheet from '~/styles/writer.css?url'
 
 export const links: LinksFunction = () => [
 	{ rel: 'stylesheet', href: writerStylesheet },
