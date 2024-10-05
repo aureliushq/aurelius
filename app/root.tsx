@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect } from 'react'
 
 import type { LinksFunction } from '@remix-run/node'
 import {
@@ -56,12 +56,6 @@ const App = ({ children }: { children: ReactNode }) => {
 					name='description'
 					content='Aurelius: A secure writing app that helps you build consistent writing habits. Enjoy a clutter-free writing space, set timed sessions, and organize multiple projects - all while keeping your work private.'
 				/>
-				{/*<link rel='preconnect' href='https://fonts.bunny.net' />*/}
-				{/*<link*/}
-				{/*	rel='stylesheet'*/}
-				{/*	href='https://fonts.bunny.net/css?family=inter:100,200,300,400,500,600,700,800,900|lato:400,700|libre-baskerville:400,700|merriweather:400,700|noto-serif:400,700|open-sans:400,700|pt-serif:400,700|roboto:400,700'*/}
-				{/*	crossOrigin='anonymous'*/}
-				{/*/>*/}
 				<link
 					rel='icon'
 					href='/favicon-32x32.png'
