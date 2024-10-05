@@ -1,6 +1,10 @@
 import { useContext } from 'react'
 
-import { type ClientLoaderFunctionArgs, Link, useLoaderData } from '@remix-run/react'
+import {
+	type ClientLoaderFunctionArgs,
+	Link,
+	useLoaderData,
+} from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -16,7 +20,10 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'

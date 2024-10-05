@@ -1,13 +1,15 @@
-import { useCallback, useState } from 'react'
+import { Suspense, lazy, useCallback, useState } from 'react'
 
 import { useLoaderData, useNavigate } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
 import invariant from 'tiny-invariant'
-import Editor from '~/components/common/editor'
+import SuspenseFallback from '~/components/common/suspense-fallback'
 import { ROUTES } from '~/lib/constants'
 import { arls } from '~/services/arls'
 import { NonEmptyString100 } from '~/services/evolu/schema'
+
+const Editor = lazy(() => import('~/components/common/editor'))
 
 export const clientLoader = async () => {
 	// TODO: only load this the first time. after loading set local storage to prevent loading again. check local storage before loading.
@@ -43,17 +45,19 @@ const Index = () => {
 	}
 
 	return (
-		<Editor
-			data={{
-				content: writing.content as string,
-				title: writing.title as string,
-				wordCount: 0,
-			}}
-			isSaving={isSaving}
-			onAutoSave={onAutoSave}
-			onReset={onReset}
-			saveOnTitleBlur={false}
-		/>
+		<Suspense fallback={<SuspenseFallback />}>
+			<Editor
+				data={{
+					content: writing.content as string,
+					title: writing.title as string,
+					wordCount: 0,
+				}}
+				isSaving={isSaving}
+				onAutoSave={onAutoSave}
+				onReset={onReset}
+				saveOnTitleBlur={false}
+			/>
+		</Suspense>
 	)
 }
 

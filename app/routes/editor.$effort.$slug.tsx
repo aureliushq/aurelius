@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import {
+	Suspense,
+	lazy,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from 'react'
 
 import {
 	type ClientActionFunctionArgs,
@@ -11,9 +18,13 @@ import {
 import * as S from '@effect/schema/Schema'
 import { type ExtractRow, type Query, String1000 } from '@evolu/common'
 import invariant from 'tiny-invariant'
-import Editor from '~/components/common/editor'
+import SuspenseFallback from '~/components/common/suspense-fallback'
 import { ROUTES } from '~/lib/constants'
-import { AureliusContext, type AureliusProviderData } from '~/lib/providers/aurelius'
+import { loadEffort, loadWriting } from '~/lib/loaders'
+import {
+	AureliusContext,
+	type AureliusProviderData,
+} from '~/lib/providers/aurelius'
 import type { EditorData } from '~/lib/types'
 import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
 import type { EffortsTable } from '~/services/evolu/database'
@@ -24,29 +35,22 @@ import {
 	WritingEffortId,
 } from '~/services/evolu/schema'
 
+const Editor = lazy(() => import('~/components/common/editor'))
+
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Effort cannot be empty')
 	invariant(params.slug, 'Content slug cannot be empty')
-	const effort = await arls.writingEfforts.findUnique({
-		slug: S.decodeSync(NonEmptyString100)(params.effort),
-	})
-	invariant(effort, 'Writing effort not found')
 
+	const effort = await loadEffort(params.effort)
 	if (params.effort === 'help') {
-		const helpArticle = await arls._help.findUnique({
-			slug: S.decodeSync(NonEmptyString100)(params.slug),
-		})
-		invariant(helpArticle, 'Content not found')
+		const helpArticle = await loadWriting('_help', effort.id, params.slug)
 		return { effort, writing: helpArticle }
 	}
-
-	const table = arls[effort.type as keyof Arls]
-	const writing = (await table.findUnique({
-		effortId: S.decodeSync(WritingEffortId)(effort.id),
-		slug: S.decodeSync(NonEmptyString100)(params.slug),
-	})) as ExtractRow<Query<EffortsTable>>
-	invariant(writing, 'Content not found')
-
+	const writing = await loadWriting(
+		effort.type as keyof Arls,
+		effort.id,
+		params.slug,
+	)
 	return { effort, writing }
 }
 
@@ -56,9 +60,7 @@ export const clientAction = async ({
 }: ClientActionFunctionArgs) => {
 	invariant(params.effort, 'Effort cannot be empty')
 	invariant(params.slug, 'Content slug cannot be empty')
-	const effort = await arls.writingEfforts.findUnique({
-		slug: S.decodeSync(NonEmptyString100)(params.effort),
-	})
+	const effort = await loadEffort(params.effort)
 	invariant(effort, 'Writing effort not found')
 
 	const writing = await arls[effort.type as keyof Arls].findUnique({
@@ -67,9 +69,7 @@ export const clientAction = async ({
 	})
 	invariant(writing, 'Content not found')
 
-	if (params.effort === 'help') {
-		return {}
-	} else {
+	if (params.effort !== 'help') {
 		const body: EditorData & { wordCount: number } = await request.json()
 		const { content, title, wordCount } = body
 
@@ -83,7 +83,7 @@ export const clientAction = async ({
 			effort.type as keyof Arls
 		] as TableQueryBuilder<EffortsTable>
 
-		table.update(writing.id, data)
+		await table.update(writing.id, data)
 
 		return { message: 'ok' }
 	}
@@ -98,6 +98,7 @@ const Writing = () => {
 
 	const [isSaving, setIsSaving] = useState<boolean>(false)
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	const onAutoSave = useCallback(
 		({ content, title, wordCount }: EditorData) => {
 			setIsSaving(true)
@@ -118,6 +119,7 @@ const Writing = () => {
 		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
 
+	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
 		if (writing) {
 			setContentId(writing.id)
@@ -125,16 +127,21 @@ const Writing = () => {
 	}, [])
 
 	return (
-		<Editor
-			data={{
-				content: writing.content as string,
-				title: (writing?.title || '') as string,
-				wordCount: writing?.wordCount ?? 0,
-			}}
-			isSaving={isSaving}
-			onAutoSave={onAutoSave}
-			onReset={onReset}
-		/>
+		<Suspense fallback={<SuspenseFallback />}>
+			<Editor
+				data={{
+					// @ts-ignore
+					content: writing.content as string,
+					// @ts-ignore
+					title: (writing?.title || '') as string,
+					// @ts-ignore
+					wordCount: writing?.wordCount ?? 0,
+				}}
+				isSaving={isSaving}
+				onAutoSave={onAutoSave}
+				onReset={onReset}
+			/>
+		</Suspense>
 	)
 }
 
