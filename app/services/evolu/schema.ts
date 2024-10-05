@@ -22,7 +22,7 @@ export const Int = S.Number.pipe(S.int(), S.brand('Int'))
 export const NonEmptyString100 = NonEmptyString.pipe(
 	S.minLength(1),
 	S.maxLength(100),
-	S.brand('NonEmptyString100')
+	S.brand('NonEmptyString100'),
 )
 export type NonEmptyString100 = typeof NonEmptyString100.Type
 const TemporalString = S.String.pipe(S.brand('TemporalString'))
@@ -30,7 +30,7 @@ export const SqliteDateTime = TemporalString.pipe(S.brand('SqliteDateTime'))
 export type SqliteDateTime = typeof SqliteDateTime.Type
 export const WordCount = S.Number.pipe(
 	S.greaterThanOrEqualTo(0),
-	S.brand('WordCount')
+	S.brand('WordCount'),
 )
 
 // IDs
