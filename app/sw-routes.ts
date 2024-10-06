@@ -19,7 +19,7 @@ export function setupRoutes() {
 		}, [] as string[])
 		if (useStaticRoutes.length) {
 			const staticRoutesRegexp = new RegExp(
-				`^${baseUrl}(${useStaticRoutes.join('|')})$`
+				`^${baseUrl}(${useStaticRoutes.join('|')})$`,
 			)
 			registerRoute(
 				({ request, sameOrigin, url }) =>
@@ -39,7 +39,7 @@ export function setupRoutes() {
 						}),
 					],
 				}),
-				'GET'
+				'GET',
 			)
 		}
 		if (useDynamicRoutes.length) {
@@ -52,7 +52,7 @@ export function setupRoutes() {
 						})
 						return `(${parts.join('/')})`
 					})
-					.join('|')})$`
+					.join('|')})$`,
 			)
 			registerRoute(
 				({ request, sameOrigin, url }) =>
@@ -68,7 +68,7 @@ export function setupRoutes() {
 							},
 						},
 					],
-				})
+				}),
 			)
 		}
 	}
