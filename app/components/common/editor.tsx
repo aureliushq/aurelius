@@ -128,6 +128,9 @@ const Editor = ({
 			}),
 			CodeBlockLowlight.configure({
 				lowlight,
+				HTMLAttributes: {
+					class: 'not-prose hljs',
+				},
 			}),
 			Youtube.configure({
 				width: 762,
@@ -139,7 +142,15 @@ const Editor = ({
 			}),
 			Highlight.configure({ multicolor: true }),
 			// @ts-expect-error: not sure why this is throwing an error, but I'm going to replace it with individual packages anyway, so it's fine
-			StarterKit,
+			StarterKit.configure({
+				code: {
+					HTMLAttributes: {
+						class: 'not-prose hljs',
+					},
+				},
+				codeBlock: false,
+				heading: false,
+			}),
 			CharacterCount,
 			TextStyle,
 			FontFamily,

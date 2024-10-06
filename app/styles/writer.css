@@ -105,20 +105,18 @@
 
 .viewer pre,
 .ProseMirror pre {
-	@apply !max-w-3xl !rounded-lg !bg-[#d5d6db] !py-3 !py-4 dark:!bg-[#1a1b26];
-	/* background: #0d0d0d; */
+	@apply !max-w-3xl !rounded-lg !py-3 !px-4;
 	font-family: "JetBrainsMono", monospace !important;
-	/*padding: 0.75rem 1rem;*/
 }
 
 .viewer pre code,
 .ProseMirror pre code {
-	@apply !max-w-3xl !bg-none !p-0 !text-[0.8rem] !text-[#565a6e] dark:!text-[#9aa5ce];
+	@apply !max-w-3xl !bg-none !p-0 !text-[0.9rem];
 }
 
 .viewer p code,
 .ProseMirror p code {
-	@apply !rounded-lg !bg-accent !px-1 !py-0.5 !font-normal !text-accent-foreground;
+	@apply !rounded-lg !px-1 !py-0.5 !font-normal;
 	font-family: "JetBrainsMono", monospace !important;
 }
 
