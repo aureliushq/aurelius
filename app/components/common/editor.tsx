@@ -1,4 +1,4 @@
-import { Suspense, lazy, useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 import { CharacterCount } from '@tiptap/extension-character-count'
@@ -19,7 +19,6 @@ import {
 import { StarterKit } from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import PreferencesDialog from '~/components/common/preferences-dialog'
-import SuspenseFallback from '~/components/common/suspense-fallback'
 import {
 	E2EEIndicator,
 	EditorToolbar,
@@ -29,6 +28,7 @@ import {
 	ResetEditor,
 	Saving,
 	SplashDialog,
+	Writer,
 	WritingSessionTimer,
 } from '~/components/editor'
 import { ScrollArea } from '~/components/ui/scroll-area'
@@ -43,8 +43,6 @@ import {
 	EditorToolbarMode,
 	WritingSessionStatus,
 } from '~/lib/types'
-
-const Writer = lazy(() => import('~/components/editor/writer'))
 
 const lowlight = createLowlight(common)
 
@@ -284,39 +282,33 @@ const Editor = ({
 						<HelpButton triggerShortcut={triggerGlobalShortcut} />
 					</div>
 				</section>
-				<Suspense fallback={<SuspenseFallback />}>
-					<Writer
-						content={editorData.content}
-						editor={editor}
-						onTitleBlur={handleTitleBlur}
-						ref={titleRef}
-						settings={settings}
-						setTitle={handleTitleChange}
-						title={editorData.title}
-					/>
-				</Suspense>
+				<Writer
+					content={editorData.content}
+					editor={editor}
+					onTitleBlur={handleTitleBlur}
+					ref={titleRef}
+					settings={settings}
+					setTitle={handleTitleChange}
+					title={editorData.title}
+				/>
 			</ScrollArea>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />
-			<Suspense>
-				<PreferencesDialog
-					preferencesOpen={preferencesOpen}
-					setPreferencesOpen={handlePreferencesOpen}
-					settings={settings}
-				/>
-			</Suspense>
+			<PreferencesDialog
+				preferencesOpen={preferencesOpen}
+				setPreferencesOpen={handlePreferencesOpen}
+				settings={settings}
+			/>
 			<ResetEditor
 				confirmResetEditor={confirmResetEditor}
 				resetEditorOpen={resetEditorOpen}
 				setResetEditorOpen={setResetEditorOpen}
 			/>
-			<Suspense>
-				<SplashDialog
-					settings={settings}
-					setSplashOpen={handleSplashOpen}
-					splashOpen={splashOpen}
-					triggerShortcut={triggerGlobalShortcut}
-				/>
-			</Suspense>
+			<SplashDialog
+				settings={settings}
+				setSplashOpen={handleSplashOpen}
+				splashOpen={splashOpen}
+				triggerShortcut={triggerGlobalShortcut}
+			/>
 		</>
 	)
 }

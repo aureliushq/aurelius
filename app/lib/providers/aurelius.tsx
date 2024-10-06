@@ -1,7 +1,6 @@
 import {
 	type ReactNode,
 	createContext,
-	startTransition,
 	useEffect,
 	useRef,
 	useState,
@@ -153,15 +152,11 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	}
 
 	const handlePreferencesOpen = (open: boolean) => {
-		startTransition(() => {
-			setPreferencesOpen(open)
-		})
+		setPreferencesOpen(open)
 	}
 
 	const handleSplashOpen = (open: boolean) => {
-		startTransition(() => {
-			setSplashOpen(() => open)
-		})
+		setSplashOpen(() => open)
 	}
 
 	const handleWordCountChange = (count: number) => {
@@ -171,17 +166,13 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const viewAllPosts = () => {
 		setMainMenuOpen(() => false)
 		handleSplashOpen(false)
-		startTransition(() => {
-			navigate(ROUTES.VIEW.POSTS)
-		})
+		navigate(ROUTES.VIEW.POSTS)
 	}
 
 	const viewAllWritingSessions = () => {
 		setMainMenuOpen(() => false)
 		handleSplashOpen(false)
-		startTransition(() => {
-			navigate(ROUTES.VIEW.WRITING_SESSIONS)
-		})
+		navigate(ROUTES.VIEW.WRITING_SESSIONS)
 	}
 
 	const data: AureliusProviderData = {
