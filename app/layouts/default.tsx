@@ -19,6 +19,7 @@ import { EditorShortcuts } from '~/lib/types'
 
 const DefaultLayout = ({ children }: { children: ReactNode }) => {
 	const shortcuts = {
+		[EditorShortcuts.FOCUS_MODE]: () => setFocusMode(!focusMode),
 		[EditorShortcuts.HELP]: () => setHelpOpen(!helpOpen),
 		[EditorShortcuts.MAIN_MENU]: () => setMainMenuOpen(!mainMenuOpen),
 	}
@@ -54,8 +55,10 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 				<section className='w-screen fixed top-0 left-0 grid grid-cols-5 z-10'>
 					<div className='flex items-center justify-start p-4 gap-4'>
 						<MainMenu
+							focusMode={focusMode}
 							mainMenuOpen={mainMenuOpen}
 							setMainMenuOpen={setMainMenuOpen}
+							triggerGlobalShortcut={triggerGlobalShortcut}
 							triggerShortcut={triggerGlobalShortcut}
 						/>
 					</div>
@@ -83,28 +86,38 @@ const DefaultLayout = ({ children }: { children: ReactNode }) => {
 						<div className='w-full max-w-2xl'>{children}</div>
 					</div>
 				</section>
-				<section className='w-screen fixed bottom-0 left-0 z-10'>
-					<div className='flex items-center justify-end p-4 gap-4'>
+				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
+					{/*{settings?.enableMusicPlayer ? (*/}
+					{/*	<MusicPlayer*/}
+					{/*		focusMode={focusMode}*/}
+					{/*		isMusicPlaying={isMusicPlaying}*/}
+					{/*		setIsMusicPlaying={setIsMusicPlaying}*/}
+					{/*	/>*/}
+					{/*) : (*/}
+					<div />
+					{/*)}*/}
+					<div
+						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
+					>
+						<span className='text-sm text-muted-foreground'>{`${wordCount} words`}</span>
 						<E2EEIndicator />
-						<HelpButton triggerShortcut={triggerGlobalShortcut} />
+						<HelpButton
+							triggerGlobalShortcut={triggerGlobalShortcut}
+						/>
 					</div>
 				</section>
 			</ScrollArea>
-			<Suspense>
-				<PreferencesDialog
-					preferencesOpen={preferencesOpen}
-					setPreferencesOpen={handlePreferencesOpen}
-					settings={settings}
-				/>
-			</Suspense>
-			<Suspense>
-				<SplashDialog
-					settings={settings}
-					setSplashOpen={handleSplashOpen}
-					splashOpen={splashOpen}
-					triggerShortcut={triggerGlobalShortcut}
-				/>
-			</Suspense>
+			<PreferencesDialog
+				preferencesOpen={preferencesOpen}
+				setPreferencesOpen={handlePreferencesOpen}
+				settings={settings}
+			/>
+			<SplashDialog
+				settings={settings}
+				setSplashOpen={handleSplashOpen}
+				splashOpen={splashOpen}
+				triggerGlobalShortcut={triggerGlobalShortcut}
+			/>
 			<HelpDialog setHelpOpen={setHelpOpen} helpOpen={helpOpen} />
 		</>
 	)

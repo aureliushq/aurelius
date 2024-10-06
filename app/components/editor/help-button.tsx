@@ -3,14 +3,14 @@ import { Button } from '~/components/ui/button'
 import { EditorShortcuts } from '~/lib/types'
 
 const HelpButton = ({
-	triggerShortcut,
+	triggerGlobalShortcut,
 }: {
-	triggerShortcut: (_: string) => void
+	triggerGlobalShortcut: (_: string) => void
 }) => {
 	return (
 		<Button
 			className='w-9 h-9'
-			onClick={() => triggerShortcut(EditorShortcuts.HELP)}
+			onClick={() => triggerGlobalShortcut(EditorShortcuts.HELP)}
 			size='icon'
 			variant='outline'
 		>

@@ -9,13 +9,11 @@ import {
 	useLoaderData,
 } from '@remix-run/react'
 
-import * as S from '@effect/schema/Schema'
 import { ArrowLeftIcon } from 'lucide-react'
 import invariant from 'tiny-invariant'
+import { loadEffort, loadWriting } from '~/lib/loaders'
 import { AureliusContext } from '~/lib/providers/aurelius'
-import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
-import type { EffortsTable } from '~/services/evolu/database'
-import { NonEmptyString100 } from '~/services/evolu/schema'
+import type { Arls } from '~/services/arls'
 import writerStylesheet from '~/styles/writer.css?url'
 
 export const links: LinksFunction = () => [
@@ -26,28 +24,20 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
 	invariant(params.slug, 'Writing URL cannot be empty')
 
-	if (params.effort === 'help') {
-		const writing = await arls._help.findUnique({
-			slug: S.decodeSync(NonEmptyString100)(params.slug),
-		})
+	const effort = await loadEffort(params.effort)
+	invariant(effort, 'Writing effort not found')
 
+	if (params.effort !== 'help') {
+		const writing = await loadWriting('_help', effort.id, params.slug)
 		return { writing }
-	} else {
-		const effort = await arls.writingEfforts.findUnique({
-			slug: S.decodeSync(NonEmptyString100)(params.effort),
-		})
-		invariant(effort, 'Writing effort not found')
-
-		const table = arls[
-			effort.type as keyof Arls
-		] as TableQueryBuilder<EffortsTable>
-		const writing = await table.findUnique({
-			effortId: effort.id,
-			slug: S.decodeSync(NonEmptyString100)(params.slug),
-		})
-
-		return { effort, writing }
 	}
+
+	const writing = await loadWriting(
+		effort.type as keyof Arls,
+		effort.id,
+		params.slug,
+	)
+	return { effort, writing }
 }
 
 const ViewWriting = () => {
@@ -77,11 +67,16 @@ const ViewWriting = () => {
 				<h1
 					className={`font-extrabold leading-tight ${settings?.titleFont}`}
 				>
-					{writing?.title || 'Untitled'}
+					{
+						// @ts-ignore
+						writing?.title || 'Untitled'
+					}
 				</h1>
 				<div
 					className={`leading-loose ${settings?.bodyFont}`}
+					// biome-ignore lint: it's fine
 					dangerouslySetInnerHTML={{
+						// @ts-ignore
 						__html: writing?.content as string,
 					}}
 				/>

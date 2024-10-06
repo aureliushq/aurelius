@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react'
+import { Link, useLocation } from '@remix-run/react'
 
 import {
 	BadgeInfoIcon,
@@ -35,18 +35,22 @@ import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 
 type MainMenuProps = {
-	focusMode?: boolean
+	focusMode: boolean
 	mainMenuOpen: boolean
 	setMainMenuOpen: (open: boolean) => void
-	triggerShortcut: (shortcutName: string) => void
+	triggerGlobalShortcut: (shortcutName: string) => void
+	triggerShortcut?: (shortcutName: string) => void
 }
 
 const MainMenu = ({
 	focusMode,
 	mainMenuOpen,
 	setMainMenuOpen,
+	triggerGlobalShortcut,
 	triggerShortcut,
 }: MainMenuProps) => {
+	const location = useLocation()
+
 	return (
 		<div
 			className={`transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
@@ -70,7 +74,7 @@ const MainMenu = ({
 								<DropdownMenuItem
 									className='w-full flex items-center justify-between'
 									onClick={() =>
-										triggerShortcut(
+										triggerGlobalShortcut(
 											EditorShortcuts.NEW_POST,
 										)
 									}
@@ -95,7 +99,7 @@ const MainMenu = ({
 								<DropdownMenuItem
 									className='w-full flex items-center justify-between'
 									onClick={() =>
-										triggerShortcut(
+										triggerGlobalShortcut(
 											EditorShortcuts.VIEW_ALL_POSTS,
 										)
 									}
@@ -134,7 +138,7 @@ const MainMenu = ({
 								<DropdownMenuItem
 									className='flex items-center justify-between'
 									onClick={() =>
-										triggerShortcut(
+										triggerGlobalShortcut(
 											EditorShortcuts.WRITING_SESSION,
 										)
 									}
@@ -161,7 +165,7 @@ const MainMenu = ({
 								<DropdownMenuItem
 									className='flex items-center justify-between'
 									onClick={() =>
-										triggerShortcut(
+										triggerGlobalShortcut(
 											EditorShortcuts.VIEW_ALL_WRITING_SESSIONS,
 										)
 									}
@@ -237,7 +241,7 @@ const MainMenu = ({
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						onClick={() =>
-							triggerShortcut(EditorShortcuts.FOCUS_MODE)
+							triggerShortcut?.(EditorShortcuts.FOCUS_MODE)
 						}
 					>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
@@ -257,33 +261,35 @@ const MainMenu = ({
 							</DropdownMenuShortcut>
 						</span>
 					</DropdownMenuItem>
-					<DropdownMenuItem
-						onClick={() =>
-							triggerShortcut(EditorShortcuts.RESET_EDITOR)
-						}
-					>
-						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
-							<span className='inline-flex items-center'>
-								<RefreshCwIcon className='mr-2 w-4 h-4' />
-								<span>Reset Editor</span>
+					{location.pathname.startsWith('/editor') && (
+						<DropdownMenuItem
+							onClick={() =>
+								triggerShortcut?.(EditorShortcuts.RESET_EDITOR)
+							}
+						>
+							<span className='w-full h-full flex items-center justify-between cursor-pointer'>
+								<span className='inline-flex items-center'>
+									<RefreshCwIcon className='mr-2 w-4 h-4' />
+									<span>Reset Editor</span>
+								</span>
+								<DropdownMenuShortcut className='ml-16'>
+									<KeyboardShortcut
+										keys={getShortcutWithModifiers(
+											allShortcuts[
+												EditorShortcuts.RESET_EDITOR
+											].key,
+											allShortcuts[
+												EditorShortcuts.RESET_EDITOR
+											].modifiers,
+										)}
+									/>
+								</DropdownMenuShortcut>
 							</span>
-							<DropdownMenuShortcut className='ml-16'>
-								<KeyboardShortcut
-									keys={getShortcutWithModifiers(
-										allShortcuts[
-											EditorShortcuts.RESET_EDITOR
-										].key,
-										allShortcuts[
-											EditorShortcuts.RESET_EDITOR
-										].modifiers,
-									)}
-								/>
-							</DropdownMenuShortcut>
-						</span>
-					</DropdownMenuItem>
+						</DropdownMenuItem>
+					)}
 					<DropdownMenuItem
 						onClick={() =>
-							triggerShortcut(EditorShortcuts.PREFERENCES)
+							triggerGlobalShortcut(EditorShortcuts.PREFERENCES)
 						}
 					>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
@@ -329,7 +335,9 @@ const MainMenu = ({
 						</a>
 					</DropdownMenuItem>
 					<DropdownMenuItem
-						onClick={() => triggerShortcut(EditorShortcuts.HELP)}
+						onClick={() =>
+							triggerGlobalShortcut(EditorShortcuts.HELP)
+						}
 					>
 						<span className='w-full h-full flex items-center justify-between cursor-pointer'>
 							<span className='inline-flex items-center'>

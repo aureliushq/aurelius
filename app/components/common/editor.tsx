@@ -104,7 +104,7 @@ const Editor = ({
 		setWritingSessionStatus,
 	} = useContext<AureliusProviderData>(AureliusContext)
 
-	useKeyboardShortcuts(shortcuts)
+	const { triggerShortcut } = useKeyboardShortcuts(shortcuts)
 
 	const titleRef = useRef<HTMLTextAreaElement>(null)
 
@@ -226,7 +226,8 @@ const Editor = ({
 							focusMode={focusMode}
 							mainMenuOpen={mainMenuOpen}
 							setMainMenuOpen={setMainMenuOpen}
-							triggerShortcut={triggerGlobalShortcut}
+							triggerGlobalShortcut={triggerGlobalShortcut}
+							triggerShortcut={triggerShortcut}
 						/>
 						<Saving isSaving={isSaving} />
 					</div>
@@ -279,7 +280,9 @@ const Editor = ({
 					>
 						<span className='text-sm text-muted-foreground'>{`${wordCount} words`}</span>
 						<E2EEIndicator />
-						<HelpButton triggerShortcut={triggerGlobalShortcut} />
+						<HelpButton
+							triggerGlobalShortcut={triggerGlobalShortcut}
+						/>
 					</div>
 				</section>
 				<Writer
@@ -307,7 +310,7 @@ const Editor = ({
 				settings={settings}
 				setSplashOpen={handleSplashOpen}
 				splashOpen={splashOpen}
-				triggerShortcut={triggerGlobalShortcut}
+				triggerGlobalShortcut={triggerGlobalShortcut}
 			/>
 		</>
 	)

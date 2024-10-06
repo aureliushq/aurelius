@@ -86,14 +86,14 @@ type SplashDialogProps = {
 	settings: SettingsRow
 	setSplashOpen: (open: boolean) => void
 	splashOpen?: boolean
-	triggerShortcut: (_: string) => void
+	triggerGlobalShortcut: (_: string) => void
 }
 
 const SplashDialog = ({
 	settings,
 	setSplashOpen,
 	splashOpen,
-	triggerShortcut,
+	triggerGlobalShortcut,
 }: SplashDialogProps) => {
 	const { latestPosts } = useContext<AureliusProviderData>(AureliusContext)
 
@@ -153,7 +153,7 @@ const SplashDialog = ({
 										}
 										label='Start a New Post'
 										onClick={() =>
-											triggerShortcut(
+											triggerGlobalShortcut(
 												EditorShortcuts.NEW_POST,
 											)
 										}
@@ -174,7 +174,7 @@ const SplashDialog = ({
 										}
 										label='Start a Writing Session'
 										onClick={() =>
-											triggerShortcut(
+											triggerGlobalShortcut(
 												EditorShortcuts.WRITING_SESSION,
 											)
 										}
@@ -196,7 +196,10 @@ const SplashDialog = ({
 										label='View All Posts'
 										onClick={() => {
 											setSplashOpen(false)
-											navigate(ROUTES.VIEW.POSTS)
+											// navigate(ROUTES.VIEW.POSTS)
+											triggerGlobalShortcut(
+												EditorShortcuts.VIEW_ALL_POSTS,
+											)
 										}}
 										shortcut={getShortcutWithModifiers(
 											allShortcuts[
@@ -216,8 +219,11 @@ const SplashDialog = ({
 										label='View All Writing Sessions'
 										onClick={() => {
 											setSplashOpen(false)
-											navigate(
-												ROUTES.VIEW.WRITING_SESSIONS,
+											// navigate(
+											// 	ROUTES.VIEW.WRITING_SESSIONS,
+											// )
+											triggerGlobalShortcut(
+												EditorShortcuts.VIEW_ALL_WRITING_SESSIONS,
 											)
 										}}
 										shortcut={getShortcutWithModifiers(
@@ -332,7 +338,7 @@ const SplashDialog = ({
 										}
 										label='Preferences'
 										onClick={() =>
-											triggerShortcut(
+											triggerGlobalShortcut(
 												EditorShortcuts.PREFERENCES,
 											)
 										}
@@ -353,7 +359,7 @@ const SplashDialog = ({
 										}
 										label='Help'
 										onClick={() =>
-											triggerShortcut(
+											triggerGlobalShortcut(
 												EditorShortcuts.HELP,
 											)
 										}
