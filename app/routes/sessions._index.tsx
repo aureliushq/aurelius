@@ -1,28 +1,27 @@
 import { Link, useLoaderData } from '@remix-run/react'
 
-import * as S from '@effect/schema/Schema'
-import type { ExtractRow, Query } from '@evolu/common'
 import type { ColumnDef } from '@tanstack/react-table'
 import { formatDistance } from 'date-fns'
 import { DataTable } from '~/components/common/data-table'
-import { type Arls, arls } from '~/services/arls'
-import type { EffortsTable } from '~/services/evolu/database'
-import { ContentId, WritingEffortId } from '~/services/evolu/schema'
+import {
+	loadEffortById,
+	loadWritingById,
+	loadWritingSessions,
+} from '~/lib/loaders'
+import type { Arls } from '~/services/arls'
 
 export const clientLoader = async () => {
-	const writingSessions = await arls.writingSessions.findMany({})
+	const writingSessions = await loadWritingSessions()
 
 	const sessions = await Promise.all(
 		writingSessions.map(async (session) => {
-			const effort = await arls.writingEfforts.findUnique({
-				id: S.decodeSync(WritingEffortId)(session.effortId),
-			})
+			const effort = await loadEffortById(session.effortId)
 			if (session.contentId) {
-				const table = arls[effort?.type as keyof Arls]
-				const writing = (await table.findUnique({
-					// @ts-ignore
-					id: S.decodeSync(ContentId)(session.contentId),
-				})) as ExtractRow<Query<EffortsTable>>
+				const writing = await loadWritingById(
+					effort?.type as keyof Arls,
+					session.effortId,
+					session.contentId,
+				)
 
 				return {
 					content: writing?.title,

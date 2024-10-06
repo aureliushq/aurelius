@@ -86,6 +86,52 @@ export class TableQueryBuilder<T extends Table>
 		return rows as ReadonlyArray<T>
 	}
 
+	async findManyWithJoin<J extends Table>(
+		joinTable: string,
+		joinCondition: { leftKey: string; rightKey: string },
+		where: Partial<T> = {},
+		select: (keyof T | keyof J)[] = [],
+	) {
+		const evolu = this.getEvolu()
+		const query = evolu.createQuery((db) => {
+			let query = db.selectFrom(this.tableName).innerJoin(
+				// @ts-ignore
+				joinTable,
+				joinCondition.leftKey,
+				joinCondition.rightKey,
+			)
+
+			if (select.length > 0) {
+				query = query
+					// @ts-ignore
+					.select(
+						select.map(
+							(field) => `${this.tableName}.${String(field)}`,
+						),
+					)
+					.select(
+						select.map((field) => `${joinTable}.${String(field)}`),
+					)
+			} else {
+				query = query
+					// @ts-ignore
+					.selectAll(`${this.tableName}.*`)
+					// @ts-ignore
+					.selectAll(`${joinTable}.*`)
+			}
+
+			for (const [key, value] of Object.entries(where)) {
+				// @ts-ignore
+				query = query.where(`${this.tableName}.${key}`, '=', value)
+			}
+
+			return query
+		}, this.options)
+
+		const { rows } = await evolu.loadQuery(query)
+		return rows
+	}
+
 	async findUnique(where: Partial<T>): Promise<T | undefined> {
 		const evolu = this.getEvolu()
 		const findUniqueQuery = evolu.createQuery((db) => {

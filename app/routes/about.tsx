@@ -71,6 +71,42 @@ const About = () => {
 							</li>
 							<li>
 								<a
+									href='https://vite.dev/'
+									target='_blank'
+									rel='noreferrer'
+									className='text-primary underline'
+								>
+									Vite
+								</a>{' '}
+								- Blazing-fast build tool with excellent
+								developer experience
+							</li>
+							<li>
+								<a
+									href='https://vite-pwa-org.netlify.app/'
+									target='_blank'
+									rel='noreferrer'
+									className='text-primary underline'
+								>
+									PWA Vite Plugin
+								</a>{' '}
+								- PWA plugin for Vite that makes Aurelius a PWA
+								and provides offline support
+							</li>
+							<li>
+								<a
+									href='https://tiptap.dev/'
+									target='_blank'
+									rel='noreferrer'
+									className='text-primary underline'
+								>
+									Tiptap
+								</a>{' '}
+								- Headless editor framework that powers
+								Aurelius' editor
+							</li>
+							<li>
+								<a
 									href='https://evolu.dev/'
 									target='_blank'
 									rel='noreferrer'

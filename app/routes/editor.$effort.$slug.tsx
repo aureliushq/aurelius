@@ -1,11 +1,4 @@
-import {
-	Suspense,
-	lazy,
-	useCallback,
-	useContext,
-	useEffect,
-	useState,
-} from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
 	type ClientActionFunctionArgs,
@@ -18,7 +11,7 @@ import {
 import * as S from '@effect/schema/Schema'
 import { type ExtractRow, type Query, String1000 } from '@evolu/common'
 import invariant from 'tiny-invariant'
-import SuspenseFallback from '~/components/common/suspense-fallback'
+import Editor from '~/components/common/editor'
 import { ROUTES } from '~/lib/constants'
 import { loadEffort, loadWriting } from '~/lib/loaders'
 import {
@@ -34,8 +27,6 @@ import {
 	NonEmptyString100,
 	WritingEffortId,
 } from '~/services/evolu/schema'
-
-const Editor = lazy(() => import('~/components/common/editor'))
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Effort cannot be empty')
@@ -127,21 +118,19 @@ const Writing = () => {
 	}, [])
 
 	return (
-		<Suspense fallback={<SuspenseFallback />}>
-			<Editor
-				data={{
-					// @ts-ignore
-					content: writing.content as string,
-					// @ts-ignore
-					title: (writing?.title || '') as string,
-					// @ts-ignore
-					wordCount: writing?.wordCount ?? 0,
-				}}
-				isSaving={isSaving}
-				onAutoSave={onAutoSave}
-				onReset={onReset}
-			/>
-		</Suspense>
+		<Editor
+			data={{
+				// @ts-ignore
+				content: writing.content as string,
+				// @ts-ignore
+				title: (writing?.title || '') as string,
+				// @ts-ignore
+				wordCount: writing?.wordCount ?? 0,
+			}}
+			isSaving={isSaving}
+			onAutoSave={onAutoSave}
+			onReset={onReset}
+		/>
 	)
 }
 

@@ -1,7 +1,6 @@
 import {
 	type ReactNode,
 	createContext,
-	startTransition,
 	useEffect,
 	useRef,
 	useState,
@@ -129,11 +128,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [latestPosts, setLatestPosts] = useState<ReadonlyArray<PostRow>>([])
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
-	const [splashOpen, setSplashOpen] = useState(
-		!(localStorage.getItem('aurelius:splash_shown') !== 'true')
-			? localStorage.getItem('aurelius:splash_shown') !== 'true'
-			: !!settings?.showSplashDialog,
-	)
+	const [splashOpen, setSplashOpen] = useState(!!settings?.showSplashDialog)
 	const [writingSessionOpen, setWritingSessionOpen] = useState(false)
 	const [writingSessionSettings, setWritingSessionSettings] =
 		useState<WritingSessionSettings>({
@@ -153,15 +148,11 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	}
 
 	const handlePreferencesOpen = (open: boolean) => {
-		startTransition(() => {
-			setPreferencesOpen(open)
-		})
+		setPreferencesOpen(open)
 	}
 
 	const handleSplashOpen = (open: boolean) => {
-		startTransition(() => {
-			setSplashOpen(() => open)
-		})
+		setSplashOpen(() => open)
 	}
 
 	const handleWordCountChange = (count: number) => {
@@ -171,17 +162,13 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const viewAllPosts = () => {
 		setMainMenuOpen(() => false)
 		handleSplashOpen(false)
-		startTransition(() => {
-			navigate(ROUTES.VIEW.POSTS)
-		})
+		navigate(ROUTES.VIEW.POSTS)
 	}
 
 	const viewAllWritingSessions = () => {
 		setMainMenuOpen(() => false)
 		handleSplashOpen(false)
-		startTransition(() => {
-			navigate(ROUTES.VIEW.WRITING_SESSIONS)
-		})
+		navigate(ROUTES.VIEW.WRITING_SESSIONS)
 	}
 
 	const data: AureliusProviderData = {

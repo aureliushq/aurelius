@@ -6,7 +6,6 @@ import {
 	useLoaderData,
 } from '@remix-run/react'
 
-import * as S from '@effect/schema/Schema'
 import type { ColumnDef } from '@tanstack/react-table'
 import { formatDistanceToNow } from 'date-fns'
 import { ChevronDown, ChevronUp, EyeIcon, PencilIcon } from 'lucide-react'
@@ -20,39 +19,28 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
+import { loadEffort, loadWritingsInEffort } from '~/lib/loaders'
 import {
 	AureliusContext,
 	type AureliusProviderData,
 } from '~/lib/providers/aurelius'
 import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
-import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
-import type { EffortsTable } from '~/services/evolu/database'
-import { NonEmptyString100 } from '~/services/evolu/schema'
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
 
-	const effort = await arls.writingEfforts.findUnique({
-		slug: S.decodeSync(NonEmptyString100)(params.effort),
-	})
+	const effort = await loadEffort(params.effort)
 	invariant(effort, 'Writing effort not found')
 
 	if (params.effort === 'help') {
-		const writings = await arls._help.findMany({})
+		const { writings } = await loadWritingsInEffort('help')
 		return { effort, writings }
 	}
 
-	const table = arls[
-		effort.type as keyof Arls
-	] as TableQueryBuilder<EffortsTable>
 	// TODO: implement select
-	const writings = await table.findMany({ where: { effortId: effort.id } })
-	const sortedWritings = [...writings].sort(
-		(a, b) =>
-			new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-	)
-	return { effort, writings: sortedWritings }
+	const { writings } = await loadWritingsInEffort(effort.slug)
+	return { effort, writings }
 }
 
 interface Writing {
@@ -85,6 +73,7 @@ const columns: ColumnDef<Writing>[] = [
 			</span>
 		),
 		header: ({ column }) => (
+			// biome-ignore lint: it's fine
 			<span
 				className='inline-flex items-center cursor-pointer px-4 gap-2'
 				onClick={() =>
