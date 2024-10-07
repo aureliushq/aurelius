@@ -11,11 +11,25 @@ import {
 	useRouteError,
 } from '@remix-run/react'
 
+import type { Evolu } from '@evolu/common'
 import { EvoluProvider } from '@evolu/react'
+import { LoaderCircleIcon } from 'lucide-react'
 import { PWAManifest } from '~/components/pwa'
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '~/components/ui/alert-dialog'
 import { Button } from '~/components/ui/button'
 import { Toaster } from '~/components/ui/toaster'
 import { TooltipProvider } from '~/components/ui/tooltip'
+import { useToast } from '~/components/ui/use-toast'
 import AureliusProvider from '~/lib/providers/aurelius'
 import { ThemeProvider, useTheme } from '~/lib/providers/theme'
 import { createEvoluClient } from '~/services/evolu/client'
@@ -96,7 +110,20 @@ const App = ({ children }: { children: ReactNode }) => {
 	)
 }
 
-const ErrorComponent = () => {
+const DataDeletedToastTitle = () => (
+	<span className='flex items-center'>
+		<LoaderCircleIcon className='w-4 h-4 mr-2 animate-spin' />
+		<span className='text-sm font-semibold'>Please wait...</span>
+	</span>
+)
+
+const DataDeletedToastContent = () => (
+	<div className='pl-6'>
+		<span className='text-sm'>Your data is being deleted.</span>
+	</div>
+)
+
+const ErrorComponent = ({ evolu }: { evolu: Evolu }) => {
 	const error = useRouteError()
 	const { theme } = useTheme()
 
@@ -121,6 +148,22 @@ const ErrorComponent = () => {
 				'Something unexpected happened. Please try again later.'
 	}
 
+	const { toast } = useToast()
+
+	const confirmDelete = () => {
+		toast({
+			description: (
+				<>
+					<DataDeletedToastTitle />
+					<DataDeletedToastContent />
+				</>
+			),
+		})
+		setTimeout(() => {
+			evolu.resetOwner().then(() => {})
+		}, 5000)
+	}
+
 	return (
 		<div className='flex w-full h-full items-center justify-center'>
 			<div className='flex flex-col items-center gap-4'>
@@ -131,9 +174,42 @@ const ErrorComponent = () => {
 				/>
 				<h1 className='text-4xl font-bold'>{title}</h1>
 				<p className='text-lg text-gray-500'>{message}</p>
-				<Link to='/'>
-					<Button>Back to Home</Button>
-				</Link>
+				<div className='flex items-center gap-4'>
+					<Link to='/'>
+						<Button>Back to Home</Button>
+					</Link>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button variant='destructive'>
+								Delete My Data
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									Are you sure?
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									This will delete your data from this
+									browser/device. If you want to recover your
+									data later, make sure you have synced your
+									data with another device.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction asChild>
+									<Button
+										className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+										onClick={confirmDelete}
+									>
+										Yes, I&apos;m sure
+									</Button>
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
+				</div>
 			</div>
 		</div>
 	)
@@ -150,7 +226,10 @@ export const ErrorBoundary = () => {
 			>
 				<AureliusProvider>
 					<App>
-						<ErrorComponent />
+						<ErrorComponent
+							// @ts-ignore
+							evolu={evolu}
+						/>
 					</App>
 				</AureliusProvider>
 			</EvoluProvider>
