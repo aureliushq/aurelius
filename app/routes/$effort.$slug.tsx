@@ -1,6 +1,5 @@
 import { useContext } from 'react'
 
-import type { LinksFunction } from '@remix-run/node'
 import {
 	type ClientLoaderFunctionArgs,
 	Link,
@@ -14,11 +13,6 @@ import invariant from 'tiny-invariant'
 import { loadEffort, loadWriting } from '~/lib/loaders'
 import { AureliusContext } from '~/lib/providers/aurelius'
 import type { Arls } from '~/services/arls'
-import writerStylesheet from '~/styles/writer.css?url'
-
-export const links: LinksFunction = () => [
-	{ rel: 'stylesheet', href: writerStylesheet },
-]
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')

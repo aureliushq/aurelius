@@ -21,11 +21,13 @@ import { ThemeProvider, useTheme } from '~/lib/providers/theme'
 import { createEvoluClient } from '~/services/evolu/client'
 import fontsStylesheet from '~/styles/fonts.css?url'
 import globalStylesheet from '~/styles/globals.css?url'
+import tokyoNightDarkStylesheet from '~/styles/tokyo-night-dark.css?url'
 import writerStylesheet from '~/styles/writer.css?url'
 
 export const links: LinksFunction = () => [
 	{ rel: 'stylesheet', href: globalStylesheet },
 	{ rel: 'stylesheet', href: fontsStylesheet },
+	{ rel: 'stylesheet', href: tokyoNightDarkStylesheet },
 	{ rel: 'stylesheet', href: writerStylesheet },
 ]
 
