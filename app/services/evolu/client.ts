@@ -8,7 +8,6 @@ import {
 import { createEvolu } from '@evolu/common-web'
 import { PositiveInt, String1000 } from '@evolu/react'
 import { Temporal } from 'temporal-polyfill'
-import { GETTING_STARTED_GUIDE } from '~/lib/constants'
 import {
 	EditorSansSerifFonts,
 	EditorSerifFonts,
@@ -17,8 +16,8 @@ import {
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { Database } from '~/services/evolu/database'
+import { runMigrations } from '~/services/evolu/migrations'
 import {
-	Content,
 	EffortType,
 	Int,
 	NonEmptyString100,
@@ -86,13 +85,7 @@ export const createEvoluClient = () => {
 				),
 				type: S.decodeSync(EffortType)(WritingEffortType.POSTS),
 			})
-			// create a getting started guide under _help
-			evolu.create('_help', {
-				content: S.decodeSync(Content)(GETTING_STARTED_GUIDE.content),
-				slug: S.decodeSync(NonEmptyString100)('getting-started'),
-				title: S.decodeSync(String1000)(GETTING_STARTED_GUIDE.title),
-				wordCount: S.decodeSync(Int)(0),
-			})
+			runMigrations(evolu as Evolu)
 		},
 	})
 }
