@@ -25,7 +25,7 @@ export const clientLoader = async () => {
 
 				return {
 					content: writing?.title,
-					contentSlug: `/${effort?.slug}/${writing?.slug}`,
+					contentSlug: `/editor/${effort?.slug}/${writing?.slug}`,
 					duration: session.duration,
 					effort: effort?.name,
 					words: session.endingWordCount - session.startingWordCount,
@@ -60,7 +60,7 @@ const columns: ColumnDef<WritingSession>[] = [
 			if (row.original?.contentSlug) {
 				return (
 					<Link
-						className='block w-[360px] text-left truncate text-primary'
+						className='block w-[320px] text-left truncate text-primary'
 						relative='path'
 						to={row.original?.contentSlug}
 					>
