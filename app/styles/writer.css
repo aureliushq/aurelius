@@ -90,22 +90,20 @@
 
 .viewer h2,
 .ProseMirror h2 {
-	@apply !px-0 !py-3;
+	@apply !px-0 !py-3 !mt-[1.5rem] !mb-[0.75rem];
 	/*    @apply max-w-3xl;*/
 	/*    font-size: 2.3rem;*/
-	/*margin: 0.75rem 0;*/
 }
 
 .viewer h3,
 .ProseMirror h3 {
-	/*    @apply max-w-3xl;*/
+	@apply !mt-[1rem] !mb-[0.875rem];
 	/*    font-size: 2rem;*/
-	margin: 0.83rem 0;
 }
 
 .viewer pre,
 .ProseMirror pre {
-	@apply !max-w-3xl !rounded-lg !py-3 !px-4;
+	@apply !max-w-3xl !rounded-lg !py-3 !px-4 !mb-[1.25em];
 	font-family: "JetBrainsMono", monospace !important;
 }
 
@@ -164,5 +162,5 @@
 
 .viewer hr,
 .ProseMirror hr {
-	@apply !my-10;
+	@apply !my-8;
 }

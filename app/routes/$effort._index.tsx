@@ -8,7 +8,12 @@ import {
 
 import type { ColumnDef } from '@tanstack/react-table'
 import { formatDistanceToNow } from 'date-fns'
-import { ChevronDown, ChevronUp, EyeIcon, PencilIcon } from 'lucide-react'
+import {
+	ChevronDown,
+	ChevronUp,
+	ExternalLinkIcon,
+	PencilIcon,
+} from 'lucide-react'
 import invariant from 'tiny-invariant'
 import { DataTable } from '~/components/common/data-table'
 import KeyboardShortcut from '~/components/editor/keyboard-shortcut'
@@ -19,7 +24,11 @@ import {
 	TooltipTrigger,
 } from '~/components/ui/tooltip'
 import { allShortcuts } from '~/lib/hooks/useKeyboardShortcuts'
-import { loadEffort, loadWritingsInEffort } from '~/lib/loaders'
+import {
+	loadEffort,
+	loadHelpArticles,
+	loadWritingsInEffort,
+} from '~/lib/loaders'
 import {
 	AureliusContext,
 	type AureliusProviderData,
@@ -30,13 +39,13 @@ import { getShortcutWithModifiers } from '~/lib/utils'
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
 
+	if (params.effort === 'help') {
+		const { writings } = await loadHelpArticles()
+		return { effort: { slug: 'help', name: 'Help Articles' }, writings }
+	}
+
 	const effort = await loadEffort(params.effort)
 	invariant(effort, 'Writing effort not found')
-
-	if (params.effort === 'help') {
-		const { writings } = await loadWritingsInEffort('help')
-		return { effort, writings }
-	}
 
 	// TODO: implement select
 	const { writings } = await loadWritingsInEffort(effort.slug)
@@ -105,29 +114,31 @@ const columns: ColumnDef<Writing>[] = [
 								size='icon'
 								variant='ghost'
 							>
-								<EyeIcon className='w-4 h-4' />
+								<ExternalLinkIcon className='w-4 h-4' />
 							</Button>
 						</TooltipTrigger>
-						<TooltipContent>View Post</TooltipContent>
+						<TooltipContent>View</TooltipContent>
 					</Tooltip>
 				</Link>
-				<Link
-					prefetch='intent'
-					to={`/editor/${row.original.effort}/${row.original.slug}`}
-				>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								className='w-9 h-9'
-								size='icon'
-								variant='ghost'
-							>
-								<PencilIcon className='w-4 h-4' />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>Edit Post</TooltipContent>
-					</Tooltip>
-				</Link>
+				{row.original.effort !== 'help' && (
+					<Link
+						prefetch='intent'
+						to={`/editor/${row.original.effort}/${row.original.slug}`}
+					>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button
+									className='w-9 h-9'
+									size='icon'
+									variant='ghost'
+								>
+									<PencilIcon className='w-4 h-4' />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>Edit Post</TooltipContent>
+						</Tooltip>
+					</Link>
+				)}
 			</div>
 		),
 		header: '',
@@ -156,24 +167,30 @@ const EffortHome = () => {
 				columns={columns}
 				data={data}
 				newButton={
-					<Button
-						className='gap-2'
-						onClick={() =>
-							triggerGlobalShortcut(EditorShortcuts.NEW_POST)
-						}
-						size='sm'
-					>
-						New Post
-						<KeyboardShortcut
-							keys={getShortcutWithModifiers(
-								allShortcuts[EditorShortcuts.NEW_POST].key,
-								allShortcuts[EditorShortcuts.NEW_POST]
-									.modifiers,
-							)}
-						/>
-					</Button>
+					effort.slug !== 'help' && (
+						<Button
+							className='gap-2'
+							onClick={() =>
+								triggerGlobalShortcut(EditorShortcuts.NEW_POST)
+							}
+							size='sm'
+						>
+							New Post
+							<KeyboardShortcut
+								keys={getShortcutWithModifiers(
+									allShortcuts[EditorShortcuts.NEW_POST].key,
+									allShortcuts[EditorShortcuts.NEW_POST]
+										.modifiers,
+								)}
+							/>
+						</Button>
+					)
 				}
-				search={{ placeholder: 'Search Posts', show: true }}
+				search={
+					effort.slug !== 'help'
+						? { placeholder: 'Search Posts', show: true }
+						: { show: false }
+				}
 			/>
 		</>
 	)

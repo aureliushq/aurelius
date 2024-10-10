@@ -25,7 +25,7 @@ export const clientLoader = async () => {
 
 				return {
 					content: writing?.title,
-					contentSlug: `/${effort?.slug}/${writing?.slug}`,
+					contentSlug: `/editor/${effort?.slug}/${writing?.slug}`,
 					duration: session.duration,
 					effort: effort?.name,
 					words: session.endingWordCount - session.startingWordCount,
@@ -60,7 +60,7 @@ const columns: ColumnDef<WritingSession>[] = [
 			if (row.original?.contentSlug) {
 				return (
 					<Link
-						className='w-[360px] text-left truncate text-primary'
+						className='block w-[320px] text-left truncate text-primary'
 						relative='path'
 						to={row.original?.contentSlug}
 					>
@@ -79,22 +79,44 @@ const columns: ColumnDef<WritingSession>[] = [
 	},
 	{
 		accessorKey: 'effort',
-		header: 'Writing Effort',
+		cell: ({ row }) => (
+			<span className='flex justify-center text-right'>
+				{row.original?.effort}
+			</span>
+		),
+		header: ({ column }) => (
+			<span className='flex items-center justify-center cursor-pointer gap-2'>
+				Writing Effort
+			</span>
+		),
 	},
 	{
 		accessorKey: 'words',
-		header: 'Words Written',
+		cell: ({ row }) => (
+			<span className='flex justify-center text-right'>
+				{row.original?.words}
+			</span>
+		),
+		header: ({ column }) => (
+			<span className='flex items-center justify-center cursor-pointer gap-2'>
+				Words Written
+			</span>
+		),
 	},
 	{
 		accessorKey: 'duration',
 		cell: ({ row }) => (
-			<span className='text-center'>
+			<span className='flex justify-end text-right'>
 				{formatDistance(0, row.original?.duration, {
 					includeSeconds: true,
 				})}
 			</span>
 		),
-		header: 'Duration',
+		header: ({ column }) => (
+			<span className='flex items-center justify-end cursor-pointer gap-2'>
+				Duration
+			</span>
+		),
 	},
 ]
 const WritingSessionsHome = () => {
