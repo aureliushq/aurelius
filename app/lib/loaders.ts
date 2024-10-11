@@ -4,6 +4,7 @@ import { type Arls, type TableQueryBuilder, arls } from '~/services/arls'
 import type { EffortsTable } from '~/services/evolu/database'
 import {
 	ContentId,
+	type HelpTable,
 	NonEmptyString100,
 	WritingEffortId,
 } from '~/services/evolu/schema'
@@ -26,14 +27,18 @@ export const loadEffortById = async (id: WritingEffortId) => {
 
 export const loadWriting = async (
 	effortType: keyof Arls,
-	effortId: string,
 	slug: string,
+	effortId = '',
 ) => {
-	const table = arls[effortType]
-	const writing = await table.findUnique({
-		effortId: S.decodeSync(WritingEffortId)(effortId),
-		slug: S.decodeSync(NonEmptyString100)(slug),
-	})
+	const table = arls[effortType] as TableQueryBuilder<EffortsTable>
+	const writing = effortId
+		? await table.findUnique({
+				effortId: S.decodeSync(WritingEffortId)(effortId),
+				slug: S.decodeSync(NonEmptyString100)(slug),
+			})
+		: await table.findUnique({
+				slug: S.decodeSync(NonEmptyString100)(slug),
+			})
 	if (!writing) throw new Error('Content not found')
 	return writing
 }
@@ -43,13 +48,28 @@ export const loadWritingById = async (
 	effortId: string,
 	id: string,
 ) => {
-	const table = arls[effortType]
+	const table = arls[effortType] as TableQueryBuilder<EffortsTable>
 	const writing = (await table.findUnique({
 		effortId: S.decodeSync(WritingEffortId)(effortId),
 		// @ts-ignore
 		id: S.decodeSync(ContentId)(id),
 	})) as ExtractRow<Query<EffortsTable>>
 	if (!writing) throw new Error('Content not found')
+	return writing
+}
+
+export const loadHelpArticles = async (): Promise<{
+	writings: ReadonlyArray<ExtractRow<Query<HelpTable>>>
+}> => {
+	const writings = await arls._help.findMany({})
+	return { writings }
+}
+
+export const loadHelpArticleBySlug = async (slug: string) => {
+	const writing = await arls._help.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(slug),
+	})
+	if (!writing) throw new Error('Help article not found')
 	return writing
 }
 

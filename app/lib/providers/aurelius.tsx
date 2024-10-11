@@ -10,8 +10,10 @@ import { type Timer, useTimer } from 'react-use-precision-timer'
 import { useNavigate } from '@remix-run/react'
 
 import type { ExtractRow, Query } from '@evolu/common'
-import { useEvolu, useQuery } from '@evolu/react'
-import { ROUTES } from '~/lib/constants'
+import { useEvolu, useQuery, useSyncState } from '@evolu/react'
+import { CheckIcon } from 'lucide-react'
+import { useToast } from '~/components/ui/use-toast'
+import { IS_RESTORING_KEY, ROUTES } from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
 import {
 	EditorShortcuts,
@@ -140,7 +142,12 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [writingSessionStatus, setWritingSessionStatus] =
 		useState<WritingSessionStatus>(WritingSessionStatus.NOT_STARTED)
 
+	const { _tag } = useSyncState()
+
 	const sessionTimer = useTimer()
+	const { toast } = useToast()
+
+	const isRestoring = localStorage.getItem(IS_RESTORING_KEY)
 
 	const createNewPost = () => {
 		handleSplashOpen(false)
@@ -213,6 +220,26 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 		fetchLatestPosts().then(() => {})
 	}, [])
+
+	// biome-ignore lint: correctness/useExhaustiveDependencies
+	useEffect(() => {
+		if (isRestoring === 'true' && _tag === 'SyncStateIsSynced') {
+			toast({
+				description: (
+					<span className='inline-flex items-center text-base'>
+						<span className='w-4 h-4 mr-2 inline-flex items-center justify-center bg-primary rounded-full'>
+							<CheckIcon className='w-2 h-2' />
+						</span>
+						Sync successful. Reloading...
+					</span>
+				),
+			})
+			localStorage.setItem(IS_RESTORING_KEY, 'false')
+			setTimeout(() => {
+				window.location.href = '/'
+			}, 3000)
+		}
+	}, [_tag, settings])
 
 	return (
 		<AureliusContext.Provider value={data}>

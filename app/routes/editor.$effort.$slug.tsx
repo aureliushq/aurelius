@@ -34,13 +34,12 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 	const effort = await loadEffort(params.effort)
 	if (params.effort === 'help') {
-		const helpArticle = await loadWriting('_help', effort.id, params.slug)
-		return { effort, writing: helpArticle }
+		window.location.href = `/help/${params.slug}`
 	}
 	const writing = await loadWriting(
 		effort.type as keyof Arls,
-		effort.id,
 		params.slug,
+		effort.id,
 	)
 	return { effort, writing }
 }
@@ -81,7 +80,8 @@ export const clientAction = async ({
 }
 
 const Writing = () => {
-	const { setContentId } = useContext<AureliusProviderData>(AureliusContext)
+	const { setContentId, setEffortId } =
+		useContext<AureliusProviderData>(AureliusContext)
 
 	const fetcher = useFetcher()
 	const { effort, writing } = useLoaderData<typeof clientLoader>()
@@ -109,6 +109,13 @@ const Writing = () => {
 	const onReset = () => {
 		navigate(`${ROUTES.EDITOR.BASE}/${effort.slug as string}`)
 	}
+
+	// biome-ignore lint: correctness/useExhaustiveDependencies
+	useEffect(() => {
+		if (effort) {
+			setEffortId(effort.id)
+		}
+	}, [effort])
 
 	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {

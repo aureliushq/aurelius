@@ -18,18 +18,18 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 	invariant(params.effort, 'Writing Effort cannot be empty')
 	invariant(params.slug, 'Writing URL cannot be empty')
 
+	if (params.effort === 'help') {
+		const writing = await loadWriting('_help', params.slug)
+		return { effort: { slug: 'help', name: 'Help Articles' }, writing }
+	}
+
 	const effort = await loadEffort(params.effort)
 	invariant(effort, 'Writing effort not found')
 
-	if (params.effort !== 'help') {
-		const writing = await loadWriting('_help', effort.id, params.slug)
-		return { writing }
-	}
-
 	const writing = await loadWriting(
 		effort.type as keyof Arls,
-		effort.id,
 		params.slug,
+		effort.id,
 	)
 	return { effort, writing }
 }
@@ -53,7 +53,7 @@ const ViewWriting = () => {
 						to={`/${effort?.slug}`}
 					>
 						<ArrowLeftIcon className='mr-2 h-4 w-4' />
-						See all
+						{`All ${effort.name}`}
 					</Link>
 				</div>
 			)}

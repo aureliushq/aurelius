@@ -197,3 +197,5 @@ export const ROUTES = {
 		WRITING_SESSIONS: '/sessions',
 	},
 }
+
+export const IS_RESTORING_KEY = 'aurelius:isRestoring'
