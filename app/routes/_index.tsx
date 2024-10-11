@@ -2,21 +2,19 @@ import { Suspense, lazy, useCallback, useState } from 'react'
 
 import { useLoaderData, useNavigate } from '@remix-run/react'
 
-import * as S from '@effect/schema/Schema'
-import invariant from 'tiny-invariant'
 import SuspenseFallback from '~/components/common/suspense-fallback'
-import { ROUTES } from '~/lib/constants'
-import { arls } from '~/services/arls'
-import { NonEmptyString100 } from '~/services/evolu/schema'
+import SyncFallback from '~/components/common/sync-fallback'
+import { IS_RESTORING_KEY, ROUTES } from '~/lib/constants'
+import { loadHelpArticleBySlug } from '~/lib/loaders'
 
 const Editor = lazy(() => import('~/components/common/editor'))
 
 export const clientLoader = async () => {
 	// TODO: only load this the first time. after loading set local storage to prevent loading again. check local storage before loading.
-	const helpArticle = await arls._help.findUnique({
-		slug: S.decodeSync(NonEmptyString100)('getting-started'),
-	})
-	invariant(helpArticle, 'Help article not found')
+	const helpArticle = await loadHelpArticleBySlug('getting-started')
+	if (!helpArticle) {
+		return { writing: null }
+	}
 
 	return { writing: helpArticle }
 }
@@ -24,8 +22,9 @@ export const clientLoader = async () => {
 const Index = () => {
 	const { writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
-
 	const [isSaving, setIsSaving] = useState<boolean>(false)
+
+	const isRestoring = localStorage.getItem(IS_RESTORING_KEY)
 
 	const onAutoSave = useCallback(() => {
 		// setIsSaving(true)
@@ -44,12 +43,16 @@ const Index = () => {
 		navigate(ROUTES.EDITOR.POST)
 	}
 
+	if (isRestoring === 'true' && !writing) {
+		return <SyncFallback />
+	}
+
 	return (
 		<Suspense fallback={<SuspenseFallback />}>
 			<Editor
 				data={{
-					content: writing.content as string,
-					title: writing.title as string,
+					content: writing?.content as string,
+					title: writing?.title as string,
 					wordCount: 0,
 				}}
 				isSaving={isSaving}

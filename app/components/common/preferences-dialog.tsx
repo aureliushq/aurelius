@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useState } from 'react'
 
-import { Form } from '@remix-run/react'
+import { Form, useNavigate } from '@remix-run/react'
 
 import * as S from '@effect/schema/Schema'
 import { String1000, parseMnemonic } from '@evolu/common'
@@ -60,6 +60,7 @@ import {
 	ALL_FONTS,
 	CHANNELS,
 	DAILY_GOAL_TYPE,
+	IS_RESTORING_KEY,
 	MUSIC_STATIONS,
 	SITE_THEMES,
 	TOOLBAR_MODES,
@@ -607,9 +608,15 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 	)
 }
 
-const Sync = () => {
+const Sync = ({
+	setPreferencesOpen,
+}: {
+	setPreferencesOpen: (value: boolean) => void
+}) => {
 	const { getOwner, restoreOwner } = useEvolu<Database>()
+	const navigate = useNavigate()
 	const [hasCopied, setHasCopied] = useState(false)
+	const [isStartSyncOpen, setIsStartSyncOpen] = useState(false)
 	const { toast } = useToast()
 
 	const owner = getOwner()
@@ -626,9 +633,7 @@ const Sync = () => {
 		toast({
 			description: (
 				<span className='inline-flex items-center text-base'>
-					<span className='w-4 h-4 mr-2 inline-flex items-center justify-center bg-primary rounded-full'>
-						<CheckIcon className='w-2 h-2' />
-					</span>
+					<LoaderCircleIcon className='w-4 h-4 mr-2 animate-spin' />
 					Sync started
 				</span>
 			),
@@ -648,7 +653,8 @@ const Sync = () => {
 							})
 						},
 						onSuccess: (mnemonic) => {
-							restoreOwner(mnemonic).then(() => {})
+							localStorage.setItem(IS_RESTORING_KEY, 'true')
+							restoreOwner(mnemonic).then()
 						},
 					}),
 				)
@@ -720,12 +726,17 @@ const Sync = () => {
 						device
 					</small>
 				</Label>
-				<Dialog>
-					<DialogTrigger asChild>
-						<Button size='sm' variant='outline'>
-							I have a Sync Code
-						</Button>
-					</DialogTrigger>
+				<Button
+					onClick={() => setIsStartSyncOpen(true)}
+					size='sm'
+					variant='outline'
+				>
+					I have a Sync Code
+				</Button>
+				<Dialog
+					onOpenChange={setIsStartSyncOpen}
+					open={isStartSyncOpen}
+				>
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>Enter Sync Code</DialogTitle>
@@ -936,7 +947,7 @@ const PreferencesDialog = ({
 		{
 			id: 'sync',
 			label: 'Sync',
-			content: <Sync />,
+			content: <Sync setPreferencesOpen={setPreferencesOpen} />,
 		},
 		{
 			id: 'advanced',
