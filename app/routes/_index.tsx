@@ -1,10 +1,11 @@
-import { Suspense, lazy, useCallback, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
 
 import { useLoaderData, useNavigate } from '@remix-run/react'
 
 import SuspenseFallback from '~/components/common/suspense-fallback'
 import SyncFallback from '~/components/common/sync-fallback'
 import { IS_RESTORING_KEY, ROUTES } from '~/lib/constants'
+import { useFirstVisit } from '~/lib/hooks'
 import { loadHelpArticleBySlug } from '~/lib/loaders'
 
 const Editor = lazy(() => import('~/components/common/editor'))
@@ -20,6 +21,7 @@ export const clientLoader = async () => {
 }
 
 const Index = () => {
+	const shouldRedirect = useFirstVisit()
 	const { writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
 	const [isSaving, setIsSaving] = useState<boolean>(false)
@@ -41,6 +43,16 @@ const Index = () => {
 
 	const onReset = () => {
 		navigate(ROUTES.EDITOR.POST)
+	}
+
+	useEffect(() => {
+		if (shouldRedirect) {
+			navigate(ROUTES.VIEW.POSTS, { replace: true }) // Replace with your desired redirect path
+		}
+	}, [shouldRedirect, navigate])
+
+	if (shouldRedirect) {
+		return null // Will be redirected by the useEffect
 	}
 
 	if (isRestoring === 'true' && !writing) {

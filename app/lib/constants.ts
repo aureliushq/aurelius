@@ -199,3 +199,4 @@ export const ROUTES = {
 }
 
 export const IS_RESTORING_KEY = 'aurelius:isRestoring'
+export const FIRST_TIME_LOADED_KEY = 'aurelius:firstTimeLoaded'

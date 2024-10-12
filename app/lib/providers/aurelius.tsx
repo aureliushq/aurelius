@@ -13,7 +13,11 @@ import type { ExtractRow, Query } from '@evolu/common'
 import { useEvolu, useQuery, useSyncState } from '@evolu/react'
 import { CheckIcon } from 'lucide-react'
 import { useToast } from '~/components/ui/use-toast'
-import { IS_RESTORING_KEY, ROUTES } from '~/lib/constants'
+import {
+	FIRST_TIME_LOADED_KEY,
+	IS_RESTORING_KEY,
+	ROUTES,
+} from '~/lib/constants'
 import { useKeyboardShortcuts } from '~/lib/hooks'
 import {
 	EditorShortcuts,
