@@ -52,11 +52,11 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 		if (changedToggle) {
 			switch (changedToggle) {
 				case EditorMarks.BOLD:
-					// @ts-expect-error: it'll work
+					// @ts-ignore
 					editor?.chain().focus().toggleBold().run()
 					break
 				case EditorMarks.ITALIC:
-					// @ts-expect-error: it'll work
+					// @ts-ignore
 					editor?.chain().focus().toggleItalic().run()
 					break
 				case EditorMarks.UNDERLINE:
@@ -77,7 +77,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 
 		switch (value) {
 			case EditorHeadings.NORMAL:
-				// @ts-expect-error: it'll work
+				// @ts-ignore
 				editor?.chain().focus().setParagraph().run()
 				break
 			case EditorHeadings.H2:
@@ -105,7 +105,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 					editor?.chain().focus().toggleCodeBlock().run()
 					break
 				case EditorNodes.QUOTE:
-					// @ts-expect-error: it'll work
+					// @ts-ignore
 					editor?.chain().focus().toggleBlockquote().run()
 					break
 			}
@@ -114,7 +114,6 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 
 	const handleSetLink = useCallback(
 		(link: string) => {
-			console.log('link', link)
 			if (link === null) {
 				return
 			}
