@@ -46,9 +46,9 @@ const useAutoSave = ({
 
 		timeoutRef.current = setTimeout(() => {
 			const dataToSave = { ...dataRef.current }
-			ignoreAutoSaveFieldsRef.current.forEach((key) => {
+			for (const key of ignoreAutoSaveFieldsRef.current) {
 				dataToSave[key] = previousDataRef.current[key]
-			})
+			}
 
 			if (
 				JSON.stringify(dataToSave) !==
@@ -67,9 +67,9 @@ const useAutoSave = ({
 			if (isInitialMountRef.current) {
 				dataRef.current = { ...dataRef.current, ...newData }
 				if (ignoreAutoSave) {
-					Object.keys(newData).forEach((key) =>
-						ignoreAutoSaveFieldsRef.current.add(key),
-					)
+					for (const key of Object.keys(newData)) {
+						ignoreAutoSaveFieldsRef.current.add(key)
+					}
 				}
 			} else {
 				setDataState((prevData) => {
@@ -77,13 +77,13 @@ const useAutoSave = ({
 					dataRef.current = updatedData
 
 					if (ignoreAutoSave) {
-						Object.keys(newData).forEach((key) =>
-							ignoreAutoSaveFieldsRef.current.add(key),
-						)
+						for (const key of Object.keys(newData)) {
+							ignoreAutoSaveFieldsRef.current.add(key)
+						}
 					} else {
-						Object.keys(newData).forEach((key) =>
-							ignoreAutoSaveFieldsRef.current.delete(key),
-						)
+						for (const key of Object.keys(newData)) {
+							ignoreAutoSaveFieldsRef.current.delete(key)
+						}
 					}
 
 					const shouldAutoSave = Object.keys(newData).some(
@@ -125,9 +125,9 @@ const useAutoSave = ({
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			const dataToSave = { ...dataRef.current }
-			ignoreAutoSaveFieldsRef.current.forEach((key) => {
+			for (const key of ignoreAutoSaveFieldsRef.current) {
 				dataToSave[key] = previousDataRef.current[key]
-			})
+			}
 			if (
 				JSON.stringify(dataToSave) !==
 				JSON.stringify(previousDataRef.current)

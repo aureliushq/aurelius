@@ -6,8 +6,10 @@ import { checkSlugUniqueness } from '~/lib/utils'
 import { type Arls, arls } from '~/services/arls'
 import {
 	Content,
+	ContentId,
 	Int,
 	NonEmptyString100,
+	WritingEffortId,
 	type WritingEffortsTable,
 } from '~/services/evolu/schema'
 
@@ -44,4 +46,18 @@ export const createWriting = async ({ body, effort }: CreateWritingArgs) => {
 	})
 
 	return { slug: finalSlug }
+}
+
+type DeleteWritingArgs = {
+	effort: WritingEffortsTable
+	id: string
+}
+
+export const deleteWriting = async ({ effort, id }: DeleteWritingArgs) => {
+	const table = arls[effort.type as keyof Arls]
+	return table.delete({
+		// @ts-ignore
+		id: S.decodeSync(ContentId)(id),
+		effortId: S.decodeSync(WritingEffortId)(effort.id),
+	})
 }

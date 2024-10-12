@@ -7,16 +7,27 @@ import type {
 	HelpTable,
 	PostsTable,
 	SettingsTable,
+	WritingEffortId,
 	WritingEffortsTable,
 	WritingSessionsTable,
 } from '~/services/evolu/schema'
 
+type DeleteWhere = {
+	id: Id
+	effortId?: WritingEffortId
+}
+
+type UpdateWhere<T> = {
+	id: Id
+	data: Partial<T>
+}
+
 type QueryBuilderMethods<T extends Table> = {
 	create(data: Partial<T>): Promise<ExtractRow<Query<T>>>
-	delete(where: Partial<T>): Promise<void>
+	delete({ id, effortId }: DeleteWhere): Promise<ExtractRow<Query<T>>>
 	findMany(options?: FindManyOptions<T>): Promise<ReadonlyArray<T>>
 	findUnique(where: Partial<T>): Promise<T | undefined>
-	update(id: Id, data: Partial<T>): Promise<ExtractRow<Query<T>>>
+	update({ id, data }: UpdateWhere<T>): Promise<ExtractRow<Query<T>>>
 }
 
 type QueryBuilderOptions = {
@@ -51,9 +62,23 @@ export class TableQueryBuilder<T extends Table>
 		>
 	}
 
-	async delete(where: Partial<T>): Promise<void> {
+	async delete({ id, effortId }: DeleteWhere): Promise<ExtractRow<Query<T>>> {
 		// TODO: implement delete
-		return
+		const evolu = this.getEvolu()
+		return this.tableName === '_help' ||
+			this.tableName === 'settings' ||
+			this.tableName === 'writingSessions'
+			? (evolu.update(this.tableName, {
+					// @ts-ignore
+					id,
+					isDeleted: true,
+				}) as unknown as Promise<ExtractRow<Query<T>>>)
+			: (evolu.update(this.tableName, {
+					// @ts-ignore
+					id,
+					effortId,
+					isDeleted: true,
+				}) as unknown as Promise<ExtractRow<Query<T>>>)
 	}
 
 	async findMany(options: FindManyOptions<T>): Promise<ReadonlyArray<T>> {
@@ -63,6 +88,7 @@ export class TableQueryBuilder<T extends Table>
 		const findManyQuery = evolu.createQuery((db) => {
 			let query = db.selectFrom(this.tableName).selectAll()
 
+			query = query.where('isDeleted', 'is', null)
 			// apply where
 			for (const [key, value] of Object.entries(where)) {
 				// @ts-ignore
@@ -136,6 +162,7 @@ export class TableQueryBuilder<T extends Table>
 		const evolu = this.getEvolu()
 		const findUniqueQuery = evolu.createQuery((db) => {
 			let query = db.selectFrom(this.tableName).selectAll()
+			query = query.where('isDeleted', 'is', null)
 			for (const [key, value] of Object.entries(where)) {
 				// @ts-ignore
 				query = query.where(key, '=', value)
@@ -147,7 +174,7 @@ export class TableQueryBuilder<T extends Table>
 		return row as Readonly<T>
 	}
 
-	async update(id: Id, data: Partial<T>): Promise<ExtractRow<Query<T>>> {
+	async update({ id, data }: UpdateWhere<T>): Promise<ExtractRow<Query<T>>> {
 		const evolu = this.getEvolu()
 		return evolu.update(this.tableName, {
 			id,
