@@ -73,6 +73,21 @@ export const loadHelpArticleBySlug = async (slug: string) => {
 	return writing
 }
 
+export const loadHelpArticles = async (): Promise<{
+	writings: ReadonlyArray<ExtractRow<Query<HelpTable>>>
+}> => {
+	const writings = await arls._help.findMany({})
+	return { writings }
+}
+
+export const loadHelpArticleBySlug = async (slug: string) => {
+	const writing = await arls._help.findUnique({
+		slug: S.decodeSync(NonEmptyString100)(slug),
+	})
+	if (!writing) throw new Error('Help article not found')
+	return writing
+}
+
 export const loadWritingsInEffort = async (
 	effortSlug: string,
 	// { limit = 50, offset = 0 } = {}

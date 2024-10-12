@@ -1,9 +1,8 @@
-import { type FormEvent, useContext, useState } from 'react'
+import { useContext } from 'react'
 
 import {
 	type ClientActionFunctionArgs,
 	type ClientLoaderFunctionArgs,
-	Form,
 	Link,
 	useLoaderData,
 	useSubmit,
@@ -20,7 +19,6 @@ import {
 	Trash2Icon,
 } from 'lucide-react'
 import invariant from 'tiny-invariant'
-import { is } from 'uvu/assert'
 import { DataTable } from '~/components/common/data-table'
 import KeyboardShortcut from '~/components/editor/keyboard-shortcut'
 import {
