@@ -23,6 +23,17 @@ export const clientLoader = async () => {
 					session.contentId,
 				)
 
+				if (!writing) {
+					return {
+						content: 'Unknown Content',
+						contentSlug: '',
+						duration: session.duration,
+						effort: effort?.name,
+						words:
+							session.endingWordCount - session.startingWordCount,
+					}
+				}
+
 				return {
 					content: writing?.title,
 					contentSlug: `/editor/${effort?.slug}/${writing?.slug}`,

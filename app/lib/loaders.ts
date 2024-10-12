@@ -54,7 +54,7 @@ export const loadWritingById = async (
 		// @ts-ignore
 		id: S.decodeSync(ContentId)(id),
 	})) as ExtractRow<Query<EffortsTable>>
-	if (!writing) throw new Error('Content not found')
+	if (!writing) return null
 	return writing
 }
 
