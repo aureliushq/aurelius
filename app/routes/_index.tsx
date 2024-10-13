@@ -47,7 +47,7 @@ const Index = () => {
 
 	useEffect(() => {
 		if (shouldRedirect) {
-			navigate(ROUTES.VIEW.POSTS, { replace: true }) // Replace with your desired redirect path
+			navigate(ROUTES.EDITOR.POST, { replace: true }) // Replace with your desired redirect path
 		}
 	}, [shouldRedirect, navigate])
 
