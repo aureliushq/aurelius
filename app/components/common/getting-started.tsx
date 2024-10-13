@@ -57,10 +57,12 @@ const GettingStarted = () => {
 			</p>
 			<p>You can start editing this text to see how the editor works.</p>
 			<p>
-				<em>
-					Important: Changes you make here are not saved. To save your
-					work, create a new post (<code>p</code>).
-				</em>
+				<mark>
+					<em>
+						Important: Changes you make here are not saved. To save
+						your work, create a new post (p).
+					</em>
+				</mark>
 			</p>
 			<hr />
 			<h3>Saving your data</h3>
@@ -77,7 +79,7 @@ const GettingStarted = () => {
 					Aurelius across multiple devices, you'll need to sync your
 					data first. To sync your data, go to Preferences
 				</em>
-				(<code>p</code>)
+				(<code>,</code>)
 				<em>
 					, select 'Sync', then 'View Code', and follow the provided
 					instructions. This ensures your writing is accessible
