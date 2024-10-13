@@ -60,6 +60,7 @@ import {
 	ALL_FONTS,
 	CHANNELS,
 	DAILY_GOAL_TYPE,
+	FIRST_TIME_LOADED_KEY,
 	IS_RESTORING_KEY,
 	MUSIC_STATIONS,
 	SITE_THEMES,
@@ -653,6 +654,7 @@ const Sync = ({
 							})
 						},
 						onSuccess: (mnemonic) => {
+							localStorage.removeItem(FIRST_TIME_LOADED_KEY)
 							localStorage.setItem(IS_RESTORING_KEY, 'true')
 							restoreOwner(mnemonic).then()
 						},
@@ -795,6 +797,7 @@ const Advanced = () => {
 			),
 		})
 		setTimeout(() => {
+			localStorage.removeItem(FIRST_TIME_LOADED_KEY)
 			resetOwner().then(() => {})
 		}, 5000)
 	}
