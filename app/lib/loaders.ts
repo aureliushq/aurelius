@@ -69,7 +69,7 @@ export const loadHelpArticleBySlug = async (slug: string) => {
 	const writing = await arls._help.findUnique({
 		slug: S.decodeSync(NonEmptyString100)(slug),
 	})
-	if (!writing) throw new Error('Help article not found')
+	if (!writing) return null
 	return writing
 }
 

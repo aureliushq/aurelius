@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
 	return (
 		<>
 			{(search?.show || newButton) && (
-				<div className='flex w-full grid grid-cols-3 gap-4 text-white mb-4'>
+				<div className='flex w-full grid grid-cols-3 gap-4 mb-4'>
 					{search?.show && (
 						<Input
 							onChange={(event) =>

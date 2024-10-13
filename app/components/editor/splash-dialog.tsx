@@ -39,6 +39,7 @@ import { EditorShortcuts } from '~/lib/types'
 import { getShortcutWithModifiers } from '~/lib/utils'
 import { arls } from '~/services/arls'
 import type { SettingsRow } from '~/services/evolu/client'
+import type { Id } from '~/services/evolu/database'
 
 const SplashDialogButton = ({
 	badge,
@@ -104,9 +105,12 @@ const SplashDialog = ({
 		const formData = new FormData(event.currentTarget)
 		const showSplashDialog = formData.get('dont-show-again') !== 'on'
 		// @ts-ignore
-		await arls.settings.update(settings.id, {
-			// @ts-ignore
-			showSplashDialog,
+		await arls.settings.update({
+			id: settings.id as Id,
+			data: {
+				// @ts-ignore
+				showSplashDialog,
+			},
 		})
 	}
 
@@ -305,7 +309,9 @@ const SplashDialog = ({
 										label='Getting Started'
 										onClick={() => {
 											setSplashOpen(false)
-											navigate(ROUTES.BASE)
+											navigate(
+												ROUTES.HELP.GETTING_STARTED,
+											)
 										}}
 									/>
 								</li>

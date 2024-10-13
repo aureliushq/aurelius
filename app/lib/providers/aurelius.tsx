@@ -127,6 +127,7 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 	const [focusMode, setFocusMode] = useState(false)
 	const [helpOpen, setHelpOpen] = useState(false)
 	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+	const [isRestoring, setIsRestoring] = useState(false)
 	const [latestPosts, setLatestPosts] = useState<ReadonlyArray<PostRow>>([])
 	const [mainMenuOpen, setMainMenuOpen] = useState(false)
 	const [preferencesOpen, setPreferencesOpen] = useState(false)
@@ -146,8 +147,6 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 
 	const sessionTimer = useTimer()
 	const { toast } = useToast()
-
-	const isRestoring = localStorage.getItem(IS_RESTORING_KEY)
 
 	const createNewPost = () => {
 		handleSplashOpen(false)
@@ -218,12 +217,14 @@ const AureliusProvider = ({ children }: AureliusProviderProps) => {
 			setLatestPosts(posts)
 		}
 
+		const isRestoring = localStorage.getItem(IS_RESTORING_KEY) === 'true'
+		setIsRestoring(isRestoring)
 		fetchLatestPosts().then(() => {})
 	}, [])
 
 	// biome-ignore lint: correctness/useExhaustiveDependencies
 	useEffect(() => {
-		if (isRestoring === 'true' && _tag === 'SyncStateIsSynced') {
+		if (isRestoring && _tag === 'SyncStateIsSynced') {
 			toast({
 				description: (
 					<span className='inline-flex items-center text-base'>
