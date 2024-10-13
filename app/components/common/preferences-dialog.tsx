@@ -77,7 +77,7 @@ import {
 import { copyToClipboard } from '~/lib/utils'
 import { arls } from '~/services/arls'
 import type { SettingsRow } from '~/services/evolu/client'
-import type { Database } from '~/services/evolu/database'
+import type { Database, Id } from '~/services/evolu/database'
 import { Int, NonEmptyString100 } from '~/services/evolu/schema'
 
 // TODO: Autosave settings on change
@@ -103,9 +103,13 @@ const Appearance = ({ settings }: { settings: SettingsRow }) => {
 		const titleFont = formData.get('title-font') as string
 
 		// @ts-ignore
-		await arls.settings.update(settings.id, {
-			bodyFont: S.decodeSync(NonEmptyString100)(bodyFont),
-			titleFont: S.decodeSync(NonEmptyString100)(titleFont),
+		await arls.settings.update({
+			// @ts-ignore
+			id: settings.id,
+			data: {
+				bodyFont: S.decodeSync(NonEmptyString100)(bodyFont),
+				titleFont: S.decodeSync(NonEmptyString100)(titleFont),
+			},
 		})
 		toast({
 			description: <SavedToastContent />,
@@ -215,10 +219,14 @@ const Editor = ({ settings }: { settings: SettingsRow }) => {
 		const toolbarMode = formData.get('editor-toolbar-mode') as string
 
 		// @ts-ignore
-		await arls.settings.update(settings.id, {
+		await arls.settings.update({
 			// @ts-ignore
-			showSplashDialog,
-			toolbarMode: S.decodeSync(NonEmptyString100)(toolbarMode),
+			id: settings.id as Id,
+			data: {
+				// @ts-ignore
+				showSplashDialog,
+				toolbarMode: S.decodeSync(NonEmptyString100)(toolbarMode),
+			},
 		})
 		toast({
 			description: <SavedToastContent />,
@@ -282,9 +290,14 @@ const Writing = ({ settings }: { settings: SettingsRow }) => {
 		writingDailyTarget: number,
 	) => {
 		// @ts-ignore
-		await arls.settings.update(settings.id, {
-			writingDailyGoal: S.decodeSync(NonEmptyString100)(writingDailyGoal),
-			writingDailyTarget: S.decodeSync(Int)(writingDailyTarget),
+		await arls.settings.update({
+			// @ts-ignore
+			id: settings.id,
+			data: {
+				writingDailyGoal:
+					S.decodeSync(NonEmptyString100)(writingDailyGoal),
+				writingDailyTarget: S.decodeSync(Int)(writingDailyTarget),
+			},
 		})
 		toast({
 			description: <SavedToastContent />,
@@ -407,10 +420,14 @@ const Export = ({ settings }: { settings: SettingsRow }) => {
 			: true
 
 		// @ts-ignore
-		await arls.settings.update(settings.id, {
-			exportImageFooter: S.decodeSync(String1000)(exportImageFooter),
+		await arls.settings.update({
 			// @ts-ignore
-			exportImageWatermark,
+			id: settings.id,
+			data: {
+				exportImageFooter: S.decodeSync(String1000)(exportImageFooter),
+				// @ts-ignore
+				exportImageWatermark,
+			},
 		})
 		toast({
 			description: <SavedToastContent />,
@@ -484,11 +501,15 @@ const Music = ({ settings }: { settings: SettingsRow }) => {
 		youtubeLink: string,
 	) => {
 		// @ts-ignore
-		await arls.settings.update(settings.id, {
+		await arls.settings.update({
 			// @ts-ignore
-			enableMusicPlayer,
-			musicChannel: S.decodeSync(NonEmptyString100)(musicChannel),
-			youtubeLink: S.decodeSync(String1000)(youtubeLink),
+			id: settings.id,
+			data: {
+				// @ts-ignore
+				enableMusicPlayer,
+				musicChannel: S.decodeSync(NonEmptyString100)(musicChannel),
+				youtubeLink: S.decodeSync(String1000)(youtubeLink),
+			},
 		})
 		toast({
 			description: <SavedToastContent />,
@@ -870,8 +891,12 @@ const Profile = ({ settings }: { settings: SettingsRow }) => {
 
 	const saveFormData = async (userName: string) => {
 		// @ts-ignore
-		await arls.settings.update(settings.id, {
-			userName: S.decodeSync(String1000)(userName),
+		await arls.settings.update({
+			// @ts-ignore
+			id: settings.id,
+			data: {
+				userName: S.decodeSync(String1000)(userName),
+			},
 		})
 		toast({
 			description: <SavedToastContent />,
