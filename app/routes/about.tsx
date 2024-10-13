@@ -4,8 +4,8 @@ const About = () => {
 	return (
 		<DefaultLayout>
 			<div className='relative mx-auto prose dark:prose-invert flex flex-col justify-center gap-12 px-6 lg:px-8'>
-				<div className='flex w-full flex-col items-start text-white'>
-					<h1 className='mb-4 text-center text-white'>About</h1>
+				<div className='flex w-full flex-col items-start'>
+					<h1 className='mb-4 text-center'>About</h1>
 				</div>
 				<div className='flex w-full flex-col items-start gap-4 leading-loose'>
 					<span>
@@ -46,8 +46,8 @@ const About = () => {
 						importantly, your content remains available and under
 						your control, no matter what.
 					</span>
-					<div className='flex w-full flex-col items-start text-white'>
-						<h2 className='mb-4 text-center text-white'>Credits</h2>
+					<div className='flex w-full flex-col items-start'>
+						<h2 className='mb-4 text-center'>Credits</h2>
 					</div>
 					<div className='flex w-full flex-col items-start gap-4 leading-loose'>
 						<span>
@@ -143,7 +143,7 @@ const About = () => {
 							</li>
 						</ul>
 					</div>
-					{/*<div className='flex w-full flex-col items-start gap-4 leading-loose text-white'>*/}
+					{/*<div className='flex w-full flex-col items-start gap-4 leading-loose'>*/}
 					{/*	<span>*/}
 					{/*		And a special thanks to the following people for*/}
 					{/*		helping me test Aurelius and providing valuable*/}

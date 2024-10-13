@@ -135,7 +135,7 @@ const WritingSessionsHome = () => {
 
 	return (
 		<>
-			<div className='prose dark:prose-invert max-w-none flex w-full flex items-center justify-between text-white'>
+			<div className='prose dark:prose-invert max-w-none flex w-full items-center justify-between'>
 				<h1 className='mb-4 text-center'>Writing Sessions</h1>
 			</div>
 			<DataTable

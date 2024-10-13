@@ -5,7 +5,7 @@ const PrivacyPolicy = () => {
 		<DefaultLayout>
 			<div className='relative mx-auto prose dark:prose-invert flex flex-col justify-center gap-12 px-6 lg:px-8'>
 				<div className='flex w-full flex-col items-start'>
-					<h1 className='mb-4 text-center text-white'>Privacy</h1>
+					<h1 className='mb-4 text-center'>Privacy</h1>
 					<div className='flex flex-col gap-2'>
 						<span className='text-sm text-gray-500'>
 							Last Updated: July 17, 2024

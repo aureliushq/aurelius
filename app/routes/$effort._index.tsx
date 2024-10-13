@@ -256,7 +256,7 @@ const EffortHome = () => {
 
 	return (
 		<>
-			<div className='prose dark:prose-invert max-w-none w-full flex items-center justify-between text-white'>
+			<div className='prose dark:prose-invert max-w-none w-full flex items-center justify-between'>
 				<h1 className='mb-4 text-center'>{effort.name}</h1>
 			</div>
 			<DataTable
