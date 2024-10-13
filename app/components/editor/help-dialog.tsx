@@ -14,6 +14,7 @@ import {
 	FORMATTING_SHORTCUTS,
 	GENERAL_SHORTCUTS,
 	MARKDOWN_SHORTCUTS,
+	ROUTES,
 } from '~/lib/constants'
 import {
 	allShortcuts,
@@ -36,7 +37,7 @@ const HelpDialog = ({ helpOpen, setHelpOpen }: HelpDialogProps) => {
 							prefetch='intent'
 							rel='noopener noreferrer'
 							target='_blank'
-							to='/help/getting-started'
+							to={ROUTES.HELP.GETTING_STARTED}
 						>
 							<Button size='sm' variant='secondary'>
 								<ExternalLinkIcon className='w-4 h-4 mr-2' />

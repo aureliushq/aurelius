@@ -58,7 +58,7 @@ import { ContentId, WordCount, WritingEffortId } from '~/services/evolu/schema'
 const HelpTooltip = ({ children }: { children: string | ReactNode }) => {
 	return (
 		<Tooltip>
-			<TooltipTrigger>
+			<TooltipTrigger asChild>
 				<CircleHelpIcon className='w-4 h-4 ml-2' />
 			</TooltipTrigger>
 			<TooltipContent>

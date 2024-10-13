@@ -34,7 +34,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 	const effort = await loadEffort(params.effort)
 	if (params.effort === 'help') {
-		window.location.href = `/help/${params.slug}`
+		window.location.href = `${ROUTES.HELP}/${params.slug}`
 	}
 	const writing = await loadWriting(
 		effort.type as keyof Arls,
@@ -73,7 +73,7 @@ export const clientAction = async ({
 			effort.type as keyof Arls
 		] as TableQueryBuilder<EffortsTable>
 
-		await table.update(writing.id, data)
+		await table.update({ id: writing.id, data })
 
 		return { message: 'ok' }
 	}

@@ -191,6 +191,10 @@ export const ROUTES = {
 		BASE: '/editor',
 		POST: '/editor/posts',
 	},
+	HELP: {
+		BASE: '/help',
+		GETTING_STARTED: '/help/getting-started',
+	},
 	PRIVACY: '/privacy',
 	VIEW: {
 		POSTS: '/posts',
