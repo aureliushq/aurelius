@@ -31,6 +31,7 @@ import {
 	Writer,
 	WritingSessionTimer,
 } from '~/components/editor'
+import MusicPlayer from '~/components/editor/music-player'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { useAutoSave, useKeyboardShortcuts } from '~/lib/hooks'
 import {
@@ -277,15 +278,15 @@ const Editor = ({
 					</div>
 				</section>
 				<section className='w-screen fixed bottom-0 left-0 grid grid-cols-2 z-10'>
-					{/*{settings?.enableMusicPlayer ? (*/}
-					{/*	<MusicPlayer*/}
-					{/*		focusMode={focusMode}*/}
-					{/*		isMusicPlaying={isMusicPlaying}*/}
-					{/*		setIsMusicPlaying={setIsMusicPlaying}*/}
-					{/*	/>*/}
-					{/*) : (*/}
-					<div />
-					{/*)}*/}
+					{settings?.enableMusicPlayer ? (
+						<MusicPlayer
+							focusMode={focusMode}
+							isMusicPlaying={isMusicPlaying}
+							setIsMusicPlaying={setIsMusicPlaying}
+						/>
+					) : (
+						<div />
+					)}
 					<div
 						className={`flex items-center justify-end p-4 gap-4 transition-opacity duration-100 hover:opacity-100 ${focusMode ? 'opacity-5' : 'opacity-100'}`}
 					>
