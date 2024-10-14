@@ -75,6 +75,7 @@
 		"lucide-react": "0.436.0",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
+		"react-player": "^2.16.0",
 		"react-use-precision-timer": "^3.5.5",
 		"tailwind-merge": "^2.4.0",
 		"tailwindcss-animate": "^1.0.7",

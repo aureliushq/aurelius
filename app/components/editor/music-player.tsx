@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react'
+import { Suspense, useContext, useState } from 'react'
 
-// import ReactPlayer from 'react-player'
 import {
 	PauseIcon,
 	PlayIcon,
@@ -8,6 +7,7 @@ import {
 	Volume2Icon,
 	VolumeXIcon,
 } from 'lucide-react'
+import ReactPlayer from 'react-player'
 import { Button } from '~/components/ui/button'
 import {
 	Popover,
@@ -16,11 +16,12 @@ import {
 } from '~/components/ui/popover'
 import { Separator } from '~/components/ui/separator'
 import { Slider } from '~/components/ui/slider'
-// import { MUSIC_STATIONS } from '~/lib/constants'
+import { MUSIC_STATIONS } from '~/lib/constants'
 import {
 	AureliusContext,
 	type AureliusProviderData,
 } from '~/lib/providers/aurelius'
+import type { MusicChannels } from '~/lib/types'
 
 // import type { MusicChannels } from '~/lib/types'
 
@@ -87,28 +88,28 @@ const MusicPlayer = ({
 					</Button>
 				)}
 			</div>
-			{/*<Suspense fallback={<div>Loading...</div>}>*/}
-			{/*	<ReactPlayer*/}
-			{/*		playing={isMusicPlaying}*/}
-			{/*		// @ts-ignore*/}
-			{/*		url={*/}
-			{/*			settings?.youtubeLink ||*/}
-			{/*			MUSIC_STATIONS[settings?.musicChannel as MusicChannels]*/}
-			{/*		}*/}
-			{/*		width='0'*/}
-			{/*		height='0'*/}
-			{/*		loop={true}*/}
-			{/*		volume={volume / 100}*/}
-			{/*		config={{*/}
-			{/*			youtube: {*/}
-			{/*				playerVars: {*/}
-			{/*					control: 1,*/}
-			{/*					start: 1,*/}
-			{/*				},*/}
-			{/*			},*/}
-			{/*		}}*/}
-			{/*	/>*/}
-			{/*</Suspense>*/}
+			<Suspense fallback={<div>Loading...</div>}>
+				<ReactPlayer
+					playing={isMusicPlaying}
+					// @ts-ignore
+					url={
+						settings?.youtubeLink ||
+						MUSIC_STATIONS[settings?.musicChannel as MusicChannels]
+					}
+					width='0'
+					height='0'
+					loop={true}
+					volume={volume / 100}
+					config={{
+						youtube: {
+							playerVars: {
+								control: 1,
+								start: 1,
+							},
+						},
+					}}
+				/>
+			</Suspense>
 		</div>
 	)
 }
