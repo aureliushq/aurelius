@@ -29,9 +29,17 @@ const About = () => {
 						but I understand that circumstances beyond my control
 						might affect its operations. That's why I've taken extra
 						steps to ensure its longevity and accessibility. The
-						entire source code is available on GitHub, allowing
-						users (with some technical knowledge) to host Aurelius
-						wherever they prefer.
+						entire source code is available on{' '}
+						<a
+							className='text-primary underline'
+							href='https://github.com/aureliushq/aurelius'
+							rel='noreferrer'
+							target='_blank'
+						>
+							GitHub
+						</a>
+						, allowing users (with some technical knowledge) to host
+						Aurelius wherever they prefer.
 					</span>
 					<span>
 						Additionally, I'm working on making your data portable.
@@ -59,10 +67,10 @@ const About = () => {
 						<ul>
 							<li>
 								<a
-									href='https://remix.run/'
-									target='_blank'
-									rel='noreferrer'
 									className='text-primary underline'
+									href='https://remix.run/'
+									rel='noreferrer'
+									target='_blank'
 								>
 									Remix
 								</a>{' '}
@@ -71,10 +79,10 @@ const About = () => {
 							</li>
 							<li>
 								<a
-									href='https://vite.dev/'
-									target='_blank'
-									rel='noreferrer'
 									className='text-primary underline'
+									href='https://vite.dev/'
+									rel='noreferrer'
+									target='_blank'
 								>
 									Vite
 								</a>{' '}
@@ -83,10 +91,10 @@ const About = () => {
 							</li>
 							<li>
 								<a
-									href='https://vite-pwa-org.netlify.app/'
-									target='_blank'
-									rel='noreferrer'
 									className='text-primary underline'
+									href='https://vite-pwa-org.netlify.app/'
+									rel='noreferrer'
+									target='_blank'
 								>
 									PWA Vite Plugin
 								</a>{' '}
@@ -95,10 +103,10 @@ const About = () => {
 							</li>
 							<li>
 								<a
-									href='https://tiptap.dev/'
-									target='_blank'
-									rel='noreferrer'
 									className='text-primary underline'
+									href='https://tiptap.dev/'
+									rel='noreferrer'
+									target='_blank'
 								>
 									Tiptap
 								</a>{' '}
@@ -107,10 +115,10 @@ const About = () => {
 							</li>
 							<li>
 								<a
-									href='https://evolu.dev/'
-									target='_blank'
-									rel='noreferrer'
 									className='text-primary underline'
+									href='https://evolu.dev/'
+									rel='noreferrer'
+									target='_blank'
 								>
 									Evolu
 								</a>{' '}
@@ -119,10 +127,10 @@ const About = () => {
 							</li>
 							<li>
 								<a
-									href='https://ui.shadcn.com/'
-									target='_blank'
-									rel='noreferrer'
 									className='text-primary underline'
+									href='https://ui.shadcn.com/'
+									rel='noreferrer'
+									target='_blank'
 								>
 									Shadcn UI
 								</a>{' '}
@@ -131,10 +139,10 @@ const About = () => {
 							</li>
 							<li>
 								<a
-									href='https://popsy.co/'
-									target='_blank'
-									rel='noreferrer'
 									className='text-primary underline'
+									href='https://popsy.co/'
+									rel='noreferrer'
+									target='_blank'
 								>
 									Popsy
 								</a>{' '}
@@ -143,35 +151,25 @@ const About = () => {
 							</li>
 						</ul>
 					</div>
-					{/*<div className='flex w-full flex-col items-start gap-4 leading-loose'>*/}
-					{/*	<span>*/}
-					{/*		And a special thanks to the following people for*/}
-					{/*		helping me test Aurelius and providing valuable*/}
-					{/*		feedback:*/}
-					{/*	</span>*/}
-					{/*	<ul>*/}
-					{/*		<li>*/}
-					{/*			<a*/}
-					{/*				href='https://www.instagram.com/reflex__god_/'*/}
-					{/*				target='_blank'*/}
-					{/*				rel='noreferrer'*/}
-					{/*				className='text-primary underline'*/}
-					{/*			>*/}
-					{/*				Sreenivasan*/}
-					{/*			</a>{' '}*/}
-					{/*		</li>*/}
-					{/*		<li>*/}
-					{/*			<a*/}
-					{/*				href='https://www.instagram.com/raj.rk98/'*/}
-					{/*				target='_blank'*/}
-					{/*				rel='noreferrer'*/}
-					{/*				className='text-primary underline'*/}
-					{/*			>*/}
-					{/*				Rajkumar*/}
-					{/*			</a>{' '}*/}
-					{/*		</li>*/}
-					{/*	</ul>*/}
-					{/*</div>*/}
+					<div className='flex w-full flex-col items-start gap-4 leading-loose'>
+						<span>
+							And a special thanks to the following people for
+							helping me test Aurelius, fixing issues, and
+							providing valuable feedback:
+						</span>
+						<ul>
+							<li>
+								{/*<a*/}
+								{/*	href='https://www.instagram.com/reflex__god_/'*/}
+								{/*	target='_blank'*/}
+								{/*	rel='noreferrer'*/}
+								{/*	className='text-primary underline'*/}
+								{/*>*/}
+								Sreenivasan
+								{/*</a>{' '}*/}
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</DefaultLayout>
