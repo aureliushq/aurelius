@@ -48,6 +48,11 @@ export enum SiteTheme {
 	SYSTEM = 'system',
 }
 
+export enum StartPage {
+	NEW_POST = 'newPost',
+	VIEW_ALL_POSTS = 'viewAllPosts',
+}
+
 export enum WritingDailyGoalType {
 	DURATION = 'DURATION',
 	WORD_COUNT = 'WORD_COUNT',

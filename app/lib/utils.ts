@@ -60,9 +60,9 @@ export const checkSlugUniqueness = async ({
 
 	if (!writing) {
 		return { isUnique: true, slug }
-	} else {
-		return { isUnique: false, slug: '' }
 	}
+
+	return { isUnique: false, slug: '' }
 }
 
 export const convertMsToHumanReadable = (ms: number): string => {
@@ -96,11 +96,12 @@ export const convertMsToHumanReadable = (ms: number): string => {
 
 	if (parts.length === 0) {
 		return '0 seconds'
-	} else if (parts.length === 1) {
-		return parts[0]
-	} else if (parts.length === 2) {
-		return `${parts[0]} and ${parts[1]}`
-	} else {
-		return `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`
 	}
+	if (parts.length === 1) {
+		return parts[0]
+	}
+	if (parts.length === 2) {
+		return `${parts[0]} and ${parts[1]}`
+	}
+	return `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`
 }

@@ -1,4 +1,11 @@
-import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
+import {
+	Suspense,
+	lazy,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from 'react'
 
 import { useLoaderData, useNavigate } from '@remix-run/react'
 
@@ -7,6 +14,11 @@ import SyncFallback from '~/components/common/sync-fallback'
 import { IS_RESTORING_KEY, ROUTES } from '~/lib/constants'
 import { useFirstVisit } from '~/lib/hooks'
 import { loadHelpArticleBySlug } from '~/lib/loaders'
+import {
+	type AureliusProviderData,
+	AureliusContext,
+} from '~/lib/providers/aurelius'
+import { StartPage } from '~/lib/types'
 
 const Editor = lazy(() => import('~/components/common/editor'))
 
@@ -21,6 +33,7 @@ export const clientLoader = async () => {
 }
 
 const Index = () => {
+	const { settings } = useContext<AureliusProviderData>(AureliusContext)
 	const shouldRedirect = useFirstVisit()
 	const { writing } = useLoaderData<typeof clientLoader>()
 	const navigate = useNavigate()
@@ -47,9 +60,16 @@ const Index = () => {
 
 	useEffect(() => {
 		if (shouldRedirect) {
-			navigate(ROUTES.EDITOR.POST, { replace: true }) // Replace with your desired redirect path
+			switch (settings.startPage) {
+				case StartPage.VIEW_ALL_POSTS:
+					navigate(ROUTES.VIEW.POSTS, { replace: true })
+					break
+				case StartPage.NEW_POST:
+					navigate(ROUTES.EDITOR.POST, { replace: true })
+					break
+			}
 		}
-	}, [shouldRedirect, navigate])
+	}, [settings.startPage, shouldRedirect, navigate])
 
 	if (shouldRedirect) {
 		return null // Will be redirected by the useEffect
