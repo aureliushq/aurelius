@@ -64,6 +64,7 @@ import {
 	IS_RESTORING_KEY,
 	MUSIC_STATIONS,
 	SITE_THEMES,
+	START_PAGES,
 	TOOLBAR_MODES,
 } from '~/lib/constants'
 import { useDebounce } from '~/lib/hooks'
@@ -72,6 +73,7 @@ import {
 	type MusicChannels,
 	type PreferencesDialogProps,
 	SiteTheme,
+	StartPage,
 	WritingDailyGoalType,
 } from '~/lib/types'
 import { copyToClipboard } from '~/lib/utils'
@@ -79,8 +81,6 @@ import { arls } from '~/services/arls'
 import type { SettingsRow } from '~/services/evolu/client'
 import type { Database, Id } from '~/services/evolu/database'
 import { Int, NonEmptyString100 } from '~/services/evolu/schema'
-
-// TODO: Autosave settings on change
 
 const SavedToastContent = () => (
 	<span className='inline-flex items-center text-base'>
@@ -90,6 +90,63 @@ const SavedToastContent = () => (
 		Saved
 	</span>
 )
+
+const General = ({ settings }: { settings: SettingsRow }) => {
+	const { toast } = useToast()
+
+	const handleChange = async (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const formData = new FormData(event.currentTarget)
+
+		const startPage = formData.get('start-page') as string
+
+		// @ts-ignore
+		await arls.settings.update({
+			// @ts-ignore
+			id: settings.id,
+			data: {
+				startPage: S.decodeSync(NonEmptyString100)(startPage),
+			},
+		})
+		toast({
+			description: <SavedToastContent />,
+		})
+	}
+
+	return (
+		<Form className='flex flex-col gap-8' onChange={handleChange}>
+			<section className='flex flex-col gap-4'>
+				<div className='flex items-center justify-between h-10'>
+					<Label className='flex flex-col gap-2'>
+						Start Page
+						<small className='text-xs font-light'>
+							Set the page that should be displayed when you open
+							Aurelius
+						</small>
+					</Label>
+					<Select
+						defaultValue={
+							(settings.startPage ||
+								StartPage.VIEW_ALL_POSTS) as string
+						}
+						name='start-page'
+					>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Fonts' />
+						</SelectTrigger>
+						<SelectContent>
+							{START_PAGES.map((page) => (
+								<SelectItem key={page.value} value={page.value}>
+									{page.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+			</section>
+		</Form>
+	)
+}
 
 const Appearance = ({ settings }: { settings: SettingsRow }) => {
 	const { theme, setTheme } = useTheme()
@@ -948,6 +1005,11 @@ const PreferencesDialog = ({
 }: { settings: SettingsRow } & PreferencesDialogProps) => {
 	const TABS = [
 		{
+			id: 'general',
+			label: 'General',
+			content: <General settings={settings} />,
+		},
+		{
 			id: 'appearance',
 			label: 'Appearance',
 			content: <Appearance settings={settings} />,
@@ -1010,7 +1072,7 @@ const PreferencesDialog = ({
 							<div className='flex flex-col w-full h-auto gap-8'>
 								<section className='flex flex-col gap-4'>
 									<Label className='text-muted-foreground px-8 font-semibold'>
-										General
+										Options
 									</Label>
 									<TabsList className='w-full h-full flex-col justify-start px-4 py-0 bg-transparent'>
 										{TABS.map((tab) => (

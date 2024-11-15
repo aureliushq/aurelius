@@ -7,6 +7,7 @@ import {
 	MusicChannels,
 	type ShortcutConfig,
 	SiteTheme,
+	StartPage,
 	WritingDailyGoalType,
 } from '~/lib/types'
 
@@ -58,6 +59,11 @@ export const SITE_THEMES = [
 	{ value: SiteTheme.LIGHT, label: 'Light' },
 	{ value: SiteTheme.DARK, label: 'Dark' },
 	{ value: SiteTheme.SYSTEM, label: 'System' },
+]
+
+export const START_PAGES = [
+	{ value: StartPage.NEW_POST, label: 'New Post' },
+	{ value: StartPage.VIEW_ALL_POSTS, label: 'View All Posts' },
 ]
 
 export const GENERAL_SHORTCUTS: ShortcutConfig[] = [

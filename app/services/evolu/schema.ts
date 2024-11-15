@@ -140,6 +140,7 @@ export const Settings = table({
 	exportImageWatermark: SqliteBoolean,
 	musicChannel: NonEmptyString100,
 	showSplashDialog: S.NullOr(SqliteBoolean),
+	startPage: NonEmptyString100,
 	titleFont: NonEmptyString100,
 	toolbarMode: NonEmptyString100,
 	userName: String1000,
