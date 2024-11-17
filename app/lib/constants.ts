@@ -145,7 +145,7 @@ export const MARKDOWN_SHORTCUTS: ShortcutConfig[] = [
 	},
 	{
 		description: 'Strikethrough',
-		key: '~text~',
+		key: '~~text~~',
 		modifiers: {},
 	},
 	{
