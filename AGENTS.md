@@ -1,3 +1,10 @@
+## Git workflow
+
+- The default branch (currently `v2`) is protected. Every change reaches it through a pull request.
+- Never commit or push to the default branch directly, even when your account can bypass the rule.
+- Start each change on a new branch from the latest default branch, then open a pull request into it.
+- Never force-push the default branch and never delete it.
+
 ## Product requirements
 
 - PRDs live in `docs/prd/`. The index and naming guide are in `docs/prd/README.md`.
