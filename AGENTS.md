@@ -5,6 +5,23 @@
 - Start each change on a new branch from the latest default branch, then open a pull request into it.
 - Never force-push the default branch and never delete it.
 
+### Branch names
+
+Name a branch `<type>/<short-description>`.
+
+| Type | Use for |
+|---|---|
+| `feat` | A new feature or a visible change in behaviour. |
+| `fix` | A bug fix. |
+| `docs` | Documentation only, including PRDs, ADRs and this file. |
+| `refactor` | A code change that does not change behaviour. |
+| `test` | Tests only. |
+| `chore` | Tooling, dependencies, build and repository upkeep. |
+
+- `short-description` is lowercase, words joined by hyphens, two to five words.
+- Examples: `fix/toolbar-mode-crash`, `docs/adr-naming-guide`.
+- One branch holds one change. If a change fits two types, use the type of its main purpose.
+
 ## Product requirements
 
 - PRDs live in `docs/prd/`. The index and naming guide are in `docs/prd/README.md`.
