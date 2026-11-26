@@ -2,10 +2,10 @@
 
 - PRDs live in `docs/prd/`. The index and naming guide are in `docs/prd/README.md`.
 - Filenames are `NNNN-short-title.md`. Refer to a PRD as `PRD-NNNN`; that reference is stable and never reused.
-- Cite a single requirement as `PRD-NNNN` plus its ID, for example `PRD-0001 LIB-4`.
+- Cite a single requirement as `PRD-NNNN` plus its ID, for example `PRD-0001 REQ-4`.
 - Every PRD starts with YAML front matter: `type`, `id`, `title`, `status`, `date`. Keep it in step with the index.
 - When you add a PRD or change its title or status, update the index in `docs/prd/README.md` in the same change.
-- `PRD-0001` defines the scope of Aurelius v2. `v1/` holds the v1 app and will be removed later.
+- `v1/` holds the v1 app and will be removed later.
 
 ## Architecture decisions
 

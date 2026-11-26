@@ -6,7 +6,7 @@ Product requirement documents (PRDs) for Aurelius. A PRD says what to build and 
 
 | ID | Title | Status | Date |
 |---|---|---|---|
-| PRD-0001 | [Aurelius v2](0001-aurelius-v2.md) | draft | 2026-11-24 |
+| — | No PRDs yet | — | — |
 
 ## Naming guide
 
@@ -20,7 +20,7 @@ Product requirement documents (PRDs) for Aurelius. A PRD says what to build and 
 
 - Use `PRD-NNNN` everywhere a PRD is cited: code comments, commits, pull requests, ADRs, other PRDs.
 - The reference never changes. A title or filename can change; the number cannot.
-- To cite one requirement, add its ID: `PRD-0001 LIB-4`.
+- To cite one requirement, add its ID: `PRD-0001 REQ-4`.
 
 **Inside the file**
 
@@ -30,12 +30,12 @@ Every PRD starts with YAML front matter, then the title line:
 ---
 type: PRD
 id: PRD-0001
-title: "Aurelius v2"
+title: "Short title"
 status: draft
 date: 2026-11-24
 ---
 
-# PRD-0001: Aurelius v2
+# PRD-0001: Short title
 ```
 
 | Field | Value |
@@ -61,4 +61,4 @@ The index row for a PRD shows the same `status` and `date` as its front matter.
 
 1. Take the next number from the index.
 2. Create `NNNN-short-title.md` in this folder.
-3. Add a row to the index above.
+3. Add a row to the index above. Remove the "No PRDs yet" row when adding the first one.

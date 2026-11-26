@@ -21,7 +21,7 @@ Architecture decision records (ADRs) for Aurelius. An ADR records one technical 
 
 - Use `ADR-NNNN` everywhere an ADR is cited: code comments, commits, pull requests, PRDs, other ADRs.
 - The reference never changes. A title or filename can change; the number cannot.
-- When an ADR answers a requirement, cite it: `PRD-0001 SYN-3`.
+- When an ADR answers a requirement, cite it: `PRD-0001 REQ-4`.
 
 **Inside the file**
 
